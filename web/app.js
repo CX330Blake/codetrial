@@ -1,6 +1,6 @@
 import { FRAMEWORKS, codingLoop } from "./lib.js";
 import { clearReportHistory, readLocalHistory } from "./history.js";
-import { pickProblem, suggestDifficulty } from "./problem-picker.js";
+import { pickProblem, practiceFocus, storeSharedFocus, suggestDifficulty } from "./problem-picker.js";
 import { buildProgressModel, pickerEntry } from "./progress.js";
 import { parseGroundingFile, selectedGroundingPacket, storeGroundingPacket } from "./document-grounding.js";
 
@@ -8,6 +8,8 @@ let problem;
 let duration;
 let interviewLoop = "coding_behavioral";
 let reports = [];
+/// The practice focus the share box currently refers to.
+let sharedFocus = null;
 let manualProblem = false;
 let manualDuration = false;
 let manualDifficulty = false;
@@ -41,6 +43,9 @@ const nodes = {
   deleteReports: document.querySelector("#delete-reports"),
   reportDeleteStatus: document.querySelector("#report-delete-status"),
   recommendation: document.querySelector("#recommendation"),
+  practiceFocus: document.querySelector("#practice-focus"),
+  practiceFocusShare: document.querySelector("#practice-focus-share"),
+  practiceFocusShareInput: document.querySelector("#practice-focus-share-input"),
   progressSummary: document.querySelector("#progress-summary"),
   progressTrends: document.querySelector("#progress-trends"),
   progressWeaknesses: document.querySelector("#progress-weaknesses"),
@@ -178,6 +183,7 @@ start.addEventListener("click", async () => {
   if (profile.role) destination.searchParams.set("role", profile.role);
   if (profile.seniority) destination.searchParams.set("seniority", profile.seniority);
   if (profile.targetCompany) destination.searchParams.set("company", profile.targetCompany);
+  const focus = nodes.practiceFocusShareInput.checked ? practiceFocus(reports) : null;
   const selected = { requirements: [], skills: [], anchors: [] };
   for (const input of nodes.groundingChoices.querySelectorAll("input:checked")) selected[input.dataset.group].push(Number(input.value));
   const consented = nodes.groundingConsent.checked;
@@ -204,6 +210,7 @@ start.addEventListener("click", async () => {
   try {
     const packet = selectedGroundingPacket(grounding, selected, consented);
     storeGroundingPacket(sessionStorage, packet);
+    storeSharedFocus(sessionStorage, focus?.weakness ?? null);
   } catch (error) {
     nodes.groundingError.textContent = error.message;
     starting = false;
@@ -508,6 +515,21 @@ function recommend(note = "") {
       : `${note}Recommended: ${title(choice.picked)}.`;
 }
 
+/// Read off `reports` alone, so it is rendered wherever those change: the two
+/// history paths below, and nowhere the selection moves.
+function renderPracticeFocus() {
+  const focus = practiceFocus(reports);
+  nodes.practiceFocus.textContent = focus
+    ? `Carry forward${focus.occurrences === 1 ? "" : ` (${focus.occurrences} reports)`}: ${focus.weakness}. Drill: ${focus.drill}. Success: ${focus.successCriterion}.`
+    : "";
+  nodes.practiceFocus.hidden = focus === null;
+  nodes.practiceFocusShare.hidden = focus === null;
+  // Consent is to share this text. Reloaded history can change it, and a box
+  // left ticked would then send words the candidate never saw beside it.
+  if (focus?.weakness !== sharedFocus) nodes.practiceFocusShareInput.checked = false;
+  sharedFocus = focus?.weakness ?? null;
+}
+
 /// Check the level the candidate's own results point at and return the sentence
 /// saying why. Empty when the reports have no opinion yet, which leaves the
 /// markup's default standing.
@@ -631,6 +653,7 @@ function showProgressError(message) {
   // history it had last managed to load.
   reports = [];
   progressEntries = [];
+  renderPracticeFocus();
   nodes.historyHeader.hidden = false;
   nodes.history.hidden = false;
   nodes.progressSummary.textContent = message;
@@ -639,6 +662,7 @@ function showProgressError(message) {
 }
 
 function showProgress(entries, suffix) {
+  renderPracticeFocus();
   progressEntries = entries;
   progressSuffix = suffix;
   const erasable = entries.length > 0 || readLocalHistory().length > 0;

@@ -1,4 +1,5 @@
 import { loadJudge, loadProblem } from "./problem-data.js";
+import { consumeSharedFocus } from "./problem-picker.js";
 import {
   outputUsable,
   preflightReadiness,
@@ -183,6 +184,7 @@ const interviewProfile = {
   role: params.get("role") || "",
   seniority: params.get("seniority") || "",
   targetCompany: params.get("company") || "",
+  practiceFocus: consumeSharedFocus(sessionStorage),
 };
 const interviewGrounding = consumeGroundingPacket(sessionStorage);
 const state = {

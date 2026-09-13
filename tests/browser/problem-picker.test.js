@@ -2,7 +2,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { pickProblem, suggestDifficulty } from "../../web/problem-picker.js";
+import { consumeSharedFocus, pickProblem, practiceFocus, storeSharedFocus, suggestDifficulty } from "../../web/problem-picker.js";
 
 const bank = [
   { id: "passed", difficulty: "Easy" },
@@ -200,6 +200,67 @@ test("an interview that ended without a verdict is not counted as a failure", ()
   );
 });
 
+test("the newest assessed plan supplies one candidate-facing practice focus", () => {
+  const focus = practiceFocus([
+    {
+      report: {
+        decision: "NO_HIRE",
+        improvementPlan: [
+          { weakness: "Test boundaries", drill: "Build a test table", successCriterion: "Predict each output" },
+          { weakness: "Explain complexity", drill: "Narrate bounds", successCriterion: "Name time and space" },
+        ],
+      },
+    },
+  ]);
+  assert.deepEqual(focus, {
+    weakness: "Test boundaries",
+    drill: "Build a test table",
+    successCriterion: "Predict each output",
+    occurrences: 1,
+  });
+});
+
+test("a recurring focus outranks a one-off item while keeping the newest matching drill", () => {
+  const focus = practiceFocus([
+    { report: { decision: "HIRE", improvementPlan: [{ weakness: "Explain complexity", drill: "Narrate bounds", successCriterion: "Name time and space" }] } },
+    { report: { decision: "NO_HIRE", improvementPlan: [{ weakness: "Test boundaries", drill: "Build a test table", successCriterion: "Predict each output" }] } },
+    { report: { decision: "HIRE", improvementPlan: [{ weakness: "Test boundaries", drill: "Name a boundary", successCriterion: "Cover four classes" }] } },
+  ]);
+  assert.deepEqual(focus, {
+    weakness: "Test boundaries",
+    drill: "Build a test table",
+    successCriterion: "Predict each output",
+    occurrences: 2,
+  });
+});
+
+test("a duplicated plan item in one report is not a recurring focus", () => {
+  const focus = practiceFocus([
+    { report: { decision: "HIRE", improvementPlan: [
+      { weakness: "Test boundaries", drill: "Build a test table", successCriterion: "Predict each output" },
+      { weakness: "Test boundaries", drill: "Name a boundary", successCriterion: "Cover four classes" },
+    ] } },
+    { report: { decision: "NO_HIRE", improvementPlan: [
+      { weakness: "Explain complexity", drill: "Narrate bounds", successCriterion: "Name time and space" },
+    ] } },
+  ]);
+
+  assert.deepEqual(focus, {
+    weakness: "Test boundaries",
+    drill: "Build a test table",
+    successCriterion: "Predict each output",
+    occurrences: 1,
+  });
+});
+
+test("incomplete, ungraded, and malformed reports cannot create a practice focus", () => {
+  assert.equal(practiceFocus([
+    { report: { incomplete: true, decision: "NO_HIRE", improvementPlan: [{ weakness: "x", drill: "y", successCriterion: "z" }] } },
+    { report: { decision: null, improvementPlan: [{ weakness: "x", drill: "y", successCriterion: "z" }] } },
+    { report: { decision: "HIRE", improvementPlan: [{ weakness: "x" }] } },
+  ]), null);
+});
+
 test("an ungraded entry does not decide which level is the current one", () => {
   // Newest is an ungraded Hard attempt; the streak belongs to the Medium pair
   // under it, which is the level the candidate actually has results at.
@@ -210,4 +271,31 @@ test("an ungraded entry does not decide which level is the current one", () => {
     ]),
     { difficulty: "Hard", from: "Medium", reason: "passed" },
   );
+});
+
+test("a shared focus is handed over once, in session storage, and unsharing clears it", () => {
+  const store = new Map();
+  const storage = {
+    getItem: (key) => (store.has(key) ? store.get(key) : null),
+    setItem: (key, value) => store.set(key, String(value)),
+    removeItem: (key) => store.delete(key),
+  };
+  storeSharedFocus(storage, "Test boundaries");
+  assert.equal(consumeSharedFocus(storage), "Test boundaries");
+  assert.equal(consumeSharedFocus(storage), "", "a reload does not share it again");
+
+  storeSharedFocus(storage, "Test boundaries");
+  storeSharedFocus(storage, null);
+  assert.equal(consumeSharedFocus(storage), "", "choosing not to share clears an earlier one");
+
+  const broken = { getItem() { throw new Error("blocked"); }, setItem() { throw new Error("blocked"); }, removeItem() { throw new Error("blocked"); } };
+  storeSharedFocus(broken, "Test boundaries");
+  assert.equal(consumeSharedFocus(broken), "", "blocked storage shares nothing");
+});
+
+test("the interview reads the focus from session storage, never from its address", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(new URL("../../web/interview.js", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /params\.get\("focus"\)/);
+  assert.match(source, /practiceFocus: consumeSharedFocus\(sessionStorage\)/);
 });

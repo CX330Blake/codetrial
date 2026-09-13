@@ -156,7 +156,7 @@ test("optional interview profile is accessible, bounded, and omitted when blank"
   const interview = read("interview.js");
   assert.match(lobby, /<summary>Optional interview context<\/summary>/);
   assert.match(lobby, /<fieldset>[\s\S]*<legend>Tailor the behavioral question<\/legend>/);
-  for (const id of ["profile-role", "profile-seniority", "profile-company"]) {
+  for (const id of ["profile-role", "profile-seniority", "profile-company", "practice-focus-share", "practice-focus-share-input"]) {
     assert.match(lobby, new RegExp(`id="${id}"`));
   }
   assert.match(lobby, /id="profile-role"[^>]*maxlength="80"/);
@@ -168,6 +168,10 @@ test("optional interview profile is accessible, bounded, and omitted when blank"
   assert.match(app, /if \(profile\.seniority\) destination\.searchParams\.set\("seniority", profile\.seniority\)/);
   assert.match(app, /if \(profile\.targetCompany\) destination\.searchParams\.set\("company", profile\.targetCompany\)/);
   assert.match(interview, /const interviewProfile = \{/);
+  // The focus travels in session storage, never the address bar.
+  assert.match(app, /storeSharedFocus\(sessionStorage, focus\?\.weakness \?\? null\)/);
+  assert.doesNotMatch(app, /searchParams\.set\("focus"/);
+  assert.match(interview, /practiceFocus: consumeSharedFocus\(sessionStorage\)/);
 });
 
 test("document grounding is explicit, clearable, ephemeral, and absent from saved artifacts", () => {
@@ -182,7 +186,10 @@ test("document grounding is explicit, clearable, ephemeral, and absent from save
   assert.match(app, /storeGroundingPacket\(sessionStorage, packet\)/);
   assert.match(interview, /consumeGroundingPacket\(sessionStorage\)/);
   const savedArtifacts = [read("history.js"), read("replay-feed.js"), functionBody(interview, "saveHistory")];
-  for (const source of savedArtifacts) assert.doesNotMatch(source, /interviewGrounding/);
+  for (const source of savedArtifacts) {
+    assert.doesNotMatch(source, /interviewGrounding/);
+    assert.doesNotMatch(source, /practiceFocus/);
+  }
 });
 
 test("report history writes local storage before account sync", async () => {

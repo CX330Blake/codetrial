@@ -56,6 +56,60 @@ export function suggestDifficulty(problems, reports) {
   return null;
 }
 
+const sharedFocusKey = "codetrial.sharedPracticeFocus";
+
+/// The focus a candidate chose to share, handed from the lobby to the interview
+/// in this tab's session storage rather than the address bar. A URL carrying
+/// it is one anybody can craft, putting their text into the interviewer's
+/// instructions with no consent given, and it lands in history and access
+/// logs. Read once: a reload does not share it again unasked.
+export function storeSharedFocus(storage, focus) {
+  try {
+    if (focus) storage.setItem(sharedFocusKey, focus);
+    else storage.removeItem(sharedFocusKey);
+  } catch { /* an unshared focus is the safe outcome */ }
+}
+
+export function consumeSharedFocus(storage) {
+  try {
+    const focus = storage.getItem(sharedFocusKey);
+    storage.removeItem(sharedFocusKey);
+    return typeof focus === "string" ? focus : "";
+  } catch {
+    return "";
+  }
+}
+
+/// Carry one concrete action from the reports into the lobby. A focus repeated
+/// across reports wins; a tie goes to the newest report and its already-ranked
+/// first item. This does not alter the next problem or become new assessment
+/// evidence: it is the candidate's own reminder until they explicitly share it
+/// with the interviewer.
+export function practiceFocus(reports) {
+  const text = (value) => typeof value === "string" && value.trim() !== "";
+  // Insertion order is newest report first and plan order within it, and the
+  // sort below is stable, so ties keep exactly that order without a key.
+  const focuses = new Map();
+  for (const { report } of reports) {
+    if (
+      report?.incomplete
+      || (report?.decision !== "HIRE" && report?.decision !== "NO_HIRE")
+      || !Array.isArray(report?.improvementPlan)
+    ) continue;
+    const reported = new Set();
+    for (const item of report.improvementPlan) {
+      if (!text(item?.weakness) || !text(item?.drill) || !text(item?.successCriterion)) continue;
+      const weakness = item.weakness.trim();
+      if (reported.has(weakness)) continue;
+      reported.add(weakness);
+      const existing = focuses.get(weakness);
+      if (existing) existing.occurrences += 1;
+      else focuses.set(weakness, { weakness, drill: item.drill.trim(), successCriterion: item.successCriterion.trim(), occurrences: 1 });
+    }
+  }
+  return [...focuses.values()].sort((left, right) => right.occurrences - left.occurrences)[0] ?? null;
+}
+
 /// Clamped at both ends: passing two Hard problems leaves the candidate on
 /// Hard, which is still the right answer, and the lobby still says why.
 function step(level, by) {

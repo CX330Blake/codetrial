@@ -254,12 +254,17 @@ impl InterviewLoop {
 }
 
 pub const MAX_PROFILE_TEXT_CHARS: usize = 80;
+/// A practice focus is a report's improvement item quoted word for word, and
+/// those run to the 400 characters `sanitizeReport` keeps. The profile bound
+/// cut one mid-sentence before the interviewer read it.
+pub const MAX_PRACTICE_FOCUS_CHARS: usize = 400;
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct InterviewProfile {
     pub role: String,
     pub seniority: Option<Seniority>,
     pub target_company: String,
+    pub practice_focus: String,
 }
 
 pub const MAX_GROUNDING_TEXT_CHARS: usize = 240;
@@ -399,6 +404,10 @@ pub fn sanitize_interview_profile(value: Option<&serde_json::Value>) -> Intervie
                 .and_then(serde_json::Value::as_str),
         ),
         target_company: profile_text(value.and_then(|item| item.get("targetCompany"))),
+        practice_focus: bounded_profile_text(
+            value.and_then(|item| item.get("practiceFocus")),
+            MAX_PRACTICE_FOCUS_CHARS,
+        ),
     }
 }
 
@@ -407,10 +416,15 @@ pub fn interview_profile_json(profile: &InterviewProfile) -> serde_json::Value {
         "role": profile.role,
         "seniority": profile.seniority.map(Seniority::as_str),
         "targetCompany": profile.target_company,
+        "practiceFocus": profile.practice_focus,
     })
 }
 
 fn profile_text(value: Option<&serde_json::Value>) -> String {
+    bounded_profile_text(value, MAX_PROFILE_TEXT_CHARS)
+}
+
+fn bounded_profile_text(value: Option<&serde_json::Value>, max_chars: usize) -> String {
     let normalized = value
         .and_then(serde_json::Value::as_str)
         .unwrap_or_default()
@@ -426,7 +440,7 @@ fn profile_text(value: Option<&serde_json::Value>) -> String {
         .split_whitespace()
         .collect::<Vec<_>>()
         .join(" ");
-    normalized.chars().take(MAX_PROFILE_TEXT_CHARS).collect()
+    normalized.chars().take(max_chars).collect()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

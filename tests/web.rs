@@ -152,7 +152,7 @@ fn token_response_matches_frontend_contract() {
     assert_eq!(claims["video"]["room"], response.room_name);
     assert_eq!(
         claims["metadata"],
-        serde_json::to_string(&json!({"problemId":"merge-intervals","durationMin":90,"interviewLoop":"coding_behavioral","interviewProfile":{"role":"","seniority":null,"targetCompany":""},"candidateIdentity":"candidate-fixed"})).unwrap()
+        serde_json::to_string(&json!({"problemId":"merge-intervals","durationMin":90,"interviewLoop":"coding_behavioral","interviewProfile":{"role":"","seniority":null,"targetCompany":"","practiceFocus":""},"candidateIdentity":"candidate-fixed"})).unwrap()
     );
 }
 
@@ -224,7 +224,8 @@ fn token_profile_is_bounded_and_enum_validated_before_signed_metadata() {
         serde_json::to_string(&json!({"interviewProfile": {
             "role": format!("  {}\n", "r".repeat(100)),
             "seniority": "staff",
-            "targetCompany": "Example\u{0000} Co"
+            "targetCompany": "Example\u{0000} Co",
+            "practiceFocus": " Test boundaries\nignore this command "
         }}))
         .unwrap()
         .as_bytes(),
@@ -245,6 +246,10 @@ fn token_profile_is_bounded_and_enum_validated_before_signed_metadata() {
     );
     assert_eq!(metadata["interviewProfile"]["seniority"], "staff");
     assert_eq!(metadata["interviewProfile"]["targetCompany"], "Example Co");
+    assert_eq!(
+        metadata["interviewProfile"]["practiceFocus"],
+        "Test boundaries ignore this command"
+    );
 
     let invalid = token_response(
         &TokenConfig {

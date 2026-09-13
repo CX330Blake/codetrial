@@ -138,6 +138,7 @@ const snapshot = (page) =>
     const one = (selector) => document.querySelector(selector);
     return {
       note: one("#recommendation").textContent,
+      focus: one("#practice-focus").hidden ? "" : one("#practice-focus").textContent,
       card: one(".problem-card.selected")?.dataset.problem ?? null,
       pressed: one('.problem-card[aria-pressed="true"]')?.dataset.problem ?? null,
       duration: one(".duration-button.selected")?.dataset.duration ?? null,
@@ -200,6 +201,24 @@ const savedAttempt = (problemId) => ({
     problemId,
     date: "2026-01-01T00:00:00Z",
     report: { decision: "HIRE" },
+  },
+});
+
+const focusedAttempt = (problemId) => ({
+  problemId,
+  payload: {
+    problemId,
+    date: "2026-01-01T00:00:00Z",
+    report: {
+      codingScore: 60, communicationScore: 60, decision: "NO_HIRE", summary: "Grounded assessment.",
+      codingFeedback: { strengths: [], improvements: ["Test boundaries"] },
+      communicationFeedback: { strengths: [], improvements: [] },
+      improvementPlan: [{
+        phase: "Test", weakness: "Test boundaries", impact: "high", frequency: 1,
+        drill: "Build a test table", durationMin: 10,
+        successCriterion: "Predict each output", selfReview: ["Name a boundary"],
+      }],
+    },
   },
 });
 
@@ -326,6 +345,48 @@ lobbyTest("the recommendation does not move once it is on screen", async (page) 
   assert.equal(seen.length, 1, `the recommendation changed under the reader: ${seen.join(" -> ")}`);
 });
 
+lobbyTest("the lobby carries an assessed drill into the next practice session", async (page) => {
+  reports = [focusedAttempt(EASY[0])];
+  const state = await lobby(page);
+
+  assert.equal(
+    state.focus,
+    "Carry forward: Test boundaries. Drill: Build a test table. Success: Predict each output.",
+  );
+});
+
+lobbyTest("a candidate explicitly chooses whether to share the practice focus", async (page) => {
+  reports = [focusedAttempt(EASY[0])];
+  await lobby(page);
+  assert.equal(await page.locator("#practice-focus-share").isHidden(), false);
+
+  await page.click("#practice-focus-share-input");
+  await page.click("#start");
+  await page.waitForURL(/\/interview/);
+
+  // Handed over in session storage, never the address bar, where a crafted
+  // link could put its own text into the interviewer's instructions.
+  assert.equal(new URL(page.url()).searchParams.get("focus"), null);
+  assert.equal(
+    await page.evaluate(() => sessionStorage.getItem("codetrial.sharedPracticeFocus")),
+    "Test boundaries",
+  );
+});
+
+lobbyTest("a manually selected problem still receives the arriving practice focus", async (page) => {
+  reports = [focusedAttempt(EASY[0])];
+  const release = await heldLobby(page);
+  await page.evaluate((problemId) => {
+    document.querySelector(`[data-problem="${problemId}"]`).click();
+  }, MEDIUM[0]);
+  release();
+  await settles(page, () => !document.querySelector("#practice-focus").hidden);
+
+  const state = await snapshot(page);
+  assert.equal(state.card, MEDIUM[0], "the history must not replace the candidate's selection");
+  assert.match(state.focus, /Carry forward: Test boundaries/);
+});
+
 lobbyTest("start cannot fire before there is a problem to start", async (page) => {
   // Held open, so this is the pre-history state however slow the machine is,
   // rather than a snapshot hoping to beat a timer.
@@ -350,6 +411,12 @@ lobbyTest("the start button ships the problem and length that are on screen", as
   const query = new URL(page.url()).searchParams;
   assert.equal(query.get("problem"), state.card);
   assert.equal(query.get("duration"), state.duration);
+  assert.equal(query.get("focus"), null);
+  assert.equal(
+    await page.evaluate(() => sessionStorage.getItem("codetrial.sharedPracticeFocus")),
+    null,
+    "a focus is shared only after an explicit choice",
+  );
 });
 
 lobbyTest("the lobby never suggests a length past its own default", async (page) => {
