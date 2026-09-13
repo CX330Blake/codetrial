@@ -11,12 +11,53 @@ const bank = [
   { id: "hard", difficulty: "Hard" },
 ];
 const hired = (problemId) => ({ problemId, report: { decision: "HIRE" } });
+const completed = (problemId, at) => ({ problemId, at, report: { decision: "HIRE" } });
 const first = () => 0;
+const day = 24 * 60 * 60 * 1000;
 
 test("a problem already passed is not what gets recommended next", () => {
   const choice = pickProblem(bank, new Set(["Easy"]), [hired("passed")], first);
   assert.equal(choice.picked.id, "fresh");
   assert.equal(choice.repeat, false);
+});
+
+test("a due completed problem takes priority over an unseen one", () => {
+  const now = 10 * day;
+  const choice = pickProblem(
+    bank,
+    new Set(["Easy"]),
+    [completed("passed", now - day)],
+    first,
+    now,
+  );
+  assert.equal(choice.picked.id, "passed");
+  assert.equal(choice.review.intervalDays, 1);
+});
+
+test("a completed problem stays out of the queue until its interval has elapsed", () => {
+  const now = 10 * day;
+  const choice = pickProblem(
+    bank,
+    new Set(["Easy"]),
+    [completed("passed", now - day + 1)],
+    first,
+    now,
+  );
+  assert.equal(choice.picked.id, "fresh");
+  assert.equal(choice.review, null);
+});
+
+test("each successful review lengthens the next interval", () => {
+  const now = 10 * day;
+  const choice = pickProblem(
+    bank,
+    new Set(["Easy"]),
+    [completed("passed", now - 3 * day), completed("passed", now - 4 * day)],
+    first,
+    now,
+  );
+  assert.equal(choice.picked.id, "passed");
+  assert.equal(choice.review.intervalDays, 3);
 });
 
 test("a difficulty nobody selected is never recommended", () => {

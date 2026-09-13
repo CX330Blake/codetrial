@@ -1,7 +1,7 @@
 import { FRAMEWORKS, codingLoop } from "./lib.js";
 import { clearReportHistory, readLocalHistory } from "./history.js";
 import { pickProblem, suggestDifficulty } from "./problem-picker.js";
-import { buildProgressModel, unwrapEntry } from "./progress.js";
+import { buildProgressModel, pickerEntry } from "./progress.js";
 import { parseGroundingFile, selectedGroundingPacket, storeGroundingPacket } from "./document-grounding.js";
 
 let problem;
@@ -408,9 +408,9 @@ async function recordGitHubLogin(reload) {
 async function renderServerHistory() {
   try {
     const data = await fetchJson("/api/reports");
-    // The picker reads the unwrapped entry, the panel takes the wire shape and
-    // unwraps it itself, and both go through the one rule in progress.js.
-    reports = data.reports.map(unwrapEntry);
+    // The picker needs the account row's timestamp for review scheduling and
+    // the verdict as it was saved; the progress panel normalizes its own.
+    reports = data.reports.map(pickerEntry);
     showProgress(data.reports, "saved to your account");
   } catch {
     showProgressError("Could not load saved account progress.");
@@ -419,8 +419,9 @@ async function renderServerHistory() {
 
 function renderLocalHistory() {
   try {
-    reports = readLocalHistory();
-    showProgress(reports, "saved on this device");
+    const entries = readLocalHistory();
+    reports = entries.map(pickerEntry);
+    showProgress(entries, "saved on this device");
   } catch {
     showProgressError("Could not load progress saved on this device.");
   }
@@ -500,9 +501,11 @@ function recommend(note = "") {
     return;
   }
   setProblem(choice.picked);
-  nodes.recommendation.textContent = choice.repeat
-    ? `${note}You have passed every problem at this level. Recommended again: ${title(choice.picked)}.`
-    : `${note}Recommended: ${title(choice.picked)}.`;
+  nodes.recommendation.textContent = choice.review
+    ? `${note}Review due after ${choice.review.intervalDays} day${choice.review.intervalDays === 1 ? "" : "s"}: ${title(choice.picked)}.`
+    : choice.repeat
+      ? `${note}You have passed every problem at this level. Recommended again: ${title(choice.picked)}.`
+      : `${note}Recommended: ${title(choice.picked)}.`;
 }
 
 /// Check the level the candidate's own results point at and return the sentence

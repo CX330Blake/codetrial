@@ -5,6 +5,13 @@ export const LEVELS = ["Easy", "Medium", "Hard"];
 /// never moves at all.
 const STREAK = 2;
 
+/// Each successful recall earns a longer break before the same problem returns.
+/// This is intentionally a small, explainable schedule: reports record a
+/// verdict and a timestamp, not a confidence rating, so guessing a more precise
+/// retention model would promise accuracy the interview never measured.
+const REVIEW_INTERVAL_DAYS = [1, 3, 7, 14, 30];
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 /// Which level to practise next, read off what the candidate has already done.
 ///
 /// `reports` is newest first, which both sources guarantee: `list_reports`
@@ -56,20 +63,37 @@ function step(level, by) {
   return LEVELS[Math.min(Math.max(index, 0), LEVELS.length - 1)];
 }
 
-/// Pick what to interview on next: a problem at one of the selected levels that
-/// the candidate has not already been hired on. `reports` is the flat entry
-/// shape `history.js` writes; the caller flattens `/api/reports` into it.
+/// Pick what to interview on next. A completed problem returns when its review
+/// is due; otherwise choose an unseen problem before repeating one early.
+/// `reports` is the `pickerEntry` shape from `progress.js`: the entry as saved,
+/// with a normalized `at`.
 ///
-/// Returns `repeat` rather than hiding it, because a candidate who has passed
-/// everything at a level is owed the sentence saying so instead of a
-/// recommendation that looks new.
-export function pickProblem(problems, difficulties, reports, random = Math.random) {
+/// The optional clock keeps the scheduling rule deterministic in its tests.
+export function pickProblem(problems, difficulties, reports, random = Math.random, now = Date.now()) {
   const eligible = problems.filter((problem) => difficulties.has(problem.difficulty));
+  const reportList = Array.isArray(reports) ? reports : [];
+  const reviews = reviewStatus(reportList, now);
   const passed = new Set(
-    reports.filter((entry) => entry?.report?.decision === "HIRE").map((entry) => entry.problemId),
+    reportList.filter((entry) => entry?.report?.decision === "HIRE").map((entry) => entry.problemId),
   );
+  const due = eligible.filter((problem) => reviews.get(problem.id)?.due);
   const fresh = eligible.filter((problem) => !passed.has(problem.id));
-  const choices = fresh.length ? fresh : eligible;
+  const choices = due.length ? due : fresh.length ? fresh : eligible;
   const picked = choices[Math.floor(random() * choices.length)];
-  return picked ? { picked, repeat: !fresh.length } : null;
+  if (!picked) return null;
+  const review = reviews.get(picked.id);
+  return { picked, repeat: !fresh.length, review: due.length ? review : null };
+}
+
+function reviewStatus(reports, now) {
+  const successes = new Map();
+  for (const entry of reports) {
+    if (entry?.report?.decision !== "HIRE" || !Number.isFinite(entry.at)) continue;
+    const seen = successes.get(entry.problemId);
+    successes.set(entry.problemId, { count: (seen?.count ?? 0) + 1, last: Math.max(seen?.last ?? -Infinity, entry.at) });
+  }
+  return new Map([...successes].map(([problemId, { count, last }]) => {
+    const intervalDays = REVIEW_INTERVAL_DAYS[Math.min(count, REVIEW_INTERVAL_DAYS.length) - 1];
+    return [problemId, { due: last + intervalDays * DAY_MS <= now, intervalDays }];
+  }));
 }

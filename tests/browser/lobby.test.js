@@ -475,6 +475,17 @@ lobbyTest("a problem already passed is not what gets recommended", async (page) 
   assert.notEqual(state.card, HARD[0], "a problem the candidate passed came back");
 });
 
+lobbyTest("a completed problem returns with a due-review explanation", async (page) => {
+  reports = [savedAttempt(EASY[0])];
+  await lobby(page);
+  await setLevel(page, "Easy", true);
+  await setLevel(page, "Medium", false);
+
+  const state = await snapshot(page);
+  assert.equal(state.card, EASY[0]);
+  assert.match(state.note, /Review due after 1 day/);
+});
+
 lobbyTest("two passes move the candidate up a level, and the lobby says why", async (page) => {
   reports = [hired(EASY[0]), hired(EASY[1])];
   const state = await lobby(page);
