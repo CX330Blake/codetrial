@@ -27,8 +27,8 @@ pub use prompts::{
     InterimReviewInput, LanguageChoiceContext, ReportPromptInput, build_instructions_for_plan,
     cold_restart, format_test_run, greeting, interim_review_prompt, language_choice, log_hint_text,
     numbered, proactive_review, read_editor_text, report_prompt, rolling_assessment,
-    significant_change, silence_nudge, spoken_language, test_results_reaction, time_warning,
-    wrap_up,
+    significant_change, silence_nudge, spoken_language, test_results_reaction,
+    test_setup_error_reaction, time_warning, wrap_up,
 };
 pub use report::{
     MAX_SUMMARY_TEXT, fallback_report, final_report, report_response_schema, validate_report,

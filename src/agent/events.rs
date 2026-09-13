@@ -10,7 +10,7 @@ use super::{
     ROUND_TRANSITION_SKEW, RuntimeState, TIME_WARNING_S, cold_restart, format_test_run,
     integrity_hash, json_int, language_choice, python_truthy, sanitize_integrity_event,
     sanitize_test_run, spoken_language, spoken_minutes_from_remaining_seconds,
-    test_reaction_decision, test_results_reaction, time_warning,
+    test_reaction_decision, test_results_reaction, test_setup_error_reaction, time_warning,
 };
 use crate::runtime::{TOPIC_CODE_UPDATE, TOPIC_CONTROL, TOPIC_INTEGRITY, TOPIC_TEST_RESULTS};
 
@@ -151,13 +151,11 @@ fn apply_test_results(
         return DataEventResult::default();
     }
 
+    let setup_error = payload.get("setupError").is_some_and(python_truthy);
     let all_passed = payload
-        .get("setupError")
-        .is_none_or(|value| !python_truthy(value))
-        && payload
-            .get("total")
-            .and_then(serde_json::Value::as_i64)
-            .is_some_and(|total| total > 0)
+        .get("total")
+        .and_then(serde_json::Value::as_i64)
+        .is_some_and(|total| total > 0)
         && payload.get("passed").and_then(serde_json::Value::as_i64)
             == payload.get("total").and_then(serde_json::Value::as_i64);
     let summary = format_test_run(Some(payload), state.test_runs);
@@ -165,7 +163,11 @@ fn apply_test_results(
     DataEventResult {
         update_last_test_reaction: true,
         update_last_interjection: true,
-        generate_reply: Some(test_results_reaction(&summary, all_passed)),
+        generate_reply: Some(if setup_error {
+            test_setup_error_reaction(&summary)
+        } else {
+            test_results_reaction(&summary, all_passed)
+        }),
         ..DataEventResult::default()
     }
 }

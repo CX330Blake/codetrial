@@ -247,6 +247,7 @@ fn prompt_samples() -> Value {
         }),
         "testsPass": test_results_reaction("3/3 passed", true),
         "testsFail": test_results_reaction("2/3 passed", false),
+        "testsSetupError": test_setup_error_reaction("The runner could not start."),
         "report": report_prompt(ReportPromptInput {
             problem,
             transcript: "Candidate: I will use a hash map.",
@@ -1002,7 +1003,14 @@ fn leetcode_reactions_preserve_stage_transitions() {
 
     let failed = test_results_reaction("1/3 passed", false);
     assert!(failed.contains("Return from Test to diagnosis/Coding"));
+    assert!(failed.contains("choose one failing case"));
+    assert!(failed.contains("expected result and what their code produced"));
     assert!(failed.contains("Do not state the commonality, bug, location, or fix"));
+
+    let setup = test_setup_error_reaction("Compiler Explorer returned 503");
+    assert!(setup.contains("first setup error"));
+    assert!(setup.contains("prevents loading the tests, compilation, or execution"));
+    assert!(setup.contains("Do not identify the error's cause, location, or fix"));
 
     let passed = test_results_reaction("3/3 passed", true);
     assert!(passed.contains("move to Optimizations"));
@@ -1026,6 +1034,7 @@ fn leetcode_reactions_preserve_stage_transitions() {
         wrap_up("time_up"),
         test_results_reaction("1/3 passed", false),
         test_results_reaction("3/3 passed", true),
+        test_setup_error_reaction("The runner could not start."),
     ] {
         assert!(
             !neutral.contains("`log_hint`"),
@@ -3489,12 +3498,12 @@ fn a_test_run_with_no_cases_is_not_congratulated() {
 fn browser_test_result_packets_are_classified_correctly_by_the_agent() {
     let (topic, cases) = wire_fixture(include_str!("fixtures/test-results.json"));
 
-    let expected_pass = [
-        ("all passed", true),
-        ("some failed", false),
-        ("setup error", false),
+    let expected_reactions = [
+        ("all passed", true, "every one passed"),
+        ("some failed", false, "choose one failing case"),
+        ("setup error", false, "first setup error"),
     ];
-    for (name, passed) in expected_pass {
+    for (name, passed, expected_reaction) in expected_reactions {
         let payload = wire_case(&cases, name);
         let mut state = RuntimeState::default();
         let result = apply_data_event(&mut state, &topic, payload, TEST_REACTION_COOLDOWN_S);
@@ -3524,6 +3533,10 @@ fn browser_test_result_packets_are_classified_correctly_by_the_agent() {
             "the agent classified the {name} run wrongly; the browser's \
              passed/total/setupError shape and the agent's reading of it have \
              diverged"
+        );
+        assert!(
+            reply.contains(expected_reaction),
+            "the {name} run did not receive its matching reaction: {reply}"
         );
     }
 }

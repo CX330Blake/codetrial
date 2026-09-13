@@ -861,7 +861,13 @@ pub fn test_results_reaction(summary_text: &str, all_passed: bool) -> String {
     }
 
     format!(
-        "[SYSTEM EVENT] The candidate just ran the built-in test cases and some failed:\n{summary_text}\nTreat this only as the candidate's reported result, not proof. Return from Test to diagnosis/Coding: in one or two short sentences, ask the candidate what the failures have in common and what part of their reasoning or code they will inspect first. Do not state the commonality, bug, location, or fix, and do not name a data structure, algorithm, or invariant. Reference a failing input only if needed and never read raw code or values symbol by symbol."
+        "[SYSTEM EVENT] The candidate just ran the built-in test cases and some failed:\n{summary_text}\nTreat this only as the candidate's reported result, not proof. Return from Test to diagnosis/Coding: in one or two short sentences, ask the candidate to choose one failing case, state its expected result and what their code produced, then name the assumption they will inspect. Do not state the commonality, bug, location, or fix, and do not name a data structure, algorithm, or invariant. Reference a failing input only if needed and never read raw code or values symbol by symbol."
+    )
+}
+
+pub fn test_setup_error_reaction(summary_text: &str) -> String {
+    format!(
+        "[SYSTEM EVENT] The candidate tried to run the built-in test cases, but the runner reported a setup error:\n{summary_text}\nTreat this only as the candidate's reported result, not proof. Return from Test to Coding: in one or two short sentences, ask the candidate to read the first setup error, say whether it prevents loading the tests, compilation, or execution, then name the one assumption they will verify before running again. Do not identify the error's cause, location, or fix, and do not provide code, commands, a data structure, algorithm, or invariant. Never read raw code or error text symbol by symbol."
     )
 }
 
