@@ -378,6 +378,22 @@ lobbyTest("a candidate explicitly chooses whether to share the practice focus", 
   );
 });
 
+lobbyTest("loading a resume keeps the JD requirements already checked", async (page) => {
+  await lobby(page);
+  await page.click("details.interview-context summary");
+  const txt = (name, text) => ({ name, mimeType: "text/plain", buffer: Buffer.from(text) });
+
+  await page.setInputFiles("#grounding-jd", txt("jd.txt", "Must know Rust\nMust know SQL"));
+  const jd = page.locator('#grounding-choices input[data-group="requirements"]');
+  await jd.first().waitFor();
+  await jd.nth(1).check();
+
+  await page.setInputFiles("#grounding-resume", txt("resume.txt", "Skills: Rust, Go\nBuilt a parser"));
+  await page.locator('#grounding-choices input[data-group="skills"]').first().waitFor();
+
+  assert.deepEqual(await jd.evaluateAll((boxes) => boxes.map((box) => box.checked)), [false, true]);
+});
+
 lobbyTest("a manually selected problem still receives the arriving practice focus", async (page) => {
   reports = [focusedAttempt(EASY[0])];
   const release = await heldLobby(page);
