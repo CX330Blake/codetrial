@@ -121,6 +121,22 @@ class VariantValidationTests(unittest.TestCase):
             brief=["A coin change problem: implement fewestTokens(tokens, amount)."],
         )
         self.rejects("source site", hints=["As on LeetCode.", "b", "c"])
+        # What the interviewer may say aloud counts as much as the page.
+        self.rejects(
+            "hints\\[0\\] names the source title",
+            hints=["Think about coin change.", "b", "c"],
+        )
+        self.rejects(
+            "followUps\\[1\\] names the source title",
+            followUps=["Limited counts?", "Is this just coin change?"],
+        )
+        self.rejects(
+            "clarifications\\[0\\].question names the source title",
+            clarifications=[
+                {"question": "Is it coin change?", "answer": "No."},
+                *self.variant["clarifications"][1:],
+            ],
+        )
         self.rejects(
             "contract names the source title", contract="Coin change, renamed."
         )
@@ -261,6 +277,42 @@ class VariantValidationTests(unittest.TestCase):
         # A tree with its gaps is not the same tree without them.
         self.assertNotEqual(
             GEN.input_values("root = [1,2,null,3]"), GEN.input_values("root = [1,2,3]")
+        )
+
+    def test_prose_may_not_walk_through_a_published_example(self):
+        # The published example here is coins 1, 2, 5 and amount 11.
+        self.rejects(
+            "repeats a published example",
+            hints=["Try 1, 2, 5 and 11 by hand.", "b", "c"],
+        )
+        self.rejects(
+            "repeats a published example",
+            followUps=["What about 11 with 5, 2 and 1?", "b"],
+        )
+        GEN.validated_variant(
+            self.problem,
+            self.judge,
+            {**self.variant, "hints": ["Try 1, 2, 4 and 11 by hand.", "b", "c"]},
+        )
+        self.assertTrue(
+            GEN.quotes_example(("paper", "title"), "Line up paper and title.")
+        )
+        self.assertFalse(
+            GEN.quotes_example(("paper", "title"), "A newspaper headline.")
+        )
+        # A small board of 0s and 1s is not quoted by an output of 0s and 1s, but
+        # a longer run of few values in the published order is.
+        board = (1.0, 1.0, 1.0, 0.0)
+        self.assertFalse(
+            GEN.quotes_example(board, "board becomes [[0,0,0],[1,1,1],[0,0,0]]")
+        )
+        self.assertTrue(
+            GEN.quotes_example((3.0, 2.0, 2.0, 3.0, 3.0), "Take 3, 2, 2, 3 with 3.")
+        )
+        # An example's own output text is read like any other prose.
+        self.rejects(
+            "repeats a published example",
+            examples=[{"case": 1, "output": "-1, unlike 1, 2, 5 and 11"}],
         )
 
     def test_a_published_argument_is_published_whatever_comes_with_it(self):
