@@ -3,7 +3,7 @@ import { clearReportHistory, readLocalHistory, renameLocalHistory } from "./hist
 import { pickProblem, practiceFocus, storeSharedFocus, suggestDifficulty } from "./problem-picker.js";
 import { buildProgressModel, pickerEntry } from "./progress.js";
 import { loadPageMap } from "./problem-data.js";
-import { parseGroundingFile, selectedGroundingPacket, storeGroundingPacket } from "./document-grounding.js";
+import { parseGroundingFile, retainedSelection, selectedGroundingPacket, storeGroundingPacket } from "./document-grounding.js";
 
 let problem;
 let duration;
@@ -220,8 +220,7 @@ start.addEventListener("click", async () => {
   if (profile.seniority) destination.searchParams.set("seniority", profile.seniority);
   if (profile.targetCompany) destination.searchParams.set("company", profile.targetCompany);
   const focus = nodes.practiceFocusShareInput.checked ? practiceFocus(reports) : null;
-  const selected = { requirements: [], skills: [], anchors: [] };
-  for (const input of nodes.groundingChoices.querySelectorAll("input:checked")) selected[input.dataset.group].push(Number(input.value));
+  const selected = checkedGrounding();
   const consented = nodes.groundingConsent.checked;
 
   starting = true;
@@ -271,10 +270,16 @@ async function loadGroundingFile(kind) {
     else { grounding.skills = []; grounding.anchors = []; }
     status.textContent = error.message;
   }
-  renderGroundingChoices();
+  renderGroundingChoices(retainedSelection(checkedGrounding(), kind));
 }
 
-function renderGroundingChoices() {
+function checkedGrounding() {
+  const selected = { requirements: [], skills: [], anchors: [] };
+  for (const input of nodes.groundingChoices.querySelectorAll("input:checked")) selected[input.dataset.group].push(Number(input.value));
+  return selected;
+}
+
+function renderGroundingChoices(selected) {
   nodes.groundingChoices.replaceChildren();
   for (const [group, label] of [["requirements", "JD requirements"], ["skills", "Resume skills"], ["anchors", "Resume experience/project anchors"]]) {
     if (!grounding[group].length) continue;
@@ -288,6 +293,7 @@ function renderGroundingChoices() {
       checkbox.type = "checkbox";
       checkbox.dataset.group = group;
       checkbox.value = String(index);
+      checkbox.checked = selected[group].includes(index);
       row.append(checkbox, document.createTextNode(` ${snippet}`));
       fieldset.append(row);
     });

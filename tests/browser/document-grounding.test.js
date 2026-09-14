@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   consumeGroundingPacket, groundingStorageKey, maxGroundingFileBytes, maxGroundingPacketBytes,
-  groundingConsentVersion, parseGroundingFile, selectedGroundingPacket, storeGroundingPacket,
+  groundingConsentVersion, parseGroundingFile, retainedSelection, selectedGroundingPacket, storeGroundingPacket,
 } from "../../web/document-grounding.js";
 import { memoryStorage } from "./source.js";
 
@@ -148,4 +148,12 @@ test("selection indexes outside the extracted list are dropped, not clamped", as
   assert.equal(selectedGroundingPacket(extracted, { requirements: [7], skills: [], anchors: [] }, true), null);
   // Order follows the indexes as given, not the document.
   assert.deepEqual(pickWith([2, 0]), ["Must have Go", "Must have Rust"]);
+});
+
+test("re-reading one document keeps the selection made in the other", () => {
+  const selected = { requirements: [0, 2], skills: [1], anchors: [0] };
+  assert.deepEqual(retainedSelection(selected, "resume"), { requirements: [0, 2], skills: [], anchors: [] });
+  assert.deepEqual(retainedSelection(selected, "jd"), { requirements: [], skills: [1], anchors: [0] });
+  retainedSelection(selected, "jd").skills.push(5);
+  assert.deepEqual(selected.skills, [1]);
 });

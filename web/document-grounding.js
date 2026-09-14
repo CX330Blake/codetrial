@@ -27,6 +27,15 @@ export async function parseGroundingFile(file, kind) {
   return kind === "jd" ? parseJd(lines) : parseResume(lines);
 }
 
+export function retainedSelection(selected, kind) {
+  const replaced = kind === "jd" ? ["requirements"] : ["skills", "anchors"];
+  const retained = { requirements: [], skills: [], anchors: [] };
+  for (const group of Object.keys(retained)) {
+    if (!replaced.includes(group)) retained[group] = [...(selected[group] || [])];
+  }
+  return retained;
+}
+
 export function selectedGroundingPacket(extracted, selected, consent) {
   const packet = {
     consentVersion: groundingConsentVersion,
