@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "nums = [0,0,1,1,1,2,2,3,3,4]",
-      "output": "5, and nums starts with [0,1,2,3,4]"
+      "input": "nums = [1,1,2,3,3,3,5]",
+      "output": "4, and nums starts with [1,2,3,5]"
     },
     {
       "input": "nums = [-2,-1,0,3]",

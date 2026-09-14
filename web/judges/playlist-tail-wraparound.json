@@ -67,6 +67,24 @@
         3
       ],
       "expected": []
+    },
+    {
+      "label": "shift by one",
+      "input": [
+        [
+          6,
+          7,
+          8,
+          9
+        ],
+        1
+      ],
+      "expected": [
+        9,
+        6,
+        7,
+        8
+      ]
     }
   ],
   "paramNames": [

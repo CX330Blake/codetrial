@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "s = \"paper\", t = \"title\"",
+      "input": "s = \"abca\", t = \"zyxz\"",
       "output": "true"
     },
     {

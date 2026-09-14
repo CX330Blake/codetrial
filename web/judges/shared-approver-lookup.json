@@ -110,6 +110,52 @@
         7,
         4
       ]
+    },
+    {
+      "label": "split below the root",
+      "input": [
+        [
+          8,
+          4,
+          12,
+          2,
+          6,
+          10,
+          14
+        ],
+        2,
+        6
+      ],
+      "expected": [
+        4,
+        2,
+        6
+      ]
+    },
+    {
+      "label": "root joins both sides",
+      "input": [
+        [
+          8,
+          4,
+          12,
+          2,
+          6,
+          10,
+          14
+        ],
+        6,
+        12
+      ],
+      "expected": [
+        8,
+        4,
+        12,
+        2,
+        6,
+        10,
+        14
+      ]
     }
   ],
   "paramNames": [

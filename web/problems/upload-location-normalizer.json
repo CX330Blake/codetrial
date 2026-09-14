@@ -13,8 +13,8 @@
       "output": "\"/c\""
     },
     {
-      "input": "path = \"/home//foo/\"",
-      "output": "\"/home/foo\""
+      "input": "path = \"/.../a/../b/c/../d/./\"",
+      "output": "\"/.../b/d\""
     }
   ],
   "starterCode": {

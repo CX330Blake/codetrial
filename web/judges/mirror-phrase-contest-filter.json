@@ -37,6 +37,13 @@
         "1,2,1"
       ],
       "expected": true
+    },
+    {
+      "label": "spaces punctuation and case",
+      "input": [
+        "Step on no pets!"
+      ],
+      "expected": true
     }
   ],
   "paramNames": [

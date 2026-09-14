@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "board = [[\"a\",\"b\"],[\"c\",\"d\"]], words = [\"ab\",\"abc\",\"abd\",\"acd\",\"bd\"]",
-      "output": "[\"ab\",\"abd\",\"acd\",\"bd\"]"
+      "input": "board = [[\"c\",\"a\",\"t\"],[\"x\",\"r\",\"o\"]], words = [\"cat\",\"car\",\"rot\",\"tor\",\"art\"]",
+      "output": "[\"cat\",\"car\",\"rot\",\"tor\"]"
     }
   ],
   "starterCode": {

@@ -63,6 +63,30 @@
         5,
         5
       ]
+    },
+    {
+      "label": "long runs trimmed to two",
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3
+        ]
+      ],
+      "expected": [
+        0,
+        0,
+        1,
+        2,
+        2,
+        3
+      ]
     }
   ],
   "paramNames": [

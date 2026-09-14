@@ -14,8 +14,8 @@
       "output": "123"
     },
     {
-      "input": "root = [1,2,3]",
-      "output": "25"
+      "input": "root = [2,3,4,null,5]",
+      "output": "259"
     }
   ],
   "starterCode": {

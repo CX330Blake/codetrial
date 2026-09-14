@@ -13,8 +13,8 @@
       "output": "[1,0.5,1.25]"
     },
     {
-      "input": "root = [3,9,20,null,null,15,7]",
-      "output": "[3,14.5,11]"
+      "input": "root = [4,7,2,null,null,1,9]",
+      "output": "[4,4.5,5]"
     }
   ],
   "starterCode": {

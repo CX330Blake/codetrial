@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]",
-      "output": "[[1,2],[3,10],[12,16]]"
+      "input": "intervals = [[1,2],[5,6]], newInterval = [2,5]",
+      "output": "[[1,6]]"
     },
     {
       "input": "intervals = [[3,5]], newInterval = [1,2]",

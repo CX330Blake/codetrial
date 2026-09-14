@@ -64,6 +64,25 @@
         2,
         3
       ]
+    },
+    {
+      "label": "middle of five",
+      "input": [
+        [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        3
+      ],
+      "expected": [
+        4,
+        8,
+        16,
+        23
+      ]
     }
   ],
   "paramNames": [

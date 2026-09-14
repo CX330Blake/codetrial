@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "head = [3,2,0,-4], pos = 1",
+      "input": "head = [1,2,3,4,5], pos = 2",
       "output": "true"
     },
     {

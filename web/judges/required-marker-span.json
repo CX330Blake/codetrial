@@ -42,6 +42,14 @@
         "A"
       ],
       "expected": ""
+    },
+    {
+      "label": "window at the end",
+      "input": [
+        "XAYBZCAB",
+        "ABC"
+      ],
+      "expected": "CAB"
     }
   ],
   "paramNames": [

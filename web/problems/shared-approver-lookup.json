@@ -9,12 +9,12 @@
   ],
   "examples": [
     {
-      "input": "root = [3,5,1,6,2,0,8,null,null,7,4], p = 7, q = 4",
-      "output": "the node with value 2"
+      "input": "root = [8,4,12,2,6,10,14], p = 2, q = 6",
+      "output": "the node with value 4"
     },
     {
-      "input": "root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1",
-      "output": "the node with value 3"
+      "input": "root = [8,4,12,2,6,10,14], p = 6, q = 12",
+      "output": "the node with value 8"
     }
   ],
   "starterCode": {

@@ -101,6 +101,29 @@
         ]
       ],
       "expected": 0
+    },
+    {
+      "label": "diagonal cells stay apart",
+      "input": [
+        [
+          [
+            "1",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "1"
+          ]
+        ]
+      ],
+      "expected": 5
     }
   ],
   "paramNames": [

@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "word1 = \"horse\", word2 = \"ros\"",
+      "input": "word1 = \"pilot\", word2 = \"split\"",
       "output": "3"
     },
     {

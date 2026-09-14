@@ -9,12 +9,12 @@
   ],
   "examples": [
     {
-      "input": "p = [1,2,1], q = [1,1,2]",
-      "output": "false"
+      "input": "p = [4,5,null,6], q = [4,5,null,6]",
+      "output": "true"
     },
     {
-      "input": "p = [], q = []",
-      "output": "true"
+      "input": "p = [4,5,null,6], q = [4,5,null,null,6]",
+      "output": "false"
     }
   ],
   "starterCode": {

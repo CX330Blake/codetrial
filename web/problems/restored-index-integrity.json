@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "root = [2,1,3]",
+      "input": "root = [10,5,15,null,null,12,20]",
       "output": "true"
     },
     {

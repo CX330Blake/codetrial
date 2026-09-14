@@ -239,6 +239,24 @@
           7
         ],
         "expected": []
+      },
+      {
+        "label": "target at both ends",
+        "input": [
+          [
+            4,
+            1,
+            4,
+            4,
+            2,
+            4
+          ],
+          4
+        ],
+        "expected": [
+          1,
+          2
+        ]
       }
     ],
     "paramNames": [
@@ -310,6 +328,26 @@
           -1,
           0,
           3
+        ]
+      },
+      {
+        "label": "runs of different lengths",
+        "input": [
+          [
+            1,
+            1,
+            2,
+            3,
+            3,
+            3,
+            5
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3,
+          5
         ]
       }
     ],
@@ -385,6 +423,30 @@
         "expected": [
           5,
           5
+        ]
+      },
+      {
+        "label": "long runs trimmed to two",
+        "input": [
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            2,
+            2,
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          3
         ]
       }
     ],
@@ -532,6 +594,26 @@
           4,
           5,
           6
+        ]
+      },
+      {
+        "label": "shift right by two",
+        "input": [
+          [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          2
+        ],
+        "expected": [
+          40,
+          50,
+          10,
+          20,
+          30
         ]
       }
     ],
@@ -877,6 +959,20 @@
           ]
         ],
         "expected": 2
+      },
+      {
+        "label": "mixed dependent counts",
+        "input": [
+          [
+            4,
+            4,
+            0,
+            0,
+            7,
+            2
+          ]
+        ],
+        "expected": 3
       }
     ],
     "paramNames": [
@@ -1824,6 +1920,13 @@
           "1,2,1"
         ],
         "expected": true
+      },
+      {
+        "label": "spaces punctuation and case",
+        "input": [
+          "Step on no pets!"
+        ],
+        "expected": true
       }
     ],
     "paramNames": [
@@ -2032,6 +2135,23 @@
         "expected": [
           1,
           2
+        ]
+      },
+      {
+        "label": "negative and positive values",
+        "input": [
+          [
+            -3,
+            0,
+            2,
+            5,
+            9
+          ],
+          7
+        ],
+        "expected": [
+          3,
+          4
         ]
       }
     ],
@@ -2273,6 +2393,14 @@
           "A"
         ],
         "expected": ""
+      },
+      {
+        "label": "window at the end",
+        "input": [
+          "XAYBZCAB",
+          "ABC"
+        ],
+        "expected": "CAB"
       }
     ],
     "paramNames": [
@@ -2346,6 +2474,20 @@
         ],
         "expected": [
           8
+        ]
+      },
+      {
+        "label": "two orders of the same words",
+        "input": [
+          "catdogdogcatcat",
+          [
+            "cat",
+            "dog"
+          ]
+        ],
+        "expected": [
+          0,
+          6
         ]
       }
     ],
@@ -3038,6 +3180,31 @@
           5,
           3
         ]
+      },
+      {
+        "label": "short wide rectangle",
+        "input": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ]
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3,
+          6,
+          5,
+          4
+        ]
       }
     ],
     "paramNames": [
@@ -3187,6 +3354,45 @@
           [
             -4,
             -2
+          ]
+        ]
+      },
+      {
+        "label": "scrambled odd square",
+        "input": [
+          [
+            [
+              7,
+              0,
+              3
+            ],
+            [
+              1,
+              5,
+              2
+            ],
+            [
+              9,
+              4,
+              6
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            9,
+            1,
+            7
+          ],
+          [
+            4,
+            5,
+            0
+          ],
+          [
+            6,
+            2,
+            3
           ]
         ]
       }
@@ -3371,6 +3577,45 @@
             4
           ]
         ]
+      },
+      {
+        "label": "zero on the right edge",
+        "input": [
+          [
+            [
+              5,
+              6,
+              7
+            ],
+            [
+              8,
+              9,
+              0
+            ],
+            [
+              1,
+              2,
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            5,
+            6,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ]
+        ]
       }
     ],
     "paramNames": [
@@ -3529,6 +3774,45 @@
             0
           ]
         ]
+      },
+      {
+        "label": "diagonal shrinks to its middle",
+        "input": [
+          [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ]
       }
     ],
     "paramNames": [
@@ -3639,6 +3923,14 @@
           "baba"
         ],
         "expected": false
+      },
+      {
+        "label": "repeat maps to the same replacement",
+        "input": [
+          "abca",
+          "zyxz"
+        ],
+        "expected": true
       }
     ],
     "paramNames": [
@@ -3695,6 +3987,14 @@
           "dog cat cat dog fish"
         ],
         "expected": false
+      },
+      {
+        "label": "three letters repeat in order",
+        "input": [
+          "abcab",
+          "sun moon star sun moon"
+        ],
+        "expected": true
       }
     ],
     "paramNames": [
@@ -3749,6 +4049,14 @@
         "input": [
           "aaa",
           "aaa"
+        ],
+        "expected": true
+      },
+      {
+        "label": "letters shuffled",
+        "input": [
+          "crate",
+          "trace"
         ],
         "expected": true
       }
@@ -4019,6 +4327,20 @@
           ]
         ],
         "expected": 3
+      },
+      {
+        "label": "run out of order",
+        "input": [
+          [
+            9,
+            1,
+            7,
+            8,
+            3,
+            10
+          ]
+        ],
+        "expected": 4
       }
     ],
     "paramNames": [
@@ -4103,6 +4425,24 @@
         "expected": [
           "-2->0",
           "2"
+        ]
+      },
+      {
+        "label": "runs and a lone slot",
+        "input": [
+          [
+            1,
+            2,
+            3,
+            7,
+            9,
+            10
+          ]
+        ],
+        "expected": [
+          "1->3",
+          "7",
+          "9->10"
         ]
       }
     ],
@@ -4823,6 +5163,20 @@
           2
         ],
         "expected": true
+      },
+      {
+        "label": "loop back to the third task",
+        "input": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          2
+        ],
+        "expected": true
       }
     ],
     "paramNames": [
@@ -4923,6 +5277,23 @@
         "expected": [
           1,
           8
+        ]
+      },
+      {
+        "label": "carry adds a digit",
+        "input": [
+          [
+            9,
+            9
+          ],
+          [
+            1
+          ]
+        ],
+        "expected": [
+          0,
+          0,
+          1
         ]
       }
     ],
@@ -5135,6 +5506,39 @@
           []
         ],
         "expected": []
+      },
+      {
+        "label": "links forward and back",
+        "input": [
+          [
+            [
+              3,
+              2
+            ],
+            [
+              5,
+              null
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            3,
+            2
+          ],
+          [
+            5,
+            null
+          ],
+          [
+            8,
+            0
+          ]
+        ]
       }
     ],
     "paramNames": [
@@ -5362,6 +5766,30 @@
           2,
           1
         ]
+      },
+      {
+        "label": "groups of three with leftover",
+        "input": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          3
+        ],
+        "expected": [
+          3,
+          2,
+          1,
+          6,
+          5,
+          4,
+          7
+        ]
       }
     ],
     "paramNames": [
@@ -5439,6 +5867,25 @@
         "expected": [
           2,
           3
+        ]
+      },
+      {
+        "label": "middle of five",
+        "input": [
+          [
+            4,
+            8,
+            15,
+            16,
+            23
+          ],
+          3
+        ],
+        "expected": [
+          4,
+          8,
+          16,
+          23
         ]
       }
     ],
@@ -5603,6 +6050,24 @@
           3
         ],
         "expected": []
+      },
+      {
+        "label": "shift by one",
+        "input": [
+          [
+            6,
+            7,
+            8,
+            9
+          ],
+          1
+        ],
+        "expected": [
+          9,
+          6,
+          7,
+          8
+        ]
       }
     ],
     "paramNames": [
@@ -5835,6 +6300,43 @@
           []
         ],
         "expected": true
+      },
+      {
+        "label": "identical sparse trees",
+        "input": [
+          [
+            4,
+            5,
+            null,
+            6
+          ],
+          [
+            4,
+            5,
+            null,
+            6
+          ]
+        ],
+        "expected": true
+      },
+      {
+        "label": "child on the other side",
+        "input": [
+          [
+            4,
+            5,
+            null,
+            6
+          ],
+          [
+            4,
+            5,
+            null,
+            null,
+            6
+          ]
+        ],
+        "expected": false
       }
     ],
     "paramNames": [
@@ -6391,6 +6893,29 @@
           null,
           3
         ]
+      },
+      {
+        "label": "left subtree moves ahead",
+        "input": [
+          [
+            5,
+            3,
+            8,
+            1,
+            4
+          ]
+        ],
+        "expected": [
+          5,
+          null,
+          3,
+          null,
+          1,
+          null,
+          4,
+          null,
+          8
+        ]
       }
     ],
     "paramNames": [
@@ -6539,6 +7064,19 @@
           ]
         ],
         "expected": 123
+      },
+      {
+        "label": "uneven depths",
+        "input": [
+          [
+            2,
+            3,
+            4,
+            null,
+            5
+          ]
+        ],
+        "expected": 259
       }
     ],
     "paramNames": [
@@ -6604,6 +7142,19 @@
           ]
         ],
         "expected": 2
+      },
+      {
+        "label": "path climbs through the root",
+        "input": [
+          [
+            1,
+            -2,
+            3,
+            4,
+            -5
+          ]
+        ],
+        "expected": 6
       }
     ],
     "paramNames": [
@@ -6784,6 +7335,23 @@
           ]
         ],
         "expected": 4
+      },
+      {
+        "label": "last level partly full",
+        "input": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        ],
+        "expected": 9
       }
     ],
     "paramNames": [
@@ -6906,6 +7474,52 @@
           7,
           4
         ]
+      },
+      {
+        "label": "split below the root",
+        "input": [
+          [
+            8,
+            4,
+            12,
+            2,
+            6,
+            10,
+            14
+          ],
+          2,
+          6
+        ],
+        "expected": [
+          4,
+          2,
+          6
+        ]
+      },
+      {
+        "label": "root joins both sides",
+        "input": [
+          [
+            8,
+            4,
+            12,
+            2,
+            6,
+            10,
+            14
+          ],
+          6,
+          12
+        ],
+        "expected": [
+          8,
+          4,
+          12,
+          2,
+          6,
+          10,
+          14
+        ]
       }
     ],
     "paramNames": [
@@ -6988,6 +7602,27 @@
           []
         ],
         "expected": []
+      },
+      {
+        "label": "deepest node hangs on the left",
+        "input": [
+          [
+            1,
+            2,
+            3,
+            4,
+            null,
+            null,
+            5,
+            6
+          ]
+        ],
+        "expected": [
+          1,
+          3,
+          5,
+          6
+        ]
       }
     ],
     "paramNames": [
@@ -7070,6 +7705,25 @@
           1,
           0.5,
           1.25
+        ]
+      },
+      {
+        "label": "fractional second level",
+        "input": [
+          [
+            4,
+            7,
+            2,
+            null,
+            null,
+            1,
+            9
+          ]
+        ],
+        "expected": [
+          4,
+          4.5,
+          5
         ]
       }
     ],
@@ -7159,6 +7813,34 @@
           [
             4,
             5
+          ]
+        ]
+      },
+      {
+        "label": "gap in last level",
+        "input": [
+          [
+            8,
+            3,
+            10,
+            1,
+            6,
+            null,
+            14
+          ]
+        ],
+        "expected": [
+          [
+            8
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            1,
+            6,
+            14
           ]
         ]
       }
@@ -7256,6 +7938,34 @@
           ],
           [
             8
+          ]
+        ]
+      },
+      {
+        "label": "gap in last level",
+        "input": [
+          [
+            8,
+            3,
+            10,
+            1,
+            6,
+            null,
+            14
+          ]
+        ],
+        "expected": [
+          [
+            8
+          ],
+          [
+            10,
+            3
+          ],
+          [
+            1,
+            6,
+            14
           ]
         ]
       }
@@ -7406,6 +8116,22 @@
           2
         ],
         "expected": 2
+      },
+      {
+        "label": "third in a full tree",
+        "input": [
+          [
+            6,
+            2,
+            8,
+            1,
+            4,
+            7,
+            9
+          ],
+          3
+        ],
+        "expected": 4
       }
     ],
     "paramNames": [
@@ -7477,6 +8203,21 @@
           ]
         ],
         "expected": false
+      },
+      {
+        "label": "valid with a right subtree",
+        "input": [
+          [
+            10,
+            5,
+            15,
+            null,
+            null,
+            12,
+            20
+          ]
+        ],
+        "expected": true
       }
     ],
     "paramNames": [
@@ -7966,6 +8707,29 @@
           ]
         ],
         "expected": 0
+      },
+      {
+        "label": "diagonal cells stay apart",
+        "input": [
+          [
+            [
+              "1",
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "0",
+              "1"
+            ]
+          ]
+        ],
+        "expected": 5
       }
     ],
     "paramNames": [
@@ -8131,6 +8895,63 @@
             "X"
           ]
         ]
+      },
+      {
+        "label": "sealed and edge pockets",
+        "input": [
+          [
+            [
+              "X",
+              "X",
+              "X",
+              "X"
+            ],
+            [
+              "X",
+              "O",
+              "X",
+              "X"
+            ],
+            [
+              "X",
+              "X",
+              "O",
+              "O"
+            ],
+            [
+              "X",
+              "X",
+              "X",
+              "X"
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            "X",
+            "X",
+            "X",
+            "X"
+          ],
+          [
+            "X",
+            "X",
+            "X",
+            "X"
+          ],
+          [
+            "X",
+            "X",
+            "O",
+            "O"
+          ],
+          [
+            "X",
+            "X",
+            "X",
+            "X"
+          ]
+        ]
       }
     ],
     "paramNames": [
@@ -8234,6 +9055,39 @@
             3
           ],
           [
+            2
+          ]
+        ]
+      },
+      {
+        "label": "triangle graph",
+        "input": [
+          [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
             2
           ]
         ]
@@ -8606,6 +9460,31 @@
           ]
         ],
         "expected": []
+      },
+      {
+        "label": "chain through three migrations",
+        "input": [
+          3,
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          2,
+          1,
+          0
+        ]
       }
     ],
     "paramNames": [
@@ -9337,6 +10216,36 @@
           "aaa",
           "aaaa"
         ]
+      },
+      {
+        "label": "words sharing a corner",
+        "input": [
+          [
+            [
+              "c",
+              "a",
+              "t"
+            ],
+            [
+              "x",
+              "r",
+              "o"
+            ]
+          ],
+          [
+            "cat",
+            "car",
+            "rot",
+            "tor",
+            "art"
+          ]
+        ],
+        "expected": [
+          "cat",
+          "car",
+          "rot",
+          "tor"
+        ]
       }
     ],
     "paramNames": [
@@ -9501,6 +10410,35 @@
           ],
           [
             3
+          ]
+        ]
+      },
+      {
+        "label": "four triples",
+        "input": [
+          4,
+          3
+        ],
+        "expected": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            3,
+            4
+          ],
+          [
+            2,
+            3,
+            4
           ]
         ]
       }
@@ -9705,6 +10643,28 @@
           ],
           [
             7
+          ]
+        ]
+      },
+      {
+        "label": "two loadouts",
+        "input": [
+          [
+            3,
+            4,
+            5
+          ],
+          9
+        ],
+        "expected": [
+          [
+            3,
+            3,
+            3
+          ],
+          [
+            4,
+            5
           ]
         ]
       }
@@ -9926,6 +10886,25 @@
           "B"
         ],
         "expected": false
+      },
+      {
+        "label": "path bends twice",
+        "input": [
+          [
+            [
+              "D",
+              "O",
+              "G"
+            ],
+            [
+              "X",
+              "A",
+              "T"
+            ]
+          ],
+          "GOAT"
+        ],
+        "expected": true
       }
     ],
     "paramNames": [
@@ -10129,6 +11108,19 @@
         "input": [
           [
             1
+          ],
+          1
+        ],
+        "expected": 0
+      },
+      {
+        "label": "before every value",
+        "input": [
+          [
+            2,
+            4,
+            8,
+            10
           ],
           1
         ],
@@ -11311,6 +12303,32 @@
           ]
         ],
         "expected": 0
+      },
+      {
+        "label": "one shelf off center",
+        "input": [
+          [
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "expected": 4
       }
     ],
     "paramNames": [
@@ -11434,6 +12452,13 @@
           85
         ],
         "expected": 4
+      },
+      {
+        "label": "three scattered set bits",
+        "input": [
+          37
+        ],
+        "expected": 3
       }
     ],
     "paramNames": [
@@ -11565,6 +12590,14 @@
           31
         ],
         "expected": 24
+      },
+      {
+        "label": "range crosses a bit",
+        "input": [
+          9,
+          12
+        ],
+        "expected": 8
       }
     ],
     "paramNames": [
@@ -11727,6 +12760,14 @@
           "adc"
         ],
         "expected": 1
+      },
+      {
+        "label": "mixed edits",
+        "input": [
+          "pilot",
+          "split"
+        ],
+        "expected": 3
       }
     ],
     "paramNames": [
@@ -11840,6 +12881,29 @@
           ]
         ],
         "expected": 9
+      },
+      {
+        "label": "offset squares",
+        "input": [
+          [
+            [
+              "1",
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1",
+              "1"
+            ]
+          ]
+        ],
+        "expected": 4
       }
     ],
     "paramNames": [
@@ -11909,6 +12973,21 @@
           ]
         ],
         "expected": 16
+      },
+      {
+        "label": "wrap across the ends",
+        "input": [
+          [
+            -2,
+            4,
+            -5,
+            4,
+            -5,
+            9,
+            4
+          ]
+        ],
+        "expected": 15
       }
     ],
     "paramNames": [
@@ -12171,6 +13250,24 @@
           3,
           3
         ]
+      },
+      {
+        "label": "run in the middle",
+        "input": [
+          [
+            1,
+            3,
+            3,
+            3,
+            6,
+            9
+          ],
+          3
+        ],
+        "expected": [
+          1,
+          3
+        ]
       }
     ],
     "paramNames": [
@@ -12227,6 +13324,14 @@
           -2147483648
         ],
         "expected": 1
+      },
+      {
+        "label": "cubed negative exponent",
+        "input": [
+          2.0,
+          -3
+        ],
+        "expected": 0.125
       }
     ],
     "paramNames": [
@@ -12369,6 +13474,20 @@
           ]
         ],
         "expected": 0
+      },
+      {
+        "label": "dip between two rises",
+        "input": [
+          [
+            2,
+            6,
+            1,
+            3,
+            8,
+            4
+          ]
+        ],
+        "expected": 11
       }
     ],
     "paramNames": [
@@ -12542,6 +13661,23 @@
           2,
           3,
           3
+        ]
+      },
+      {
+        "label": "mixed signs",
+        "input": [
+          [
+            8,
+            -3,
+            5,
+            0
+          ]
+        ],
+        "expected": [
+          -3,
+          0,
+          5,
+          8
         ]
       }
     ],
@@ -13053,6 +14189,35 @@
           [
             1,
             3
+          ]
+        ]
+      },
+      {
+        "label": "second row enters",
+        "input": [
+          [
+            1,
+            6
+          ],
+          [
+            2,
+            3,
+            10
+          ],
+          3
+        ],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            6,
+            2
           ]
         ]
       }

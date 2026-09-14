@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbcbcac\"",
+      "input": "s1 = \"aa\", s2 = \"ab\", s3 = \"aaba\"",
       "output": "true"
     },
     {

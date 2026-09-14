@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "s = \"A man, a plan, a canal: Panama\"",
+      "input": "s = \"Step on no pets!\"",
       "output": "true"
     },
     {

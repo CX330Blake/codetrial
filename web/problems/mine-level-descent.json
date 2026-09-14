@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]",
-      "output": "11"
+      "input": "triangle = [[1],[2,100],[100,1,1]]",
+      "output": "4"
     },
     {
       "input": "triangle = [[2],[-3,4],[6,-5,7]]",

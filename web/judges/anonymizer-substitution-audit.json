@@ -42,6 +42,14 @@
         "baba"
       ],
       "expected": false
+    },
+    {
+      "label": "repeat maps to the same replacement",
+      "input": [
+        "abca",
+        "zyxz"
+      ],
+      "expected": true
     }
   ],
   "paramNames": [

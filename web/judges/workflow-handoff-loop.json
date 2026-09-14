@@ -61,6 +61,20 @@
         2
       ],
       "expected": true
+    },
+    {
+      "label": "loop back to the third task",
+      "input": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        2
+      ],
+      "expected": true
     }
   ],
   "paramNames": [

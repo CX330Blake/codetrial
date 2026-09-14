@@ -13,8 +13,8 @@
       "output": "2"
     },
     {
-      "input": "root = [5,3,6,2,4,null,null,1], k = 3",
-      "output": "3"
+      "input": "root = [6,2,8,1,4,7,9], k = 3",
+      "output": "4"
     }
   ],
   "starterCode": {

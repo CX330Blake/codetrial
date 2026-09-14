@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "k = 2, w = 0, payouts = [1,2,3], required = [0,1,1]",
-      "output": "4"
+      "input": "k = 1, w = 2, payouts = [1,100,3], required = [0,2,2]",
+      "output": "102"
     },
     {
       "input": "k = 2, w = 1, payouts = [2,4,8], required = [0,1,3]",

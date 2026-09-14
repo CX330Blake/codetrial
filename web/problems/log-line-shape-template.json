@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "pattern = \"abba\", s = \"dog cat cat dog\"",
+      "input": "pattern = \"abcab\", s = \"sun moon star sun moon\"",
       "output": "true"
     },
     {

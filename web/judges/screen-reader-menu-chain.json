@@ -71,6 +71,29 @@
         null,
         3
       ]
+    },
+    {
+      "label": "left subtree moves ahead",
+      "input": [
+        [
+          5,
+          3,
+          8,
+          1,
+          4
+        ]
+      ],
+      "expected": [
+        5,
+        null,
+        3,
+        null,
+        1,
+        null,
+        4,
+        null,
+        8
+      ]
     }
   ],
   "paramNames": [

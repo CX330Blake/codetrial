@@ -61,6 +61,43 @@
         []
       ],
       "expected": true
+    },
+    {
+      "label": "identical sparse trees",
+      "input": [
+        [
+          4,
+          5,
+          null,
+          6
+        ],
+        [
+          4,
+          5,
+          null,
+          6
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "label": "child on the other side",
+      "input": [
+        [
+          4,
+          5,
+          null,
+          6
+        ],
+        [
+          4,
+          5,
+          null,
+          null,
+          6
+        ]
+      ],
+      "expected": false
     }
   ],
   "paramNames": [

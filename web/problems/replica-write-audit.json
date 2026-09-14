@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "nums = [2,2,3,2]",
-      "output": "3"
+      "input": "nums = [5,5,5,8,8,8,11]",
+      "output": "11"
     },
     {
       "input": "nums = [-4,6,6,6]",

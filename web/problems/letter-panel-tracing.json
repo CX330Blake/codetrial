@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"SEE\"",
+      "input": "board = [[\"D\",\"O\",\"G\"],[\"X\",\"A\",\"T\"]], word = \"GOAT\"",
       "output": "true"
     }
   ],

@@ -47,6 +47,20 @@
         ]
       ],
       "expected": 2
+    },
+    {
+      "label": "mixed dependent counts",
+      "input": [
+        [
+          4,
+          4,
+          0,
+          0,
+          7,
+          2
+        ]
+      ],
+      "expected": 3
     }
   ],
   "paramNames": [

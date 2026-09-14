@@ -64,6 +64,19 @@
         1
       ],
       "expected": 0
+    },
+    {
+      "label": "before every value",
+      "input": [
+        [
+          2,
+          4,
+          8,
+          10
+        ],
+        1
+      ],
+      "expected": 0
     }
   ],
   "paramNames": [

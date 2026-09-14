@@ -13,7 +13,7 @@
       "output": "true"
     },
     {
-      "input": "s = \"axc\", t = \"ahbgdc\"",
+      "input": "s = \"aaa\", t = \"aa\"",
       "output": "false"
     }
   ],

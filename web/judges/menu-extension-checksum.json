@@ -51,6 +51,19 @@
         ]
       ],
       "expected": 123
+    },
+    {
+      "label": "uneven depths",
+      "input": [
+        [
+          2,
+          3,
+          4,
+          null,
+          5
+        ]
+      ],
+      "expected": 259
     }
   ],
   "paramNames": [

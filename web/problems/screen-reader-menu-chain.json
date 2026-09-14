@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "root = [1,2,5,3,4,null,6]",
-      "output": "root becomes [1,null,2,null,3,null,4,null,5,null,6]"
+      "input": "root = [5,3,8,1,4]",
+      "output": "root becomes [5,null,3,null,1,null,4,null,8]"
     },
     {
       "input": "root = [1,null,2,null,3]",

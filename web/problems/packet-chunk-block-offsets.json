@@ -9,12 +9,8 @@
   ],
   "examples": [
     {
-      "input": "s = \"wordgoodgoodgoodbestword\", words = [\"word\",\"good\",\"best\",\"good\"]",
-      "output": "[8]"
-    },
-    {
-      "input": "s = \"barfoothefoobarman\", words = [\"foo\",\"bar\"]",
-      "output": "[0,9]"
+      "input": "s = \"catdogdogcatcat\", words = [\"cat\",\"dog\"]",
+      "output": "[0,6]"
     }
   ],
   "starterCode": {

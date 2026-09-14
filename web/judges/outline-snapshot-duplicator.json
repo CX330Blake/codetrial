@@ -112,6 +112,39 @@
         []
       ],
       "expected": []
+    },
+    {
+      "label": "links forward and back",
+      "input": [
+        [
+          [
+            3,
+            2
+          ],
+          [
+            5,
+            null
+          ],
+          [
+            8,
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          null
+        ],
+        [
+          8,
+          0
+        ]
+      ]
     }
   ],
   "paramNames": [

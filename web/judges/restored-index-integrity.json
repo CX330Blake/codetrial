@@ -57,6 +57,21 @@
         ]
       ],
       "expected": false
+    },
+    {
+      "label": "valid with a right subtree",
+      "input": [
+        [
+          10,
+          5,
+          15,
+          null,
+          null,
+          12,
+          20
+        ]
+      ],
+      "expected": true
     }
   ],
   "paramNames": [

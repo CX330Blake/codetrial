@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "s = \"ADOBECODEBANC\", t = \"ABC\"",
-      "output": "\"BANC\""
+      "input": "s = \"XAYBZCAB\", t = \"ABC\"",
+      "output": "\"CAB\""
     },
     {
       "input": "s = \"aa\", t = \"aa\"",

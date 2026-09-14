@@ -81,6 +81,32 @@
         ]
       ],
       "expected": 0
+    },
+    {
+      "label": "one shelf off center",
+      "input": [
+        [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "expected": 4
     }
   ],
   "paramNames": [

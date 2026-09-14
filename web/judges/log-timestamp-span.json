@@ -80,6 +80,24 @@
         3,
         3
       ]
+    },
+    {
+      "label": "run in the middle",
+      "input": [
+        [
+          1,
+          3,
+          3,
+          3,
+          6,
+          9
+        ],
+        3
+      ],
+      "expected": [
+        1,
+        3
+      ]
     }
   ],
   "paramNames": [

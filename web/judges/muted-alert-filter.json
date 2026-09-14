@@ -70,6 +70,24 @@
         7
       ],
       "expected": []
+    },
+    {
+      "label": "target at both ends",
+      "input": [
+        [
+          4,
+          1,
+          4,
+          4,
+          2,
+          4
+        ],
+        4
+      ],
+      "expected": [
+        1,
+        2
+      ]
     }
   ],
   "paramNames": [

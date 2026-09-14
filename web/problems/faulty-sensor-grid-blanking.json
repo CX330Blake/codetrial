@@ -13,8 +13,8 @@
       "output": "matrix becomes [[0,2,3],[0,0,0],[0,8,9]]"
     },
     {
-      "input": "matrix = [[1,1,1],[1,0,1],[1,1,1]]",
-      "output": "matrix becomes [[1,0,1],[0,0,0],[1,0,1]]"
+      "input": "matrix = [[5,6,7],[8,9,0],[1,2,3]]",
+      "output": "matrix becomes [[5,6,0],[0,0,0],[1,2,0]]"
     }
   ],
   "starterCode": {

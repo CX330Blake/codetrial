@@ -148,8 +148,8 @@
     "contract": "dropMutedCode(nums, val) returns k, the number of entries of nums not equal to val, and must rearrange nums in place so its first k slots hold exactly those entries as a multiset in any order; slots after k are ignored, and k is 0 for an empty buffer or when every entry equals val.",
     "examples": [
       {
-        "case": 1,
-        "output": "5, and nums starts with 0,1,3,0,4 in any order"
+        "case": 4,
+        "output": "2, and nums starts with 1,2 in any order"
       },
       {
         "case": 2,
@@ -199,8 +199,8 @@
     "contract": "compactDistinctReadings(nums) takes nums sorted in nondecreasing order, returns k, the number of distinct values, and must leave the first k slots of nums holding each distinct value exactly once in ascending order; slots after k are ignored.",
     "examples": [
       {
-        "case": 1,
-        "output": "5, and nums starts with [0,1,2,3,4]"
+        "case": 3,
+        "output": "4, and nums starts with [1,2,3,5]"
       },
       {
         "case": 2,
@@ -250,8 +250,8 @@
     "contract": "capRepeatsAtTwo(nums) takes nums sorted in nondecreasing order, returns k, and must leave the first k slots of nums holding every value min(count, 2) times in ascending order; slots after k are ignored.",
     "examples": [
       {
-        "case": 0,
-        "output": "5, and nums starts with [1,1,2,2,3]"
+        "case": 3,
+        "output": "6, and nums starts with [0,0,1,2,2,3]"
       },
       {
         "case": 2,
@@ -343,8 +343,8 @@
     "contract": "advanceCarousel(nums, k) returns nothing and must modify nums in place so the element originally at index i ends at index (i + k) mod len(nums), where k may be 0 or at least len(nums); the grader compares nums after the call.",
     "examples": [
       {
-        "case": 0,
-        "output": "nums becomes [5,6,7,1,2,3,4]"
+        "case": 4,
+        "output": "nums becomes [40,50,10,20,30]"
       },
       {
         "case": 3,
@@ -474,7 +474,7 @@
     "contract": "packetReachesEnd(nums) returns true if index len(nums) - 1 can be reached from index 0 by forward moves where from index i you may advance any distance from 1 to nums[i], and false otherwise; a single element list returns true.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -568,7 +568,7 @@
     "contract": "impactScore(dependents) returns the largest integer h such that at least h entries of the unsorted list dependents are each greater than or equal to h, which is 0 when no entry is positive and never exceeds len(dependents).",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 2
@@ -1154,7 +1154,7 @@
     "contract": "layoutReceiptLines(words, lineWidth) packs words in order onto lines, placing each next word on the current line whenever it fits with at least one space before it and returns the list of lines, each exactly lineWidth characters; every line except the last with two or more words distributes spaces between words as evenly as possible with the extra spaces going to the leftmost gaps, while the last line and any single-word line are left-aligned with single spaces and right-padded with spaces.",
     "examples": [
       {
-        "case": 1
+        "case": 0
       },
       {
         "case": 2
@@ -1203,7 +1203,7 @@
     "contract": "readsSameBothWays(s) returns true exactly when the sequence of ASCII letters and digits in s, with letters lowercased and all other characters removed, equals its own reverse; a string with no letters or digits returns true.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -1251,7 +1251,7 @@
         "case": 4
       },
       {
-        "case": 1
+        "case": 3
       }
     ],
     "clarifications": [
@@ -1341,7 +1341,7 @@
         "case": 3
       },
       {
-        "case": 1
+        "case": 4
       }
     ],
     "clarifications": [
@@ -1474,7 +1474,7 @@
     "contract": "longestDistinctRun(s) returns the length of the longest contiguous substring of s in which no character occurs twice, with case-sensitive comparison and every character (digits, symbols, spaces) counted. An empty s returns 0.",
     "examples": [
       {
-        "case": 2
+        "case": 3
       },
       {
         "case": 4
@@ -1519,7 +1519,7 @@
     "contract": "shortestCoveringSpan(s, t) returns the shortest contiguous substring of s that contains each letter of t at least as many times as it occurs in t, matching case-sensitively. If no such substring exists (including when t needs more copies than s has) it returns the empty string; the shortest one is unique when it exists.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 3
@@ -1568,10 +1568,7 @@
     "contract": "findChunkBlockOffsets(s, words) returns every 0-based index i in s such that s[i : i + len(words) * L], where L is the common word length, splits into L-length pieces that are a permutation of words with multiplicity respected. Starting offsets may be any character position, the offsets may be in any order, and an empty list is returned when there are none.",
     "examples": [
       {
-        "case": 3
-      },
-      {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -1617,7 +1614,7 @@
     "contract": "shortestRunReaching(target, nums) returns the minimum length of a contiguous run of nums (all positive) whose sum is greater than or equal to target, or 0 if even the whole list sums to less than target.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 4
@@ -1661,9 +1658,6 @@
     ],
     "contract": "isGridConsistent(board) takes a 9 by 9 grid of single-character strings, each '1' to '9' or '.', and returns true exactly when no digit repeats within any row, any column, or any of the nine non-overlapping 3 by 3 blocks, ignoring '.' cells; solvability is not checked.",
     "examples": [
-      {
-        "case": 0
-      },
       {
         "case": 2
       }
@@ -1710,7 +1704,7 @@
         "case": 4
       },
       {
-        "case": 0
+        "case": 5
       }
     ],
     "clarifications": [
@@ -1752,8 +1746,8 @@
         "output": "matrix becomes [[-3,-1],[-4,-2]]"
       },
       {
-        "case": 0,
-        "output": "matrix becomes [[7,4,1],[8,5,2],[9,6,3]]"
+        "case": 4,
+        "output": "matrix becomes [[9,1,7],[4,5,0],[6,2,3]]"
       }
     ],
     "clarifications": [
@@ -1799,8 +1793,8 @@
         "output": "matrix becomes [[0,2,3],[0,0,0],[0,8,9]]"
       },
       {
-        "case": 0,
-        "output": "matrix becomes [[1,0,1],[0,0,0],[1,0,1]]"
+        "case": 5,
+        "output": "matrix becomes [[5,6,0],[0,0,0],[1,2,0]]"
       }
     ],
     "clarifications": [
@@ -1850,8 +1844,8 @@
         "output": "board becomes [[0,0,0],[1,1,1],[0,0,0]]"
       },
       {
-        "case": 0,
-        "output": "board becomes [[0,0,0],[1,0,1],[0,1,1],[0,1,0]]"
+        "case": 5,
+        "output": "board becomes [[0,0,0],[0,1,0],[0,0,0]]"
       }
     ],
     "clarifications": [
@@ -1904,7 +1898,7 @@
         "case": 3
       },
       {
-        "case": 1
+        "case": 4
       }
     ],
     "clarifications": [
@@ -1946,7 +1940,7 @@
     "contract": "isConsistentCipher(s, t) returns true exactly when there is a one-to-one character mapping, applied at every position, that turns s into t: equal characters in s must map to equal characters in t and different characters in s must map to different characters in t (a character may map to itself). s and t have equal length.",
     "examples": [
       {
-        "case": 2
+        "case": 5
       },
       {
         "case": 4
@@ -1991,7 +1985,7 @@
     "contract": "matchesTokenTemplate(pattern, s) splits s on single spaces and returns true exactly when the number of words equals the number of letters in pattern and there is a one-to-one correspondence between letters and words by position (same letter means same word, different letters mean different words); otherwise false.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -2036,7 +2030,7 @@
     "contract": "isRearrangedCode(s, t) returns true exactly when s and t contain the same lowercase letters with the same counts (so different lengths give false), and false otherwise.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 3
@@ -2126,7 +2120,7 @@
         "case": 4
       },
       {
-        "case": 2
+        "case": 3
       }
     ],
     "clarifications": [
@@ -2168,10 +2162,7 @@
     "contract": "longestPortBlock(nums) returns the largest L such that some integer v has v, v + 1, ..., v + L - 1 all present in nums, with duplicates counted once and values possibly negative; an empty nums returns 0.",
     "examples": [
       {
-        "case": 4
-      },
-      {
-        "case": 0
+        "case": 5
       }
     ],
     "clarifications": [
@@ -2216,7 +2207,7 @@
         "case": 4
       },
       {
-        "case": 1
+        "case": 5
       }
     ],
     "clarifications": [
@@ -2262,7 +2253,7 @@
     "contract": "addBusyBlock(intervals, newInterval) takes a list of [start, end] pairs sorted by start and pairwise non-overlapping plus one new [start, end] pair, and returns a new list of [start, end] pairs sorted by start in which newInterval is added and every group of intervals that overlap or touch at an endpoint is merged into one covering interval.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 2
@@ -2310,7 +2301,7 @@
     "contract": "fewestHealthChecks(windows) returns the minimum number of points on the number line such that every closed interval [start, end] in windows (unsorted, start < end, possibly nested, values in the 32-bit signed range) contains at least one of them; intervals that only share an endpoint can be covered by one point.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 4
@@ -2362,7 +2353,7 @@
         "case": 4
       },
       {
-        "case": 1
+        "case": 3
       }
     ],
     "clarifications": [
@@ -2450,7 +2441,7 @@
     "contract": "computeRuleValue(tokens) evaluates a valid postfix expression whose tokens are integer literals (possibly negative or multi-digit, such as -11) or one of +, -, *, /, where each operator applies to the two most recent operands with the earlier one on the left and / is integer division truncating toward zero; it returns the final integer.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 4
@@ -2499,7 +2490,7 @@
     "contract": "evaluateFormula(s) returns the integer value of a well-formed expression containing non-negative integer literals, binary + and -, unary minus before a number or a parenthesized group, parentheses and spaces, evaluated with normal left-to-right semantics and without calling a built-in eval.",
     "examples": [
       {
-        "case": 1
+        "case": 3
       },
       {
         "case": 5
@@ -2548,7 +2539,7 @@
     "contract": "hasHandoffLoop(head) receives only the head ListNode (or null) and returns true exactly when following next pointers revisits some node object, and false when the chain ends in null; pos in the examples only tells the test setup which 0-based node the tail links back to, with -1 meaning no cycle, and node values may repeat.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -2597,7 +2588,7 @@
     "contract": "addDigitChains(l1, l2) takes two non-empty ListNode chains of decimal digits in least-significant-first order with no leading zeros except the number 0, and returns a ListNode chain in the same order holding the digits of their sum, with a final carry adding one more node; the returned chain is read by values only.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -2688,7 +2679,7 @@
     "contract": "snapshotOutline(head) returns a deep copy of a next-linked chain of Node objects whose random field points to any node in the chain or null: the copy must contain only newly created nodes with the same values in the same next order and each random pointing to the copy of the corresponding original target (null stays null), and an empty outline returns null. The graded form lists each node as [val, 0-based index of its random target or null].",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 1
@@ -2741,7 +2732,7 @@
     "contract": "flipQueueSegment(head, left, right) reverses the nodes at 1-based positions left through right inclusive (1 <= left <= right <= length) of the ListNode chain, leaving the nodes before and after in place, and returns the head of the resulting chain, which is graded by its sequence of values; left == right returns the chain unchanged.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 5
@@ -2790,7 +2781,7 @@
     "contract": "reorderFrameBatches(head, k) receives a chain of 1 to 5000 frames and 1 <= k <= its length, and returns the head of the same nodes relinked so each consecutive full batch of k frames from the head is reversed while a final batch shorter than k keeps its original order. Node values must not be rewritten, and the result is graded as the full sequence of values from the returned head.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -2835,7 +2826,7 @@
     "contract": "retractEntryFromTail(head, n) receives a feed of 1 to 30 entries and 1 <= n <= its length, and returns the head after unlinking the n-th entry counted from the tail starting at 1 (n of 1 removes the tail, n equal to the length removes the head). Remaining entries keep their order, and removing the only entry returns null.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -2922,7 +2913,7 @@
     "contract": "wrapPlaylistTail(head, k) receives 0 to 500 tracks and 0 <= k <= 2 * 10^9, and returns the head after k presses, each moving the last track to the front, so the result is the queue rotated right by k mod length. An empty queue returns null, and k that is 0 or a multiple of the length leaves the order unchanged.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 2
@@ -3101,10 +3092,10 @@
     "contract": "snapshotsMatch(p, q) receives two trees of 0 to 100 nodes and returns true only if they have identical shape, with every child in the same left or right position, and equal values at every position, else false. Two empty trees return true and exactly one empty tree returns false.",
     "examples": [
       {
-        "case": 2
+        "case": 4
       },
       {
-        "case": 3
+        "case": 5
       }
     ],
     "clarifications": [
@@ -3360,8 +3351,8 @@
     "contract": "linearizeMenu(root) receives 0 to 2000 items, returns nothing, and must rearrange the existing nodes in place so that starting from root the right fields visit every item in node, left subtree, right subtree order and every left field is null. The tree is read back from root after the call, and an empty or single-item menu is left unchanged.",
     "examples": [
       {
-        "case": 0,
-        "output": "root becomes [1,null,2,null,3,null,4,null,5,null,6]"
+        "case": 4,
+        "output": "root becomes [5,null,3,null,1,null,4,null,8]"
       },
       {
         "case": 3,
@@ -3453,7 +3444,7 @@
         "case": 3
       },
       {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -3500,7 +3491,7 @@
     "contract": "bestRouteYield(root) receives a non-empty tree of 1 to 3 * 10^4 nodes with values from -1000 to 1000 and returns the largest sum of values over any non-empty path of nodes connected by parent-child edges with no node repeated, which may start and end anywhere and need not include root. If all values are negative the answer is the largest single value.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 3
@@ -3590,7 +3581,7 @@
         "case": 3
       },
       {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -3632,12 +3623,12 @@
     "contract": "nearestSharedApprover(root, p, q) receives an unordered tree of 2 to 10^5 distinct values plus two distinct nodes p and q that are in the tree, and returns the existing node deepest in the tree that has both p and q in its subtree, where a node counts as within its own subtree, so if one is above the other that one is returned. Grading serializes the subtree under the returned node level by level, so the original node must be returned, not a copy.",
     "examples": [
       {
-        "case": 3,
-        "output": "the node with value 2"
+        "case": 4,
+        "output": "the node with value 4"
       },
       {
-        "case": 0,
-        "output": "the node with value 3"
+        "case": 5,
+        "output": "the node with value 8"
       }
     ],
     "clarifications": [
@@ -3683,7 +3674,7 @@
     "contract": "sidebarLabels(root) receives 0 to 100 nodes and returns a list with exactly one value per depth from top to bottom, namely the rightmost existing node at that depth, even when it lies under the left subtree. An empty tree returns an empty list.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -3728,7 +3719,7 @@
         "case": 3
       },
       {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -3773,7 +3764,7 @@
         "case": 3
       },
       {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -3818,7 +3809,7 @@
         "case": 3
       },
       {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -3860,7 +3851,7 @@
     "contract": "tightestSpacing(root) receives a search tree of 2 to 10^4 distinct values from 0 to 10^5 and returns the smallest absolute difference between any two node values in the whole tree, not only parent and child pairs.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 2
@@ -3908,7 +3899,7 @@
         "case": 3
       },
       {
-        "case": 1
+        "case": 4
       }
     ],
     "clarifications": [
@@ -3950,7 +3941,7 @@
     "contract": "indexOrderingHolds(root) receives 1 to 10^4 nodes with 32-bit signed values and returns true only if for every node all values anywhere in its left subtree are strictly smaller and all values anywhere in its right subtree are strictly larger, else false. Any equal value in the constrained position makes it false.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 2
@@ -3995,7 +3986,7 @@
     "contract": "countCopperRegions(grid) receives a 1 to 300 by 1 to 300 grid of the characters '1' and '0' and returns the number of maximal groups of '1' cells connected through up, down, left or right neighbors only, with cells outside the grid treated as '0'. Diagonal contact does not connect, and modifying grid is allowed.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 2
@@ -4048,8 +4039,8 @@
         "output": "board becomes [[\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\"]]"
       },
       {
-        "case": 0,
-        "output": "board becomes [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]"
+        "case": 4,
+        "output": "board becomes [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"O\",\"O\"],[\"X\",\"X\",\"X\",\"X\"]]"
       }
     ],
     "clarifications": [
@@ -4076,7 +4067,7 @@
       "Maps are now 10^4 by 10^4 cells. What breaks in your solution, and how would you fix it?"
     ],
     "hints": [
-      "Look at the air cell on the bottom edge in the example. Why does it survive, and what does that suggest about which pockets are safe?",
+      "Look at the air cells on the right edge in the example. Why does it survive, and what does that suggest about which pockets are safe?",
       "Rather than proving a pocket is sealed, is it easier to find everything that is definitely not sealed, and where would you begin looking?",
       "How will you mark the air that connects to the edge so that one final pass can backfill the rest and put the marked cells back to air?"
     ]
@@ -4094,7 +4085,7 @@
         "case": 3
       },
       {
-        "case": 0
+        "case": 4
       }
     ],
     "clarifications": [
@@ -4240,8 +4231,8 @@
     "contract": "planMigrationOrder(migrationCount, dependencies) returns a list containing every migration number from 0 to migrationCount - 1 exactly once such that for every pair [a, b] migration b appears before migration a; any such order is accepted. If no such order exists it returns an empty list.",
     "examples": [
       {
-        "case": 1,
-        "output": "[0,1,2,3] (one valid order)"
+        "case": 4,
+        "output": "[2,1,0] (the only valid order)"
       },
       {
         "case": 2,
@@ -4288,7 +4279,7 @@
     "contract": "fewestTurnsToFinish(board) returns the minimum number of turns to move from square 1 to square n^2, where squares are numbered from the bottom-left corner in rows alternating left-to-right then right-to-left going up, board rows are listed top to bottom, each turn advances 1 to 6 squares without passing n^2, and landing on a square whose board value is not -1 moves the token to that destination once (no second portal that turn). It returns -1 if square n^2 is unreachable.",
     "examples": [
       {
-        "case": 1
+        "case": 2
       },
       {
         "case": 3
@@ -4519,7 +4510,7 @@
     "contract": "traceableWords(board, words) returns each word from words that can be spelled by a path of horizontally or vertically adjacent cells with no cell reused within that word, listing each such word once. The order of the returned words does not matter.",
     "examples": [
       {
-        "case": 2
+        "case": 4
       }
     ],
     "clarifications": [
@@ -4607,7 +4598,7 @@
     "contract": "pickCanaryGroups(n, k) returns every distinct group of k different host numbers chosen from 1 through n, each group exactly once. The order of numbers within a group and the order of the groups do not matter.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -4698,7 +4689,7 @@
     "contract": "listPalletLoadouts(candidates, target) returns every distinct multiset of values from candidates, each value usable any number of times, whose sum is exactly target, each multiset listed once. Order within a loadout and order of loadouts do not matter, and it returns an empty list when none exist.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 3
@@ -4831,7 +4822,7 @@
     "contract": "canTraceWord(board, word) returns true if word can be spelled by starting at any tile and moving only up, down, left or right between consecutive letters, never reusing a tile, with case-sensitive matching, and false otherwise.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       }
     ],
     "clarifications": [
@@ -5012,7 +5003,7 @@
     "contract": "slotForTimestamp(nums, target) returns the zero-based index of target in the strictly increasing nums if present, otherwise the zero-based index where target would be inserted to keep nums sorted, which is len(nums) if target exceeds every element. nums is not modified.",
     "examples": [
       {
-        "case": 3
+        "case": 5
       }
     ],
     "clarifications": [
@@ -5260,7 +5251,7 @@
     "contract": "integerRootFloor(x) returns the largest non-negative integer r with r * r <= x, for 0 <= x <= 2^31 - 1, so 0 returns 0 and 8 returns 2.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 3
@@ -5347,7 +5338,7 @@
     "contract": "bestLeaseRevenue(nums) returns the maximum sum of a subset of the non-negative values in nums such that no two chosen indices are adjacent in the list, with the first and last positions not considered adjacent.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 2
@@ -5657,7 +5648,7 @@
     "contract": "cheapestRouteCost(grid) returns the minimum integer sum of cell costs over any path from grid[0][0] to the bottom-right cell moving only one cell right or down per step, counting both the first and last cells. Costs are non-negative and the grid has at least one row and column.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 3
@@ -5705,7 +5696,7 @@
     "contract": "countRobotRoutes(layout) returns the integer number of distinct paths from the top-left cell to the bottom-right cell that move only one cell east or south and never enter a cell equal to 1. It returns 0 when the start or end cell is 1 or no path exists; a 1 by 1 open grid gives 1.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -5760,7 +5751,7 @@
         "case": 3
       },
       {
-        "case": 1
+        "case": 4
       }
     ],
     "clarifications": [
@@ -5802,7 +5793,7 @@
     "contract": "countGrantedFlags(n) returns the integer count of 1 bits in the binary representation of the positive integer n, where 1 <= n <= 2^31 - 1.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -5843,7 +5834,7 @@
     "contract": "findUnreplicatedId(nums) returns the one integer that occurs exactly once in nums, where every other value occurs exactly three times; values are signed 32-bit and may be negative, and the returned value must keep its sign.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -5888,7 +5879,7 @@
     "contract": "commonBitsInBlock(left, right) returns the integer equal to the bitwise AND of every integer from left through right inclusive, with 0 <= left <= right <= 2^31 - 1; when left equals right it returns left.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -5933,7 +5924,7 @@
     "contract": "cheapestDescent(triangle) returns the minimum integer sum over paths that take one entry per row from triangle[0][0] to the last row, moving from index j to index j or j + 1 in the next row. Costs may be negative, and a single-row triangle returns its only value.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 4
@@ -5978,7 +5969,7 @@
     "contract": "fewestCharacterFixes(word1, word2) returns the minimum integer number of single-character insertions, deletions, or replacements (each costing 1) that transform word1 into word2. Either string may be empty, and identical strings give 0.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -6023,7 +6014,7 @@
     "contract": "largestPanelArea(matrix) returns the integer area (side squared) of the largest axis-aligned square whose cells are all the character '1' in a grid of '1' and '0' characters, or 0 when no cell is '1'.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -6072,7 +6063,7 @@
     "contract": "bestOrbitWindow(nums) returns the maximum integer sum of a non-empty contiguous run of nums where the run may wrap from the last element to the first but uses each index at most once. When every value is negative, it returns the largest single value.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 4
@@ -6117,7 +6108,7 @@
     "contract": "locateSequenceNumber(nums, target) returns the zero-based index of target in nums, or -1 if target does not occur. nums holds distinct values in ascending order rotated at an unknown point, possibly not rotated.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 4
@@ -6166,7 +6157,7 @@
     "contract": "kthRankedScore(nums, k) returns the value that would be at 1-based position k if nums were sorted in descending order, with equal values occupying separate positions; 1 <= k <= len(nums) and values may be negative.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -6211,7 +6202,7 @@
     "contract": "timestampIndexSpan(nums, target) returns a two-element list [first, last] of the zero-based indices of the first and last occurrences of target in the nondecreasing list nums. It returns [-1, -1] when target is absent or nums is empty, and [i, i] for a single match.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 3
@@ -6260,7 +6251,7 @@
     "contract": "growthOverPeriods(x, n) returns the float x raised to the integer power n, with x^0 = 1 and x^-n = 1 / x^n, where n may be any signed 32-bit value including -2^31. The result is accepted within an absolute tolerance of 1e-5, and zero is never raised to a negative power.",
     "examples": [
       {
-        "case": 1
+        "case": 5
       },
       {
         "case": 3
@@ -6305,7 +6296,7 @@
     "contract": "isFaithfulMerge(s1, s2, s3) returns the boolean true exactly when s3 is formed by merging all characters of s1 and all characters of s2, each used once and each keeping its own relative order, with nothing else in s3; a length mismatch gives false and three empty strings give true.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -6350,7 +6341,7 @@
     "contract": "bestTwoRoundTrips(prices) returns the maximum integer total profit from at most two non-overlapping buy-then-later-sell trades on the daily prices, holding at most one block at a time (a sale and the next buy may be on the same day), or 0 if no trade is profitable.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 3
@@ -6399,7 +6390,7 @@
     "contract": "bestProfitWithinTrades(k, prices) returns the maximum integer total profit from at most k non-overlapping buy-then-later-sell trades on the daily prices, holding at most one contract at a time; it returns 0 when k is 0 or no trade is profitable.",
     "examples": [
       {
-        "case": 1
+        "case": 3
       },
       {
         "case": 4
@@ -6448,7 +6439,7 @@
     "contract": "orderEventChain(head) returns the head of a singly linked chain containing exactly the multiset of val values from the input chain in nondecreasing order, duplicates kept, with the last node's next set to None; an empty chain (None) returns None. Only the sequence of values is graded, so relinking or new nodes are both accepted.",
     "examples": [
       {
-        "case": 1
+        "case": 5
       },
       {
         "case": 4
@@ -6493,7 +6484,7 @@
     "contract": "pooledMedianReading(nums1, nums2) returns the median of all values in both nondecreasing lists combined: the middle value for an odd total count, or the mean of the two middle values for an even count. Either list may be empty but not both, and the result is accepted within an absolute tolerance of 1e-5.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -6542,7 +6533,7 @@
     "contract": "mostCollinearStakes(points) returns the integer maximum number of the distinct [x, y] integer points that lie on one straight line of any orientation, including vertical; a single point gives 1.",
     "examples": [
       {
-        "case": 1
+        "case": 4
       },
       {
         "case": 3
@@ -6587,7 +6578,7 @@
     "contract": "mirrorWordBits(n) returns the non-negative integer whose 32-bit representation is the 32-bit representation of n (leading zeros included) in reversed bit order; graded inputs and outputs both lie in 0 to 2^31 - 1, and 0 gives 0.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 2
@@ -6632,7 +6623,7 @@
     "contract": "bestFinalBankroll(k, w, payouts, required) returns the maximum integer final cash, starting cash included, after completing at most k distinct contracts one at a time, where contract i may start only when current cash is at least required[i], nothing is deducted, and payouts[i] is added on completion.",
     "examples": [
       {
-        "case": 0
+        "case": 3
       },
       {
         "case": 4
@@ -6681,7 +6672,7 @@
     "contract": "cheapestFareCombos(nums1, nums2, k) returns a list of min(k, len(nums1) * len(nums2)) pairs [nums1[i], nums2[j]] over distinct index pairs (i, j) with the smallest sums, so equal values at different indices can repeat a pair. The list is compared as a multiset in any order, but each pair must be [outbound, return] in that order, and graded data has no ties at the cutoff.",
     "examples": [
       {
-        "case": 0
+        "case": 5
       },
       {
         "case": 3
@@ -6730,7 +6721,7 @@
     "contract": "combineShardChains(lists) returns the head of one singly linked chain holding every val from all the nondecreasing chains in lists in nondecreasing order, duplicates kept. lists may be empty or contain empty chains (None), and when there are no nodes at all it returns None.",
     "examples": [
       {
-        "case": 0
+        "case": 4
       },
       {
         "case": 3
@@ -6823,9 +6814,6 @@
     ],
     "contract": "buildTileTree(grid) returns the root Node of the four-way tree for the n by n 0/1 grid (n a power of two, 1 to 64): a uniform region is a single leaf with isLeaf true and val equal to its value, and any other region is a node with isLeaf false whose topLeft, topRight, bottomLeft and bottomRight children cover its four quarters. It is graded as the preorder list of [isLeaf, val] with split nodes shown as [0, 1], so a uniform region must never be split and val on split nodes is ignored.",
     "examples": [
-      {
-        "case": 2
-      },
       {
         "case": 4
       }

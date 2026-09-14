@@ -95,6 +95,25 @@
         "B"
       ],
       "expected": false
+    },
+    {
+      "label": "path bends twice",
+      "input": [
+        [
+          [
+            "D",
+            "O",
+            "G"
+          ],
+          [
+            "X",
+            "A",
+            "T"
+          ]
+        ],
+        "GOAT"
+      ],
+      "expected": true
     }
   ],
   "paramNames": [

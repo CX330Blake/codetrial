@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "head = [1,2,3,4,5], k = 2",
-      "output": "[4,5,1,2,3]"
+      "input": "head = [6,7,8,9], k = 1",
+      "output": "[9,6,7,8]"
     },
     {
       "input": "head = [1,2,3], k = 6",

@@ -58,6 +58,26 @@
         0,
         3
       ]
+    },
+    {
+      "label": "runs of different lengths",
+      "input": [
+        [
+          1,
+          1,
+          2,
+          3,
+          3,
+          3,
+          5
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        5
+      ]
     }
   ],
   "paramNames": [

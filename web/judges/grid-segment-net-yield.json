@@ -53,6 +53,19 @@
         ]
       ],
       "expected": 2
+    },
+    {
+      "label": "path climbs through the root",
+      "input": [
+        [
+          1,
+          -2,
+          3,
+          4,
+          -5
+        ]
+      ],
+      "expected": 6
     }
   ],
   "paramNames": [

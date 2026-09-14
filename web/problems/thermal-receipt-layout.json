@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "words = [\"What\",\"must\",\"be\",\"acknowledgment\",\"shall\",\"be\"], lineWidth = 16",
-      "output": "[\"What   must   be\",\"acknowledgment  \",\"shall be        \"]"
+      "input": "words = [\"Keep\",\"it\",\"as\",\"concise\",\"as\",\"your\",\"documentation.\"], lineWidth = 16",
+      "output": "[\"Keep    it    as\",\"concise  as your\",\"documentation.  \"]"
     },
     {
       "input": "words = [\"a\",\"b\",\"c\",\"d\",\"e\"], lineWidth = 3",

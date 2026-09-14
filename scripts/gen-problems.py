@@ -595,6 +595,49 @@ def names_source(title: str, text: str) -> bool:
     return False
 
 
+# How much of a published example is recognisable on its own: this many values,
+# or one string this long. Both the published-case check and the prose check
+# read these, so the two agree on what counts.
+RECOGNISABLE_VALUES = 4
+RECOGNISABLE_CHARS = 5
+
+
+def example_arguments(text: str) -> list[tuple]:
+    """The values of each argument a published example names, one tuple apiece.
+
+    `head = [1,2,3,4,5], k = 2` gives (1, 2, 3, 4, 5) and (2,). Only an argument
+    long enough to be recognised on its own counts: four values or more, or one
+    string of five characters or more. The published tree with another k, or the
+    published sentence with another word list, is still the published example.
+    """
+    parts, depth, quoted, start = [], 0, False, 0
+    for at, character in enumerate(text):
+        # A quote is escaped only behind an odd run of backslashes.
+        if character == '"' and (at - len(text[:at].rstrip("\\"))) % 2 == 0:
+            quoted = not quoted
+        elif quoted:
+            continue
+        elif character in "[{(":
+            depth += 1
+        elif character in "]})":
+            depth -= 1
+        elif character == "," and depth == 0:
+            parts.append(text[start:at])
+            start = at + 1
+    parts.append(text[start:])
+    arguments = [input_values(part.split("=", 1)[-1]) for part in parts]
+    return [
+        values
+        for values in arguments
+        if len(values) >= RECOGNISABLE_VALUES
+        or (
+            len(values) == 1
+            and isinstance(values[0], str)
+            and len(values[0]) >= RECOGNISABLE_CHARS
+        )
+    ]
+
+
 def sized(problem_id: str, where: str, value: object, low: int, high: int) -> list:
     if not isinstance(value, list) or not low <= len(value) <= high:
         raise RuntimeError(f"{problem_id}: {where} must hold {low}..{high} entries")
@@ -828,6 +871,18 @@ def validated_variant(problem: dict, judge: dict, variant: object) -> dict:
         )
         for example in problem["examples"]
     }
+    # A function case is published by any one argument of a published example,
+    # a class case only by its whole argument list: its operation names repeat
+    # across every case.
+    published_arguments = (
+        set()
+        if judge["kind"] == "class"
+        else {
+            values
+            for example in problem["examples"]
+            for values in example_arguments(example["input"])
+        }
+    )
     published = {
         at
         for at, case in enumerate(judge["cases"])
@@ -837,6 +892,10 @@ def validated_variant(problem: dict, judge: dict, variant: object) -> dict:
             else input_values(case_input(judge, case))
         )
         in published_inputs
+        or any(
+            input_values(compact(argument)) in published_arguments
+            for argument in case["input"]
+        )
     }
     examples = []
     shown = set()
@@ -869,11 +928,13 @@ def validated_variant(problem: dict, judge: dict, variant: object) -> dict:
         if names_source(problem["title"], shown_text):
             raise RuntimeError(f"{problem_id}: examples[{at}] names the source title")
         examples.append(rendered)
-    # The published examples are the most recognisable thing about a problem.
-    # One of them may stay when it is the clearest case, never all of them while
-    # the judge holds a case of its own.
-    if len(published) < len(cases) and shown <= published:
-        raise RuntimeError(f"{problem_id}: every example is a published one")
+    # The published examples are the most recognisable thing about a problem:
+    # "pwwkew" or "paper" and "title" name it as surely as the title does. None
+    # of them is shown, so a judge built only from them needs a case of its own.
+    if shown & published:
+        raise RuntimeError(
+            f"{problem_id}: examples show published case {min(shown & published)}"
+        )
     return {"problem": shipped, "judge": graded, "examples": examples}
 
 

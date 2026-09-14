@@ -66,6 +66,22 @@
         2
       ],
       "expected": 2
+    },
+    {
+      "label": "third in a full tree",
+      "input": [
+        [
+          6,
+          2,
+          8,
+          1,
+          4,
+          7,
+          9
+        ],
+        3
+      ],
+      "expected": 4
     }
   ],
   "paramNames": [

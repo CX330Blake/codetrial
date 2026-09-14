@@ -42,6 +42,14 @@
         "dog cat cat dog fish"
       ],
       "expected": false
+    },
+    {
+      "label": "three letters repeat in order",
+      "input": [
+        "abcab",
+        "sun moon star sun moon"
+      ],
+      "expected": true
     }
   ],
   "paramNames": [

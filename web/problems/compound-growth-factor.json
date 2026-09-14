@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "x = 2.1, n = 3",
-      "output": "9.261"
+      "input": "x = 2.0, n = -3",
+      "output": "0.125"
     },
     {
       "input": "x = 5.5, n = 0",

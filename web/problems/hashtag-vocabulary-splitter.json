@@ -13,7 +13,7 @@
       "output": "true"
     },
     {
-      "input": "s = \"applepenapple\", vocabulary = [\"apple\",\"pen\"]",
+      "input": "s = \"cars\", vocabulary = [\"car\",\"ca\",\"rs\"]",
       "output": "true"
     }
   ],

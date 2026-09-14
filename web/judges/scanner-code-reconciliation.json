@@ -42,6 +42,14 @@
         "adc"
       ],
       "expected": 1
+    },
+    {
+      "label": "mixed edits",
+      "input": [
+        "pilot",
+        "split"
+      ],
+      "expected": 3
     }
   ],
   "paramNames": [

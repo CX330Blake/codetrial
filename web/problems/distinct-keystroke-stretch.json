@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "s = \"pwwkew\"",
-      "output": "3"
+      "input": "s = \"abba\"",
+      "output": "2"
     },
     {
       "input": "s = \"\"",

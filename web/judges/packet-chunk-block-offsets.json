@@ -60,6 +60,20 @@
       "expected": [
         8
       ]
+    },
+    {
+      "label": "two orders of the same words",
+      "input": [
+        "catdogdogcatcat",
+        [
+          "cat",
+          "dog"
+        ]
+      ],
+      "expected": [
+        0,
+        6
+      ]
     }
   ],
   "paramNames": [

@@ -42,6 +42,14 @@
         "aaa"
       ],
       "expected": true
+    },
+    {
+      "label": "letters shuffled",
+      "input": [
+        "crate",
+        "trace"
+      ],
+      "expected": true
     }
   ],
   "paramNames": [

@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "s = \"anagram\", t = \"nagaram\"",
+      "input": "s = \"crate\", t = \"trace\"",
       "output": "true"
     },
     {

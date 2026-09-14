@@ -117,6 +117,36 @@
         "aaa",
         "aaaa"
       ]
+    },
+    {
+      "label": "words sharing a corner",
+      "input": [
+        [
+          [
+            "c",
+            "a",
+            "t"
+          ],
+          [
+            "x",
+            "r",
+            "o"
+          ]
+        ],
+        [
+          "cat",
+          "car",
+          "rot",
+          "tor",
+          "art"
+        ]
+      ],
+      "expected": [
+        "cat",
+        "car",
+        "rot",
+        "tor"
+      ]
     }
   ],
   "paramNames": [

@@ -176,7 +176,7 @@ class VariantValidationTests(unittest.TestCase):
             "examples": [{"case": 1}],
         }
         # The published call-style example is case 0, argument for argument.
-        with self.assertRaisesRegex(RuntimeError, "every example is a published one"):
+        with self.assertRaisesRegex(RuntimeError, "show published case 0"):
             GEN.validated_variant(
                 problem, judge, {**variant, "examples": [{"case": 0}]}
             )
@@ -235,13 +235,26 @@ class VariantValidationTests(unittest.TestCase):
     def test_examples_are_judge_cases_and_not_only_the_published_ones(self):
         self.rejects("names one judge case", examples=[{"case": 2}])
         self.rejects("names one judge case", examples=[{"input": "coins = [5,7]"}])
-        self.rejects("every example is a published one", examples=[{"case": 0}])
+        self.rejects("show published case 0", examples=[{"case": 0}])
+        # Nor when every case is a published one: the judge needs one of its own.
+        problem = {
+            **self.problem,
+            "examples": [
+                *self.problem["examples"],
+                {"input": "coins = [5,7], amount = 1", "output": "-1"},
+            ],
+        }
+        with self.assertRaisesRegex(RuntimeError, "show published case 1"):
+            GEN.validated_variant(problem, self.judge, self.variant)
+        # Not even beside one of the judge's own: "pwwkew" names its problem
+        # however many other examples keep it company.
+        self.rejects("show published case 0", examples=[{"case": 1}, {"case": 0}])
         # The same input spelled another way is still the published one.
         problem = {
             **self.problem,
             "examples": [{"input": "coins = [1, 2, 5], amount = 11.00", "output": "3"}],
         }
-        with self.assertRaisesRegex(RuntimeError, "every example is a published one"):
+        with self.assertRaisesRegex(RuntimeError, "show published case 0"):
             GEN.validated_variant(
                 problem, self.judge, {**self.variant, "examples": [{"case": 0}]}
             )
@@ -249,6 +262,36 @@ class VariantValidationTests(unittest.TestCase):
         self.assertNotEqual(
             GEN.input_values("root = [1,2,null,3]"), GEN.input_values("root = [1,2,3]")
         )
+
+    def test_a_published_argument_is_published_whatever_comes_with_it(self):
+        self.assertEqual(
+            GEN.example_arguments("head = [1,2,3,4,5], k = 2"),
+            [(1.0, 2.0, 3.0, 4.0, 5.0)],
+        )
+        self.assertEqual(
+            GEN.example_arguments('s = "a, b, c: done", n = 3'), [("a, b, c: done",)]
+        )
+        # An escaped backslash does not escape the quote after it.
+        self.assertEqual(
+            GEN.example_arguments(r's = "ab\\", t = "hello, world"'),
+            [("hello, world",)],
+        )
+        # The published coins with a different amount are still the published coins.
+        problem = {
+            **self.problem,
+            "examples": [{"input": "coins = [1,2,5,7], amount = 11", "output": "2"}],
+        }
+        judge = {
+            **self.judge,
+            "cases": [
+                *self.judge["cases"],
+                {"label": "same coins", "input": [[1, 2, 5, 7], 3], "expected": 2},
+            ],
+        }
+        with self.assertRaisesRegex(RuntimeError, "show published case 2"):
+            GEN.validated_variant(
+                problem, judge, {**self.variant, "examples": [{"case": 2}]}
+            )
 
     def test_an_example_may_say_its_output_the_way_a_reader_needs_it(self):
         posed = GEN.validated_variant(

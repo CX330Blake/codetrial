@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "candidates = [2,3,5], target = 8",
-      "output": "[[2,2,2,2],[2,3,3],[3,5]]"
+      "input": "candidates = [3,4,5], target = 9",
+      "output": "[[3,3,3],[4,5]]"
     },
     {
       "input": "candidates = [7,3,2], target = 7",

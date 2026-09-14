@@ -83,6 +83,28 @@
           7
         ]
       ]
+    },
+    {
+      "label": "two loadouts",
+      "input": [
+        [
+          3,
+          4,
+          5
+        ],
+        9
+      ],
+      "expected": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          4,
+          5
+        ]
+      ]
     }
   ],
   "paramNames": [

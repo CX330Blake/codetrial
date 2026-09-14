@@ -9,7 +9,7 @@
   ],
   "examples": [
     {
-      "input": "n = 11",
+      "input": "n = 37",
       "output": "3"
     },
     {

@@ -9,8 +9,8 @@
   ],
   "examples": [
     {
-      "input": "x = 8",
-      "output": "2"
+      "input": "x = 2147395600",
+      "output": "46340"
     },
     {
       "input": "x = 1",

@@ -63,6 +63,23 @@
         1,
         2
       ]
+    },
+    {
+      "label": "negative and positive values",
+      "input": [
+        [
+          -3,
+          0,
+          2,
+          5,
+          9
+        ],
+        7
+      ],
+      "expected": [
+        3,
+        4
+      ]
     }
   ],
   "paramNames": [
