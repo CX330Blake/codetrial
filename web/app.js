@@ -153,6 +153,7 @@ for (const input of levels) {
 }
 
 let grounding = { requirements: [], skills: [], anchors: [] };
+const groundingReads = { jd: 0, resume: 0 };
 
 nodes.groundingJd.addEventListener("change", () => loadGroundingFile("jd"));
 nodes.groundingResume.addEventListener("change", () => loadGroundingFile("resume"));
@@ -259,17 +260,19 @@ start.addEventListener("click", async () => {
 async function loadGroundingFile(kind) {
   const input = kind === "jd" ? nodes.groundingJd : nodes.groundingResume;
   const status = kind === "jd" ? nodes.groundingJdStatus : nodes.groundingResumeStatus;
+  const read = ++groundingReads[kind];
   status.textContent = "Reading locally...";
+  let parsed = null;
+  let message = "Parsed locally. Select only snippets you want to send.";
   try {
-    const parsed = await parseGroundingFile(input.files[0], kind);
-    if (kind === "jd") grounding.requirements = parsed.requirements;
-    else ({ skills: grounding.skills, anchors: grounding.anchors } = parsed);
-    status.textContent = "Parsed locally. Select only snippets you want to send.";
+    parsed = await parseGroundingFile(input.files[0], kind);
   } catch (error) {
-    if (kind === "jd") grounding.requirements = [];
-    else { grounding.skills = []; grounding.anchors = []; }
-    status.textContent = error.message;
+    message = error.message;
   }
+  if (read !== groundingReads[kind]) return;
+  if (kind === "jd") grounding.requirements = parsed?.requirements ?? [];
+  else { grounding.skills = parsed?.skills ?? []; grounding.anchors = parsed?.anchors ?? []; }
+  status.textContent = message;
   renderGroundingChoices(retainedSelection(checkedGrounding(), kind));
 }
 
@@ -302,6 +305,8 @@ function renderGroundingChoices(selected) {
 }
 
 function clearGrounding() {
+  groundingReads.jd++;
+  groundingReads.resume++;
   grounding = { requirements: [], skills: [], anchors: [] };
   nodes.groundingJd.value = "";
   nodes.groundingResume.value = "";
