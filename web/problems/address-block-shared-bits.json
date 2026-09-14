@@ -1,0 +1,64 @@
+{
+  "page": "address-block-shared-bits",
+  "title": "Address Block Shared Bits",
+  "source": "Bitwise AND of Numbers Range",
+  "difficulty": "Medium",
+  "brief": [
+    "Our IP allocation tool stores IPv4 addresses as integers. For a contiguous block of addresses, network engineers want the value that keeps only the bits which are set in every single address of the block.",
+    "Implement commonBitsInBlock(left, right), where left is the first address and right is the last address of the block, and return the integer formed by the bits that are set in every address from left through right."
+  ],
+  "examples": [
+    {
+      "input": "left = 9, right = 12",
+      "output": "8"
+    },
+    {
+      "input": "left = 24, right = 31",
+      "output": "24"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def commonBitsInBlock(self, left: int, right: int) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} left\n * @param {number} right\n * @return {number}\n */\nfunction commonBitsInBlock(left, right) {\n  // Think out loud as you go!\n}\n",
+    "c": "int commonBitsInBlock(int left, int right) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int commonBitsInBlock(int left, int right) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int commonBitsInBlock(int left, int right) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "kind": "function",
+  "entry": "fewestBaseEdits",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "one base edit",
+      "input": [
+        "AACCGGTT",
+        "AACCGGTA",
+        [
+          "AACCGGTA"
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "label": "two base edits",
+      "input": [
+        "AACCGGTT",
+        "AAACGGTA",
+        [
+          "AACCGGTA",
+          "AACCGCTA",
+          "AAACGGTA"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "label": "target not approved",
+      "input": [
+        "AACCGGTT",
+        "AACCGGTA",
+        []
+      ],
+      "expected": -1
+    },
+    {
+      "label": "three step chain",
+      "input": [
+        "AAAAACCC",
+        "AACCCCCC",
+        [
+          "AAAACCCC",
+          "AAACCCCC",
+          "AACCCCCC"
+        ]
+      ],
+      "expected": 3
+    }
+  ],
+  "paramNames": [
+    "current",
+    "target",
+    "approved"
+  ],
+  "paramTypes": [
+    "string",
+    "string",
+    "string[]"
+  ],
+  "returnType": "integer"
+}

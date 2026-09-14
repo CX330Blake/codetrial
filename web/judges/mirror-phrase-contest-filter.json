@@ -1,0 +1,56 @@
+{
+  "kind": "function",
+  "entry": "readsSameBothWays",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "punctuation and case",
+      "input": [
+        "A man, a plan, a canal: Panama"
+      ],
+      "expected": true
+    },
+    {
+      "label": "letters mismatch",
+      "input": [
+        "race a car"
+      ],
+      "expected": false
+    },
+    {
+      "label": "only spaces",
+      "input": [
+        " "
+      ],
+      "expected": true
+    },
+    {
+      "label": "digits count",
+      "input": [
+        "0P"
+      ],
+      "expected": false
+    },
+    {
+      "label": "mixed digits and punctuation",
+      "input": [
+        "1,2,1"
+      ],
+      "expected": true
+    },
+    {
+      "label": "spaces punctuation and case",
+      "input": [
+        "Step on no pets!"
+      ],
+      "expected": true
+    }
+  ],
+  "paramNames": [
+    "s"
+  ],
+  "paramTypes": [
+    "string"
+  ],
+  "returnType": "boolean"
+}

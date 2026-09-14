@@ -1,0 +1,112 @@
+{
+  "kind": "function",
+  "entry": "snapshotsMatch",
+  "checker": "exact",
+  "argTypes": [
+    "binaryTree",
+    "binaryTree"
+  ],
+  "cases": [
+    {
+      "label": "identical trees",
+      "input": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "label": "same values different null side",
+      "input": [
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          null,
+          2
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "label": "same shape different values",
+      "input": [
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          1,
+          2
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "label": "both empty",
+      "input": [
+        [],
+        []
+      ],
+      "expected": true
+    },
+    {
+      "label": "identical sparse trees",
+      "input": [
+        [
+          4,
+          5,
+          null,
+          6
+        ],
+        [
+          4,
+          5,
+          null,
+          6
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "label": "child on the other side",
+      "input": [
+        [
+          4,
+          5,
+          null,
+          6
+        ],
+        [
+          4,
+          5,
+          null,
+          null,
+          6
+        ]
+      ],
+      "expected": false
+    }
+  ],
+  "paramNames": [
+    "p",
+    "q"
+  ],
+  "paramTypes": [
+    "TreeNode",
+    "TreeNode"
+  ],
+  "returnType": "boolean"
+}

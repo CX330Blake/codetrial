@@ -1,4 +1,5 @@
 import { loadJudge, loadProblem } from "./problem-data.js";
+import { consumeSharedFocus } from "./problem-picker.js";
 import {
   outputUsable,
   preflightReadiness,
@@ -142,7 +143,7 @@ const problem = await loadProblem(params.get("problem")).catch((error) => {
 // Every tab is offered until the answer arrives, which is what the row did
 // before this and what it keeps doing if the judge never loads; the run path
 // reports that failure itself.
-const judgePromise = loadJudge(problem.id).catch(() => null);
+const judgePromise = loadJudge(problem.page).catch(() => null);
 let languages = languagesFor(null);
 /// What the lobby asked for, until `/api/token` says what it got. The range
 /// here mirrors the server's own and is the fallback for a URL that arrives
@@ -183,6 +184,7 @@ const interviewProfile = {
   role: params.get("role") || "",
   seniority: params.get("seniority") || "",
   targetCompany: params.get("company") || "",
+  practiceFocus: consumeSharedFocus(sessionStorage),
 };
 const interviewGrounding = consumeGroundingPacket(sessionStorage);
 const state = {
@@ -307,7 +309,7 @@ let jimAudio = null;
 
 // Before `init`, because the queue's first producer is inside it. The bindings
 // are handed over rather than re-derived: one `state` object, one `nodes` map.
-initReplay({ state, nodes, problem, recordingEnabled, consentVersion, replayVersion });
+initReplay({ state, nodes, recordingEnabled, consentVersion, replayVersion });
 initCaptions({ nodes });
 initAvatarStage({ nodes });
 initAudioOutput({ nodes, jimAudioElement: () => jimAudio });
@@ -361,7 +363,7 @@ async function init() {
   // a caption nobody said.
   showCaptions();
   await connect(preflight, presenting);
-  publish(topics.code, codeUpdatePayload(currentCode(), state.language));
+  publishCode();
   state.endsAt = Date.now() + durationMin * 60 * 1000;
   tickTimer();
   setInterval(tickTimer, 1000);
@@ -472,7 +474,7 @@ function bindEvents() {
     paintEditor();
     clearTimeout(codePublishTimer);
     codePublishTimer = setTimeout(() => {
-      publish(topics.code, codeUpdatePayload(currentCode(), state.language, Date.now()));
+      publishCode(Date.now());
       codePublishTimer = null;
     }, CODE_PUBLISH_DEBOUNCE_MS);
   });
@@ -723,7 +725,7 @@ async function connect(preflight, presenting = false) {
     const response = await fetch("/api/token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ problemId: problem.id, durationMin, interviewId, interviewLoop, interviewProfile, ...(interviewGrounding ? { interviewGrounding } : {}) }),
+      body: JSON.stringify({ problemId: problem.page, durationMin, interviewId, interviewLoop, interviewProfile, ...(interviewGrounding ? { interviewGrounding } : {}) }),
     });
     if (!response.ok) throw new Error((await response.json()).error || "Failed to create a session.");
     const connection = await response.json();
@@ -834,7 +836,7 @@ async function connectLiveKit(connection, preflight, presenting = false) {
     // so Jim is reading what the candidate is actually looking at rather than
     // whatever the last queued keystroke said.
     flushPendingPublishes();
-    publish(topics.code, codeUpdatePayload(currentCode(), state.language));
+    publishCode();
     updateAgentState();
   });
   room.on(livekit.RoomEvent.Disconnected, () => {
@@ -1106,8 +1108,10 @@ async function toggleMicrophone() {
 }
 
 function renderProblem() {
+  // Difficulty only. The topic tags name the technique, and the heading is the
+  // scenario's own title rather than the published problem it was written from.
   nodes.title.textContent = problem.title;
-  nodes.meta.textContent = `${problem.difficulty} · ${problem.topics.join(", ")}`;
+  nodes.meta.textContent = problem.difficulty;
   // The heading the recording shows. Sent from here rather than assembled in
   // the template, so the two pages name the problem the same way. This render
   // happens in the lobby, before there is an interview to attach it to, which
@@ -1158,7 +1162,7 @@ function setLanguage(language) {
   // agent to ignore packets the browser should not have sent.
   clearTimeout(codePublishTimer);
   codePublishTimer = setTimeout(() => {
-    publish(topics.code, codeUpdatePayload(currentCode(), state.language));
+    publishCode();
     codePublishTimer = null;
   }, CODE_PUBLISH_DEBOUNCE_MS);
 }
@@ -1391,7 +1395,7 @@ async function runTests() {
   nodes.run.textContent = "Running...";
   nodes.resultsBody.hidden = false;
   setTestStatus(firstRunnerStatus(state.language));
-  const summary = await runBrowserTests(problem.id, currentCode(), state.language, setTestStatus);
+  const summary = await runBrowserTests(problem.page, currentCode(), state.language, setTestStatus);
   state.latestSummary = summary;
   state.testStatus = finalRunnerStatus(summary, state.testStatus);
   renderResults(summary);
@@ -1449,7 +1453,7 @@ function flushPendingCodePublish() {
   if (!codePublishTimer) return;
   clearTimeout(codePublishTimer);
   codePublishTimer = null;
-  publish(topics.code, codeUpdatePayload(currentCode(), state.language, Date.now()));
+  publishCode(Date.now());
   // The same debounce the agent gets. An event per keystroke would be the
   // whole per-interview budget spent on the first ten minutes of typing.
   recordReplay("editor", { code: currentCode(), language: state.language });
@@ -1614,7 +1618,7 @@ function saveHistory() {
   // The interview id travels with the report so the replay page can put the
   // two beside each other. Reports are keyed by their own id and recordings by
   // theirs, and without this the only thing relating them is the clock.
-  const entry = { id: randomId(), date: new Date().toISOString(), interviewId: state.interviewId, problemId: problem.id, problemTitle: problem.title, difficulty: problem.difficulty, language: state.language, durationMin, interviewLoop, report: state.report };
+  const entry = { id: randomId(), date: new Date().toISOString(), interviewId: state.interviewId, problemId: problem.page, problemTitle: problem.title, difficulty: problem.difficulty, language: state.language, durationMin, interviewLoop, report: state.report };
   return saveReportHistory(entry);
 }
 
@@ -1623,7 +1627,8 @@ function downloadReport() {
   const url = URL.createObjectURL(new Blob([markdown], { type: "text/markdown" }));
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `interview-report-${problem.id}-${new Date().toISOString().slice(0, 10)}.md`;
+  // Named for the scenario the candidate saw: the id is the published slug.
+  anchor.download = `interview-report-${problem.page}-${new Date().toISOString().slice(0, 10)}.md`;
   document.body.append(anchor);
   anchor.click();
   anchor.remove();
@@ -1789,4 +1794,10 @@ function paintEditor() {
 
 function currentCode() {
   return nodes.editor.value;
+}
+
+/// The one way the editor reaches the agent: the buffer and its language. The
+/// agent holds its own copy of the starters it measures written code against.
+function publishCode(at) {
+  publish(topics.code, codeUpdatePayload(currentCode(), state.language, at));
 }

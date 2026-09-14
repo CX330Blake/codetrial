@@ -44,7 +44,7 @@ use crate::agent::{
     CANDIDATE_SPEAKER, INTERIM_CONTEXT_NOTES, InterimReviewInput, RuntimeState, SpeakerTurn,
     WATCH_TICK_S, apply_data_event, code_head, framework_evidence_json, framework_progress,
     interim_review_prompt, parse_participant_metadata, read_editor_text, record_framework_evidence,
-    record_interim_notes, transcript_tail, unreviewed_from, wrap_up,
+    record_interim_notes, released_follow_ups, transcript_tail, unreviewed_from, wrap_up,
 };
 use crate::config::AgentConfig;
 use crate::runtime::TOPIC_CONTROL;
@@ -1425,7 +1425,7 @@ fn initial_runtime_state(boot: &RuntimeBootstrap<'_>, started_at: Instant) -> Ru
         interview_loop: boot.interview_loop,
         coding_minutes: boot.coding_minutes,
         behavioral_minutes: boot.behavioral_minutes,
-        ..RuntimeState::default()
+        ..RuntimeState::for_problem(boot.problem)
     }
 }
 
@@ -1912,7 +1912,9 @@ fn agent_state_attributes(
     attributes
 }
 
-fn execute_tool_call(state: &mut RuntimeState, call: &GeminiFunctionCall) -> serde_json::Value {
+/// Public so the behaviour check in `tests/interview_behavior.rs` answers a
+/// text model's tool calls with this dispatch rather than a copy of it.
+pub fn execute_tool_call(state: &mut RuntimeState, call: &GeminiFunctionCall) -> serde_json::Value {
     match call.name.as_str() {
         TOOL_READ_EDITOR => serde_json::json!({
             "result": read_editor_text(
@@ -1922,13 +1924,36 @@ fn execute_tool_call(state: &mut RuntimeState, call: &GeminiFunctionCall) -> ser
                 state.test_runs,
             )
         }),
+
+        // Missing reads as asked for: the declaration requires the flag, and
+        // the cost of the other default is a hint the candidate asked for
+        // arriving without its rung.
         TOOL_LOG_HINT => {
-            serde_json::json!({ "result": crate::agent::record_hint(state) })
+            let requested = call
+                .args
+                .get("requested")
+                .and_then(serde_json::Value::as_bool)
+                .unwrap_or(true);
+            serde_json::json!({ "result": crate::agent::record_hint(state, requested) })
         }
-        TOOL_RECORD_FRAMEWORK_EVIDENCE => match record_framework_evidence(state, &call.args) {
-            Ok(evidence) => serde_json::json!({ "result": framework_evidence_json(&evidence) }),
-            Err(error) => serde_json::json!({ "error": error }),
-        },
+
+        // The call that completes the coding round also hands over the
+        // follow-ups, once: a later Test or Optimizations note finds the round
+        // already complete and returns the evidence alone.
+        TOOL_RECORD_FRAMEWORK_EVIDENCE => {
+            let was_complete = crate::agent::coding_round_complete(state);
+            match record_framework_evidence(state, &call.args) {
+                Ok(evidence) => {
+                    let mut response =
+                        serde_json::json!({ "result": framework_evidence_json(&evidence) });
+                    if !was_complete && let Some(follow_ups) = released_follow_ups(state) {
+                        response["followUps"] = follow_ups.into();
+                    }
+                    response
+                }
+                Err(error) => serde_json::json!({ "error": error }),
+            }
+        }
 
         // A request, answered here, acted on by the room loop. Ending the
         // interview publishes a report and leaves the room, and none of that is

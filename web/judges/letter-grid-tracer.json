@@ -1,0 +1,161 @@
+{
+  "kind": "function",
+  "entry": "traceableWords",
+  "checker": "arrayBag",
+  "cases": [
+    {
+      "label": "mixed board words",
+      "input": [
+        [
+          [
+            "o",
+            "a",
+            "a",
+            "n"
+          ],
+          [
+            "e",
+            "t",
+            "a",
+            "e"
+          ],
+          [
+            "i",
+            "h",
+            "k",
+            "r"
+          ],
+          [
+            "i",
+            "f",
+            "l",
+            "v"
+          ]
+        ],
+        [
+          "oath",
+          "pea",
+          "eat",
+          "rain"
+        ]
+      ],
+      "expected": [
+        "oath",
+        "eat"
+      ]
+    },
+    {
+      "label": "cannot reuse cell",
+      "input": [
+        [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "c",
+            "d"
+          ]
+        ],
+        [
+          "abcb"
+        ]
+      ],
+      "expected": []
+    },
+    {
+      "label": "shared prefixes",
+      "input": [
+        [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "c",
+            "d"
+          ]
+        ],
+        [
+          "ab",
+          "abc",
+          "abd",
+          "acd",
+          "bd"
+        ]
+      ],
+      "expected": [
+        "ab",
+        "abd",
+        "acd",
+        "bd"
+      ]
+    },
+    {
+      "label": "duplicate board paths return word once",
+      "input": [
+        [
+          [
+            "a",
+            "a"
+          ],
+          [
+            "a",
+            "a"
+          ]
+        ],
+        [
+          "a",
+          "aa",
+          "aaa",
+          "aaaa"
+        ]
+      ],
+      "expected": [
+        "a",
+        "aa",
+        "aaa",
+        "aaaa"
+      ]
+    },
+    {
+      "label": "words sharing a corner",
+      "input": [
+        [
+          [
+            "c",
+            "a",
+            "t"
+          ],
+          [
+            "x",
+            "r",
+            "o"
+          ]
+        ],
+        [
+          "cat",
+          "car",
+          "rot",
+          "tor",
+          "art"
+        ]
+      ],
+      "expected": [
+        "cat",
+        "car",
+        "rot",
+        "tor"
+      ]
+    }
+  ],
+  "paramNames": [
+    "board",
+    "words"
+  ],
+  "paramTypes": [
+    "character[][]",
+    "string[]"
+  ],
+  "returnType": "list<string>"
+}

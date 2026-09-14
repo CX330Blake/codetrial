@@ -1,0 +1,158 @@
+{
+  "kind": "class",
+  "className": "CommandIndex",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "mixed operations",
+      "input": [
+        [
+          "CommandIndex",
+          "insert",
+          "search",
+          "search",
+          "startsWith",
+          "insert",
+          "search"
+        ],
+        [
+          [],
+          [
+            "apple"
+          ],
+          [
+            "apple"
+          ],
+          [
+            "app"
+          ],
+          [
+            "app"
+          ],
+          [
+            "app"
+          ],
+          [
+            "app"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        false,
+        true,
+        null,
+        true
+      ]
+    },
+    {
+      "label": "prefix is not word",
+      "input": [
+        [
+          "CommandIndex",
+          "insert",
+          "startsWith",
+          "search",
+          "insert",
+          "search"
+        ],
+        [
+          [],
+          [
+            "app"
+          ],
+          [
+            "ap"
+          ],
+          [
+            "apple"
+          ],
+          [
+            "apple"
+          ],
+          [
+            "apple"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        false,
+        null,
+        true
+      ]
+    },
+    {
+      "label": "shared prefix words",
+      "input": [
+        [
+          "CommandIndex",
+          "insert",
+          "insert",
+          "search",
+          "search",
+          "startsWith"
+        ],
+        [
+          [],
+          [
+            "car"
+          ],
+          [
+            "cat"
+          ],
+          [
+            "car"
+          ],
+          [
+            "cap"
+          ],
+          [
+            "ca"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        true,
+        false,
+        true
+      ]
+    },
+    {
+      "label": "missing prefix",
+      "input": [
+        [
+          "CommandIndex",
+          "insert",
+          "startsWith",
+          "search"
+        ],
+        [
+          [],
+          [
+            "dog"
+          ],
+          [
+            "do"
+          ],
+          [
+            "dogs"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        false
+      ]
+    }
+  ]
+}

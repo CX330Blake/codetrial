@@ -1,0 +1,60 @@
+{
+  "page": "backend-pool-sampler",
+  "title": "Backend Pool Sampler",
+  "source": "Insert Delete GetRandom O(1)",
+  "difficulty": "Medium",
+  "brief": [
+    "Our load balancer keeps a pool of backend server ids. Servers join and leave constantly, and for every incoming request the balancer picks a backend uniformly at random from whoever is in the pool right now. All three operations sit on the request path, so none of them can slow down as the pool grows.",
+    "Implement the class BackendPool. BackendPool() creates an empty pool. insert(val) adds backend val and returns true, or returns false if it was already in the pool. remove(val) removes backend val and returns true, or returns false if it was not in the pool. getRandom() returns one backend currently in the pool, with every current backend equally likely."
+  ],
+  "examples": [
+    {
+      "input": "[\"BackendPool\",\"insert\",\"insert\",\"remove\",\"getRandom\"]\n[[],[1],[2],[1],[]]",
+      "output": "[null,true,true,true,2]"
+    }
+  ],
+  "starterCode": {
+    "python": "class BackendPool:\n    def __init__(self):\n        pass\n\n    def insert(self, val: int) -> bool:\n        pass\n\n    def remove(self, val: int) -> bool:\n        pass\n\n    def getRandom(self) -> int:\n        pass\n",
+    "javascript": "class BackendPool {\n  constructor() {\n  }\n\n  /** @param {number} val @return {boolean} */\n  insert(val) {\n  }\n\n  /** @param {number} val @return {boolean} */\n  remove(val) {\n  }\n\n  /** @return {number} */\n  getRandom() {\n  }\n}\n",
+    "c": "typedef struct {\n    // Think out loud as you go!\n} BackendPool;\n\nBackendPool* backendPoolCreate() {\n    return NULL;\n}\n\nbool backendPoolInsert(BackendPool* obj, int val) {\n    return false;\n}\n\nbool backendPoolRemove(BackendPool* obj, int val) {\n    return false;\n}\n\nint backendPoolGetRandom(BackendPool* obj) {\n    return 0;\n}\n\nvoid backendPoolFree(BackendPool* obj) {\n}\n",
+    "cpp": "class BackendPool {\npublic:\n    BackendPool() {\n    }\n\n    bool insert(int val) {\n        return false;\n    }\n\n    bool remove(int val) {\n        return false;\n    }\n\n    int getRandom() {\n        return 0;\n    }\n};\n",
+    "java": "class BackendPool {\n    public BackendPool() {\n    }\n\n    public boolean insert(int val) {\n        return false;\n    }\n\n    public boolean remove(int val) {\n        return false;\n    }\n\n    public int getRandom() {\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

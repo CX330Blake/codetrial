@@ -1,0 +1,64 @@
+{
+  "page": "mirror-phrase-contest-filter",
+  "title": "Mirror Phrase Contest Filter",
+  "source": "Valid Palindrome",
+  "difficulty": "Easy",
+  "brief": [
+    "A radio station runs a contest where listeners text in phrases that read the same forwards and backwards. Entries come in with messy capitalisation, spaces and punctuation, and the moderation service needs to reject the ones that do not qualify.",
+    "Implement readsSameBothWays(s), where s is the raw text of one entry, and return true if the entry reads the same in both directions once spacing, punctuation and capitalisation are ignored, and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "s = \"Step on no pets!\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"1,2,1\"",
+      "output": "true"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def readsSameBothWays(self, s: str) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nfunction readsSameBothWays(s) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool readsSameBothWays(char* s) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool readsSameBothWays(string s) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean readsSameBothWays(String s) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

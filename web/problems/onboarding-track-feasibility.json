@@ -1,0 +1,60 @@
+{
+  "page": "onboarding-track-feasibility",
+  "title": "Onboarding Track Feasibility",
+  "source": "Course Schedule",
+  "difficulty": "Medium",
+  "brief": [
+    "Our engineering onboarding program is made of training modules, and some modules require others to be finished first. Program managers edit these requirements by hand, and they want a check that a new hire can actually get through every module.",
+    "Implement onboardingIsCompletable(moduleCount, requirements), where modules are numbered 0 to moduleCount - 1 and each requirements[i] is a pair [a, b] meaning module b must be finished before module a, and return true if every module can be completed."
+  ],
+  "examples": [
+    {
+      "input": "moduleCount = 5, requirements = [[1,0],[2,0],[3,1]]",
+      "output": "true"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    bool onboardingIsCompletable(int moduleCount, vector<vector<int>>& requirements) {\n        \n    }\n};",
+    "java": "class Solution {\n    public boolean onboardingIsCompletable(int moduleCount, int[][] requirements) {\n        \n    }\n}",
+    "python": "class Solution:\n    def onboardingIsCompletable(self, moduleCount: int, requirements: List[List[int]]) -> bool:\n        ",
+    "javascript": "/**\n * @param {number} moduleCount\n * @param {number[][]} requirements\n * @return {boolean}\n */\nvar onboardingIsCompletable = function(moduleCount, requirements) {\n    \n};",
+    "c": "bool onboardingIsCompletable(int moduleCount, int** requirements, int requirementsSize, int* requirementsColSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

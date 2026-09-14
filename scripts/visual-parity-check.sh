@@ -90,7 +90,7 @@ const path = require("path");
 
 const pages = [
   { name: "home", route: "/", ready: "Practice a live technical interview", selectors: ["body", "main", "h1", ".problem-grid", ".problem-card", ".duration-row", ".start-row"] },
-  { name: "interview", route: "/interview?problem=two-sum&duration=45", ready: "Two Sum", selectors: ["body", "main", "#problem-title", ".interview-sidebar", ".editor-panel", "#editor", "#run-tests", "#transcript-panel"] },
+  { name: "interview", route: "/interview?problem=two-sum&duration=45", ready: "Example 1", selectors: ["body", "main", "#problem-title", ".interview-sidebar", ".editor-panel", "#editor", "#run-tests", "#transcript-panel"] },
 ];
 
 // scripts/session-cookie.sh hands over a bare `name=value`, attributes already

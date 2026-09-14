@@ -1,0 +1,60 @@
+{
+  "page": "bouncing-print-head",
+  "title": "Bouncing Print Head",
+  "source": "Zigzag Conversion",
+  "difficulty": "Medium",
+  "brief": [
+    "A label printer's head moves diagonally: it prints each character of a message one column to the right of the last, stepping down one row at a time until it hits the bottom row, then stepping up one row at a time until it hits the top row, and bouncing like that until the message ends.",
+    "The printer then transmits the label row by row, top row first, each row read left to right. Implement rowByRowReadout(s, rowCount), where s is the message and rowCount is the number of rows the head moves across, and return the transmitted string."
+  ],
+  "examples": [
+    {
+      "input": "s = \"ABCDE\", rowCount = 2",
+      "output": "\"ACEBD\""
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def rowByRowReadout(self, s: str, rowCount: int) -> str:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @param {number} rowCount\n * @return {string}\n */\nfunction rowByRowReadout(s, rowCount) {\n  // Think out loud as you go!\n}\n",
+    "c": "char* rowByRowReadout(char* s, int rowCount) {\n    // Think out loud as you go!\n    return \"\";\n}\n",
+    "cpp": "class Solution {\npublic:\n    string rowByRowReadout(string s, int rowCount) {\n        // Think out loud as you go!\n        return \"\";\n    }\n};\n",
+    "java": "class Solution {\n    public String rowByRowReadout(String s, int rowCount) {\n        // Think out loud as you go!\n        return \"\";\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

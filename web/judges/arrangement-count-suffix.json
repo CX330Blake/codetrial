@@ -1,0 +1,49 @@
+{
+  "kind": "function",
+  "entry": "countEndingZeros",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "no factor of five",
+      "input": [
+        3
+      ],
+      "expected": 0
+    },
+    {
+      "label": "first ending zero",
+      "input": [
+        5
+      ],
+      "expected": 1
+    },
+    {
+      "label": "zero jobs",
+      "input": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "label": "extra factor from twenty five",
+      "input": [
+        25
+      ],
+      "expected": 6
+    },
+    {
+      "label": "multiple powers of five",
+      "input": [
+        100
+      ],
+      "expected": 24
+    }
+  ],
+  "paramNames": [
+    "n"
+  ],
+  "paramTypes": [
+    "integer"
+  ],
+  "returnType": "integer"
+}

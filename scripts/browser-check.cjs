@@ -13,6 +13,26 @@ const http = require("http");
 const { spawn } = require("child_process");
 let livekitServerSdk;
 
+// The browser loads scenario names, while the checks stay keyed by the stable
+// bank ids that identify their judges and candidate programs. Reading the
+// generated map makes that boundary explicit instead of letting a removed
+// problem file decide which scenario each flow happens to exercise.
+const problemPages = JSON.parse(fs.readFileSync(`${__dirname}/../web/problem-pages.json`, "utf8"));
+
+function scenario(problemId) {
+  const entry = problemPages[problemId];
+  if (!entry) throw new Error(`no scenario page for ${problemId}`);
+  return entry;
+}
+
+function scenarioTitle(problemId) {
+  return scenario(problemId).title;
+}
+
+function interviewUrl(problemId) {
+  return `${process.env.BASE_URL}/interview?problem=${scenario(problemId).page}&duration=20`;
+}
+
 const soakSeconds = Number(process.env.BROWSER_CHECK_SOAK_SECONDS || "0");
 if (!Number.isSafeInteger(soakSeconds) || soakSeconds < 0) {
   throw new Error("BROWSER_CHECK_SOAK_SECONDS must be a whole number of seconds");
@@ -438,7 +458,7 @@ async function isolateRustAgent(roomName, rustAgentIdentity, timeoutMs = 120000)
       // The browser launches with --use-fake-ui-for-media-stream, which is why
       // no other flow in this file grants permissions.
       await page.setViewportSize({ width: 1440, height: 900 });
-      await page.goto(`${process.env.BASE_URL}/interview?problem=two-sum&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("two-sum"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
       await page.locator("#jim-avatar").waitFor({ timeout: 30000 });
       // Leaving "loading" is the contract. Which terminal state it lands on is
@@ -500,17 +520,18 @@ async function isolateRustAgent(roomName, rustAgentIdentity, timeoutMs = 120000)
       // 150, and the picker only offers the difficulties the checkboxes select,
       // which defaults to Medium alone. Valid Parentheses is Easy, so reach it
       // the way a candidate does rather than waiting for a card the lobby is
-      // deliberately hiding.
+      // deliberately hiding. The card is named for its scenario; the published
+      // title is on it too, hidden unless the candidate asks.
       await page.getByText("Choose a specific problem instead").click();
       await page.getByRole("checkbox", { name: "Easy" }).check();
-      await page.getByText("Valid Parentheses").waitFor();
+      await page.getByText(scenarioTitle("valid-parentheses"), { exact: true }).waitFor();
       return;
     }
 
     if (mode === "offline") {
-      await page.goto(`${process.env.BASE_URL}/interview?problem=two-sum&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("two-sum"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Two Sum", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("two-sum"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       // The `""` branch that used to be here is gone. It set the global from an
       // init script and expected "not wired up yet", which cannot work: the
@@ -526,7 +547,7 @@ async function isolateRustAgent(roomName, rustAgentIdentity, timeoutMs = 120000)
       if (compilerExplorerMock) {
         await page.getByRole("button", { name: "C", exact: true }).click();
         await page.getByLabel("Code editor").fill(`#include <stdlib.h>
-int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+int* matchDisputedCharge(int* nums, int numsSize, int target, int* returnSize) {
     int* out = malloc(sizeof(int) * 2);
     for (int i = 0; i < numsSize; i++) {
         for (int j = i + 1; j < numsSize; j++) {
@@ -543,18 +564,18 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 }
 `);
         await runAndExpectPassing(4, 120000);
-        await page.goto(`${process.env.BASE_URL}/interview?problem=min-stack&duration=20`, { waitUntil: "domcontentloaded" });
+        await page.goto(interviewUrl("min-stack"), { waitUntil: "domcontentloaded" });
         await clearMediaGate(page);
-        await page.getByRole("heading", { name: "Min Stack", level: 1 }).waitFor();
+        await page.getByRole("heading", { name: scenarioTitle("min-stack"), level: 1 }).waitFor();
         await page.getByText("Offline", { exact: true }).waitFor();
         await page.getByRole("button", { name: "C++" }).click();
         await page.getByLabel("Code editor").fill(`#include <vector>
 using namespace std;
-class MinStack {
+class BidLedger {
     vector<int> values;
     vector<int> minimums;
 public:
-    MinStack() {}
+    BidLedger() {}
     void push(int value) {
         values.push_back(value);
         minimums.push_back(minimums.empty() ? value : min(value, minimums.back()));
@@ -568,14 +589,14 @@ public:
 };
 `);
         await runAndExpectPassing(4, 120000);
-        await page.goto(`${process.env.BASE_URL}/interview?problem=binary-search-tree-iterator&duration=20`, { waitUntil: "domcontentloaded" });
+        await page.goto(interviewUrl("binary-search-tree-iterator"), { waitUntil: "domcontentloaded" });
         await clearMediaGate(page);
-        await page.getByRole("heading", { name: "Binary Search Tree Iterator", level: 1 }).waitFor();
+        await page.getByRole("heading", { name: scenarioTitle("binary-search-tree-iterator"), level: 1 }).waitFor();
         await page.getByText("Offline", { exact: true }).waitFor();
         await page.getByRole("button", { name: "Java", exact: true }).click();
-        await page.getByLabel("Code editor").fill(`class BSTIterator {
+        await page.getByLabel("Code editor").fill(`class OrderedCursor {
     private final ArrayDeque<TreeNode> stack = new ArrayDeque<>();
-    public BSTIterator(TreeNode root) { pushLeft(root); }
+    public OrderedCursor(TreeNode root) { pushLeft(root); }
     private void pushLeft(TreeNode node) {
         while (node != null) {
             stack.push(node);
@@ -597,7 +618,7 @@ public:
         await page.getByRole("button", { name: "C++" }).click();
         await page.getByLabel("Code editor").fill(`class Solution {
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+    vector<int> matchDisputedCharge(vector<int>& nums, int target) {
         return {0, 1};
     }
 };
@@ -610,14 +631,14 @@ public:
       }
       await page.getByRole("button", { name: "JavaScript" }).click();
       await page.getByLabel("Code editor").fill(`let i = 0;
-function twoSum() {
+function matchDisputedCharge() {
   return spec.cases[i++].expected;
 }
 `);
       await page.getByRole("button", { name: /Run tests/ }).click();
       await page.getByRole("button", { name: "Run tests" }).waitFor();
       await page.getByText("Test results · 0/4").waitFor();
-      await page.getByLabel("Code editor").fill(`function twoSum(nums, target) {
+      await page.getByLabel("Code editor").fill(`function matchDisputedCharge(nums, target) {
   const seen = new Map();
   for (let i = 0; i < nums.length; i++) {
     const want = target - nums[i];
@@ -631,7 +652,7 @@ function twoSum() {
       await page.getByRole("button", { name: "C++" }).click();
       await page.getByLabel("Code editor").fill(`class Solution {
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+    vector<int> matchDisputedCharge(vector<int>& nums, int target) {
         unordered_map<int, int> seen;
         for (int i = 0; i < (int)nums.size(); i++) {
             int want = target - nums[i];
@@ -645,7 +666,7 @@ public:
       await runAndExpectPassing(4, 120000);
       await page.getByLabel("Code editor").fill(`class Solution {
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+    vector<int> matchDisputedCharge(vector<int>& nums, int target) {
         return {
     }
 };
@@ -656,7 +677,7 @@ public:
       await page.locator("#results-body pre").filter({ hasText: /Compilation failed|expected|error/i }).waitFor({ timeout: 120000 });
       await page.getByRole("button", { name: "C", exact: true }).click();
       await page.getByLabel("Code editor").fill(`#include <stdlib.h>
-int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+int* matchDisputedCharge(int* nums, int numsSize, int target, int* returnSize) {
     int* out = malloc(sizeof(int) * 2);
     for (int i = 0; i < numsSize; i++) {
         for (int j = i + 1; j < numsSize; j++) {
@@ -675,7 +696,7 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
       await runAndExpectPassing(4, 120000);
       await page.getByRole("button", { name: "Python" }).click();
       await page.getByLabel("Code editor").fill(`class Solution:
-    def twoSum(self, nums, target):
+    def matchDisputedCharge(self, nums, target):
         seen = {}
         for i, value in enumerate(nums):
             want = target - value
@@ -689,12 +710,12 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
       await page.locator("p").filter({ hasText: /^Jim$/ }).first().waitFor();
       await page.locator("p").filter({ hasText: /^You$/ }).first().waitFor();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=merge-sorted-array&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("merge-sorted-array"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Merge Sorted Array", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("merge-sorted-array"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function merge(nums1, m, nums2, n) {
+      await page.getByLabel("Code editor").fill(`function spliceReadings(nums1, m, nums2, n) {
   let write = m + n - 1;
   let left = m - 1;
   let right = n - 1;
@@ -709,12 +730,12 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=remove-duplicates-from-sorted-array-ii&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("remove-duplicates-from-sorted-array-ii"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Remove Duplicates from Sorted Array II", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("remove-duplicates-from-sorted-array-ii"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function removeDuplicates(nums) {
+      await page.getByLabel("Code editor").fill(`function capRepeatsAtTwo(nums) {
   let write = 0;
   for (const value of nums) {
     if (write < 2 || nums[write - 2] !== value) {
@@ -727,7 +748,7 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
       await page.getByRole("button", { name: /Run tests/ }).click();
       await page.getByRole("button", { name: "Run tests" }).waitFor();
       await page.getByText("Test results · 0/3").waitFor();
-      await page.getByLabel("Code editor").fill(`function removeDuplicates(nums) {
+      await page.getByLabel("Code editor").fill(`function capRepeatsAtTwo(nums) {
   let write = 0;
   for (const value of nums) {
     if (write < 2 || nums[write - 2] !== value) {
@@ -739,12 +760,12 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 `);
       await runAndExpectPassing(3);
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=merge-two-sorted-lists&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("merge-two-sorted-lists"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Merge Two Sorted Lists", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("merge-two-sorted-lists"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function mergeTwoLists(list1, list2) {
+      await page.getByLabel("Code editor").fill(`function interleaveEvents(list1, list2) {
   const dummy = new ListNode();
   let tail = dummy;
   while (list1 && list2) {
@@ -763,12 +784,12 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=copy-list-with-random-pointer&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("copy-list-with-random-pointer"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Copy List with Random Pointer", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("copy-list-with-random-pointer"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function copyRandomList(head) {
+      await page.getByLabel("Code editor").fill(`function snapshotOutline(head) {
   if (!head) return null;
   const copies = new Map();
   for (let node = head; node; node = node.next) copies.set(node, new _Node(node.val));
@@ -781,12 +802,12 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=rotate-list&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("rotate-list"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Rotate List", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("rotate-list"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function rotateRight(head, k) {
+      await page.getByLabel("Code editor").fill(`function wrapPlaylistTail(head, k) {
   if (!head || !head.next) return head;
   let tail = head;
   let length = 1;
@@ -806,27 +827,27 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=invert-binary-tree&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("invert-binary-tree"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Invert Binary Tree", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("invert-binary-tree"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function invertTree(root) {
+      await page.getByLabel("Code editor").fill(`function mirrorLayout(root) {
   if (!root) return null;
-  const left = invertTree(root.left);
-  root.left = invertTree(root.right);
+  const left = mirrorLayout(root.left);
+  root.left = mirrorLayout(root.right);
   root.right = left;
   return root;
 }
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=construct-binary-tree-from-preorder-and-inorder-traversal&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("construct-binary-tree-from-preorder-and-inorder-traversal"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Construct Binary Tree from Preorder and Inorder Traversal", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("construct-binary-tree-from-preorder-and-inorder-traversal"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function buildTree(preorder, inorder) {
+      await page.getByLabel("Code editor").fill(`function rebuildFromDumps(preorder, inorder) {
   const positions = new Map(inorder.map((value, index) => [value, index]));
   let preIndex = 0;
   function build(left, right) {
@@ -843,12 +864,12 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=populating-next-right-pointers-in-each-node-ii&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("populating-next-right-pointers-in-each-node-ii"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Populating Next Right Pointers in Each Node II", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("populating-next-right-pointers-in-each-node-ii"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function connect(root) {
+      await page.getByLabel("Code editor").fill(`function linkRowNeighbors(root) {
   let level = root;
   while (level) {
     const dummy = new _Node(0);
@@ -864,56 +885,56 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=binary-search-tree-iterator&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("binary-search-tree-iterator"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Binary Search Tree Iterator", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("binary-search-tree-iterator"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`var BSTIterator = function(root) {
+      await page.getByLabel("Code editor").fill(`var OrderedCursor = function(root) {
   this.stack = [];
   this.pushLeft(root);
 };
 
-BSTIterator.prototype.pushLeft = function(node) {
+OrderedCursor.prototype.pushLeft = function(node) {
   while (node) {
     this.stack.push(node);
     node = node.left;
   }
 };
 
-BSTIterator.prototype.next = function() {
+OrderedCursor.prototype.next = function() {
   const node = this.stack.pop();
   this.pushLeft(node.right);
   return node.val;
 };
 
-BSTIterator.prototype.hasNext = function() {
+OrderedCursor.prototype.hasNext = function() {
   return this.stack.length > 0;
 };
 `);
       await runAndExpectPassing(3);
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=lowest-common-ancestor-of-a-binary-tree&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("lowest-common-ancestor-of-a-binary-tree"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Lowest Common Ancestor of a Binary Tree", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("lowest-common-ancestor-of-a-binary-tree"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function lowestCommonAncestor(root, p, q) {
+      await page.getByLabel("Code editor").fill(`function nearestSharedApprover(root, p, q) {
   if (!root || root === p || root === q) return root;
-  const left = lowestCommonAncestor(root.left, p, q);
-  const right = lowestCommonAncestor(root.right, p, q);
+  const left = nearestSharedApprover(root.left, p, q);
+  const right = nearestSharedApprover(root.right, p, q);
   if (left && right) return root;
   return left || right;
 }
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=binary-tree-zigzag-level-order-traversal&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("binary-tree-zigzag-level-order-traversal"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Binary Tree Zigzag Level Order Traversal", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("binary-tree-zigzag-level-order-traversal"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function zigzagLevelOrder(root) {
+      await page.getByLabel("Code editor").fill(`function serpentineSweep(root) {
   if (!root) return [];
   const rows = [];
   let queue = [root];
@@ -936,12 +957,12 @@ BSTIterator.prototype.hasNext = function() {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=validate-binary-search-tree&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("validate-binary-search-tree"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Validate Binary Search Tree", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("validate-binary-search-tree"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function isValidBST(root) {
+      await page.getByLabel("Code editor").fill(`function indexOrderingHolds(root) {
   function valid(node, low, high) {
     if (!node) return true;
     if (node.val <= low || node.val >= high) return false;
@@ -952,12 +973,12 @@ BSTIterator.prototype.hasNext = function() {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=clone-graph&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("clone-graph"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Clone Graph", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("clone-graph"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function cloneGraph(node) {
+      await page.getByLabel("Code editor").fill(`function replicateTopology(node) {
   if (!node) return null;
   const copies = new Map();
   function clone(current) {
@@ -972,64 +993,64 @@ BSTIterator.prototype.hasNext = function() {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=course-schedule-ii&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("course-schedule-ii"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Course Schedule II", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("course-schedule-ii"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function findOrder(numCourses, prerequisites) {
-  const graph = Array.from({ length: numCourses }, () => []);
-  const indegree = Array(numCourses).fill(0);
-  for (const [course, prerequisite] of prerequisites) {
-    graph[prerequisite].push(course);
-    indegree[course]++;
+      await page.getByLabel("Code editor").fill(`function planMigrationOrder(migrationCount, dependencies) {
+  const graph = Array.from({ length: migrationCount }, () => []);
+  const indegree = Array(migrationCount).fill(0);
+  for (const [migration, dependency] of dependencies) {
+    graph[dependency].push(migration);
+    indegree[migration]++;
   }
   const queue = [];
-  for (let course = numCourses - 1; course >= 0; course--) {
-    if (indegree[course] === 0) queue.push(course);
+  for (let migration = migrationCount - 1; migration >= 0; migration--) {
+    if (indegree[migration] === 0) queue.push(migration);
   }
   const order = [];
   while (queue.length) {
-    const course = queue.pop();
-    order.push(course);
-    for (const next of graph[course]) {
+    const migration = queue.pop();
+    order.push(migration);
+    for (const next of graph[migration]) {
       if (--indegree[next] === 0) queue.push(next);
     }
   }
-  return order.length === numCourses ? order : [];
+  return order.length === migrationCount ? order : [];
 }
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=implement-trie-prefix-tree&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("implement-trie-prefix-tree"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Implement Trie (Prefix Tree)", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("implement-trie-prefix-tree"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`var Trie = function() {
+      await page.getByLabel("Code editor").fill(`var CommandIndex = function() {
   this.children = new Map();
   this.word = false;
 };
 
-Trie.prototype.insert = function(word) {
+CommandIndex.prototype.insert = function(word) {
   let node = this;
   for (const char of word) {
-    if (!node.children.has(char)) node.children.set(char, new Trie());
+    if (!node.children.has(char)) node.children.set(char, new CommandIndex());
     node = node.children.get(char);
   }
   node.word = true;
 };
 
-Trie.prototype.search = function(word) {
+CommandIndex.prototype.search = function(word) {
   const node = this.find(word);
   return Boolean(node && node.word);
 };
 
-Trie.prototype.startsWith = function(prefix) {
+CommandIndex.prototype.startsWith = function(prefix) {
   return Boolean(this.find(prefix));
 };
 
-Trie.prototype.find = function(text) {
+CommandIndex.prototype.find = function(text) {
   let node = this;
   for (const char of text) {
     node = node.children.get(char);
@@ -1040,26 +1061,26 @@ Trie.prototype.find = function(text) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=design-add-and-search-words-data-structure&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("design-add-and-search-words-data-structure"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Design Add and Search Words Data Structure", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("design-add-and-search-words-data-structure"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`var WordDictionary = function() {
+      await page.getByLabel("Code editor").fill(`var PatternLexicon = function() {
   this.children = new Map();
   this.word = false;
 };
 
-WordDictionary.prototype.addWord = function(word) {
+PatternLexicon.prototype.addWord = function(word) {
   let node = this;
   for (const char of word) {
-    if (!node.children.has(char)) node.children.set(char, new WordDictionary());
+    if (!node.children.has(char)) node.children.set(char, new PatternLexicon());
     node = node.children.get(char);
   }
   node.word = true;
 };
 
-WordDictionary.prototype.search = function(word) {
+PatternLexicon.prototype.search = function(word) {
   const dfs = (node, index) => {
     if (index === word.length) return node.word;
     const char = word[index];
@@ -1077,12 +1098,12 @@ WordDictionary.prototype.search = function(word) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=combination-sum&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("combination-sum"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Combination Sum", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("combination-sum"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function combinationSum(candidates, target) {
+      await page.getByLabel("Code editor").fill(`function listPalletLoadouts(candidates, target) {
   candidates.sort((a, b) => a - b);
   const results = [];
   function dfs(start, remain, path) {
@@ -1102,12 +1123,12 @@ WordDictionary.prototype.search = function(word) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=permutations&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("permutations"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Permutations", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("permutations"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function permute(nums) {
+      await page.getByLabel("Code editor").fill(`function allStartupOrders(nums) {
   const results = [];
   function dfs(path, used) {
     if (path.length === nums.length) {
@@ -1129,12 +1150,12 @@ WordDictionary.prototype.search = function(word) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=generate-parentheses&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("generate-parentheses"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Generate Parentheses", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("generate-parentheses"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function generateParenthesis(n) {
+      await page.getByLabel("Code editor").fill(`function wellNestedSequences(n) {
   const results = [];
   function dfs(open, close, path) {
     if (path.length === n * 2) {
@@ -1150,12 +1171,12 @@ WordDictionary.prototype.search = function(word) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=n-queens-ii&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("n-queens-ii"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "N-Queens II", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("n-queens-ii"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function totalNQueens(n) {
+      await page.getByLabel("Code editor").fill(`function countSafeLayouts(n) {
   let count = 0;
   const cols = new Set();
   const diagA = new Set();
@@ -1182,12 +1203,12 @@ WordDictionary.prototype.search = function(word) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=word-search&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("word-search"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Word Search", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("word-search"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function exist(board, word) {
+      await page.getByLabel("Code editor").fill(`function canTraceWord(board, word) {
   function dfs(row, col, index) {
     if (index === word.length) return true;
     if (row < 0 || col < 0 || row === board.length || col === board[0].length) return false;
@@ -1211,12 +1232,12 @@ WordDictionary.prototype.search = function(word) {
 `);
       await runAndExpectPassing();
 
-      await page.goto(`${process.env.BASE_URL}/interview?problem=convert-sorted-array-to-binary-search-tree&duration=20`, { waitUntil: "domcontentloaded" });
+      await page.goto(interviewUrl("convert-sorted-array-to-binary-search-tree"), { waitUntil: "domcontentloaded" });
       await clearMediaGate(page);
-      await page.getByRole("heading", { name: "Convert Sorted Array to Binary Search Tree", level: 1 }).waitFor();
+      await page.getByRole("heading", { name: scenarioTitle("convert-sorted-array-to-binary-search-tree"), level: 1 }).waitFor();
       await page.getByText("Offline", { exact: true }).waitFor();
       await page.getByRole("button", { name: "JavaScript" }).click();
-      await page.getByLabel("Code editor").fill(`function sortedArrayToBST(nums) {
+      await page.getByLabel("Code editor").fill(`function buildBalancedIndex(nums) {
   function build(left, right) {
     if (left > right) return null;
     const mid = Math.floor((left + right) / 2);
@@ -1258,7 +1279,7 @@ WordDictionary.prototype.search = function(word) {
       }
     }
 
-    await page.goto(`${process.env.BASE_URL}/interview?problem=two-sum&duration=20`);
+    await page.goto(interviewUrl("two-sum"));
     await clearMediaGate(page);
     if (credentialed && !rustAgentIdentity) {
       roomName = await page
@@ -1298,7 +1319,7 @@ WordDictionary.prototype.search = function(word) {
           const pill = await page.locator("#agent-state").innerText().catch(() => "");
           if (/Offline/.test(pill)) throw new Error("the interview joined no room; the status pill reads Offline");
         }
-        const problemTitle = await page.getByRole("heading", { name: "Two Sum", level: 1 }).innerText();
+        const problemTitle = await page.getByRole("heading", { name: scenarioTitle("two-sum"), level: 1 }).innerText();
         // Scoped to the pill. The captions element also renders the literal
         // word "Listening" as its placeholder, so an unscoped text match hits
         // two elements; it only ever looked unambiguous because the pill was
@@ -1448,7 +1469,7 @@ function startCompilerExplorerMock() {
         executes
         && payload.options?.userArguments === "-O2 -std=c17"
         && request.url.includes("/api/compiler/cclang1910/")
-        && source.includes("int* twoSum")
+        && source.includes("int* matchDisputedCharge")
         && source.includes("int main(void)")
       ) {
         stdout = "{\"results\":[{\"actual\":[0,1],\"timeMs\":1},{\"actual\":[1,2],\"timeMs\":1},{\"actual\":[0,1],\"timeMs\":1},{\"actual\":[0,2],\"timeMs\":1}]}";
@@ -1457,9 +1478,9 @@ function startCompilerExplorerMock() {
         && payload.options?.userArguments === "-O2 -std=c++20"
         && request.url.includes("/api/compiler/g162/")
         && [
-          "class MinStack",
+          "class BidLedger",
           "jsonFragments(actual)",
-          "MinStack instance{}",
+          "BidLedger instance{}",
           "instance.push(-2)",
           "instance.pop();",
           "instance.getMin()",
@@ -1472,8 +1493,8 @@ function startCompilerExplorerMock() {
         && payload.options?.userArguments === ""
         && request.url.includes("/api/compiler/java2501/")
         && [
-          "class BSTIterator",
-          "new BSTIterator(treeNode(new Integer[]{7, 3, 15, null, null, 9, 20}))",
+          "class OrderedCursor",
+          "new OrderedCursor(treeNode(new Integer[]{7, 3, 15, null, null, 9, 20}))",
           "actual.add(jsonAny(instance.next()))",
           "actual.add(jsonAny(instance.hasNext()))",
         ].every((pattern) => source.includes(pattern))

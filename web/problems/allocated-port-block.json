@@ -1,0 +1,60 @@
+{
+  "page": "allocated-port-block",
+  "title": "Allocated Port Block",
+  "source": "Longest Consecutive Sequence",
+  "difficulty": "Medium",
+  "brief": [
+    "A network inventory tool exports the port numbers currently allocated on a gateway in no particular order. Operators want to know the size of the largest block of adjacent port numbers that are all allocated, wherever those numbers happen to sit in the export.",
+    "Implement longestPortBlock(nums), where nums is the exported list of port numbers, and return the length of the longest run of integer values v, v + 1, v + 2 and so on that all appear in nums."
+  ],
+  "examples": [
+    {
+      "input": "nums = [9,1,7,8,3,10]",
+      "output": "4"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def longestPortBlock(self, nums: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction longestPortBlock(nums) {\n  // Think out loud as you go!\n}\n",
+    "c": "int longestPortBlock(int* nums, int numsSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int longestPortBlock(vector<int>& nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int longestPortBlock(int[] nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

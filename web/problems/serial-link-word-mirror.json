@@ -1,0 +1,64 @@
+{
+  "page": "serial-link-word-mirror",
+  "title": "Serial Link Word Mirror",
+  "source": "Reverse Bits",
+  "difficulty": "Easy",
+  "brief": [
+    "A sensor sends 32-bit words over a serial link least significant bit first, but our receiver assembles each word as if it had arrived most significant bit first. Every word we store therefore has its bit order mirrored.",
+    "Implement mirrorWordBits(n), where n is a received 32-bit word as an integer, and return the integer whose 32 bits are the bits of n in reverse order."
+  ],
+  "examples": [
+    {
+      "input": "n = 715827882",
+      "output": "1431655764"
+    },
+    {
+      "input": "n = 2",
+      "output": "1073741824"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def mirrorWordBits(self, n: int) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nfunction mirrorWordBits(n) {\n  // Think out loud as you go!\n}\n",
+    "c": "int mirrorWordBits(int n) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int mirrorWordBits(int n) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int mirrorWordBits(int n) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

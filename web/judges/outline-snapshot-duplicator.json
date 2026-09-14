@@ -1,0 +1,157 @@
+{
+  "kind": "function",
+  "entry": "snapshotOutline",
+  "checker": "exact",
+  "argTypes": [
+    "randomList"
+  ],
+  "outputType": "randomList",
+  "cases": [
+    {
+      "label": "mixed random links",
+      "input": [
+        [
+          [
+            7,
+            null
+          ],
+          [
+            13,
+            0
+          ],
+          [
+            11,
+            4
+          ],
+          [
+            10,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          7,
+          null
+        ],
+        [
+          13,
+          0
+        ],
+        [
+          11,
+          4
+        ],
+        [
+          10,
+          2
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "self random link",
+      "input": [
+        [
+          [
+            1,
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "label": "duplicate values different randoms",
+      "input": [
+        [
+          [
+            3,
+            null
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            null
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          3,
+          null
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          null
+        ]
+      ]
+    },
+    {
+      "label": "empty random list",
+      "input": [
+        []
+      ],
+      "expected": []
+    },
+    {
+      "label": "links forward and back",
+      "input": [
+        [
+          [
+            3,
+            2
+          ],
+          [
+            5,
+            null
+          ],
+          [
+            8,
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          null
+        ],
+        [
+          8,
+          0
+        ]
+      ]
+    }
+  ],
+  "paramNames": [
+    "head"
+  ],
+  "paramTypes": [
+    "Node"
+  ],
+  "returnType": "Node"
+}

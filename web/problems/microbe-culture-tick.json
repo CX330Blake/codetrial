@@ -1,0 +1,64 @@
+{
+  "page": "microbe-culture-tick",
+  "title": "Microbe Culture Tick",
+  "source": "Game of Life",
+  "difficulty": "Medium",
+  "brief": [
+    "A lab simulation models a microbe culture on a rectangular grid where each cell is either occupied (1) or empty (0). On every tick, an occupied cell stays occupied if it has two or three occupied neighbours and dies otherwise, and an empty cell becomes occupied if it has exactly three occupied neighbours.",
+    "Implement advanceCultureTick(board), where board is the grid as a list of rows of 0s and 1s. Advance it by one tick by modifying board directly; the function returns nothing."
+  ],
+  "examples": [
+    {
+      "input": "board = [[0,1,0],[0,1,0],[0,1,0]]",
+      "output": "board becomes [[0,0,0],[1,1,1],[0,0,0]]"
+    },
+    {
+      "input": "board = [[1,0,0],[0,1,0],[0,0,1]]",
+      "output": "board becomes [[0,0,0],[0,1,0],[0,0,0]]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def advanceCultureTick(self, board: list[list[int]]) -> None:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} board\n * @return {void}\n */\nfunction advanceCultureTick(board) {\n  // Think out loud as you go!\n}\n",
+    "c": "void advanceCultureTick(int** board, int boardSize, int* boardColSize) {\n    // Think out loud as you go!\n}\n",
+    "cpp": "class Solution {\npublic:\n    void advanceCultureTick(vector<vector<int>>& board) {\n        // Think out loud as you go!\n    }\n};\n",
+    "java": "class Solution {\n    public void advanceCultureTick(int[][] board) {\n        // Think out loud as you go!\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

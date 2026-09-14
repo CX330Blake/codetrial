@@ -1,0 +1,64 @@
+{
+  "page": "faulty-sensor-grid-blanking",
+  "title": "Faulty Sensor Grid Blanking",
+  "source": "Set Matrix Zeroes",
+  "difficulty": "Medium",
+  "brief": [
+    "A floor-mounted pressure sensor grid is wired by row buses and column buses. When any sensor reads exactly 0, both buses it sits on are considered faulty, and every reading on that row and that column must be blanked to 0 before the data is published.",
+    "Implement blankFaultyLines(matrix), where matrix is the grid of readings as a list of rows. Apply the blanking by modifying matrix directly; the function returns nothing."
+  ],
+  "examples": [
+    {
+      "input": "matrix = [[1,2,3],[0,5,6],[7,8,9]]",
+      "output": "matrix becomes [[0,2,3],[0,0,0],[0,8,9]]"
+    },
+    {
+      "input": "matrix = [[5,6,7],[8,9,0],[1,2,3]]",
+      "output": "matrix becomes [[5,6,0],[0,0,0],[1,2,0]]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def blankFaultyLines(self, matrix: list[list[int]]) -> None:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} matrix\n * @return {void}\n */\nfunction blankFaultyLines(matrix) {\n  // Think out loud as you go!\n}\n",
+    "c": "void blankFaultyLines(int** matrix, int matrixSize, int* matrixColSize) {\n    // Think out loud as you go!\n}\n",
+    "cpp": "class Solution {\npublic:\n    void blankFaultyLines(vector<vector<int>>& matrix) {\n        // Think out loud as you go!\n    }\n};\n",
+    "java": "class Solution {\n    public void blankFaultyLines(int[][] matrix) {\n        // Think out loud as you go!\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,13 +1,16 @@
 import { FRAMEWORKS, codingLoop } from "./lib.js";
-import { clearReportHistory, readLocalHistory } from "./history.js";
-import { pickProblem, suggestDifficulty } from "./problem-picker.js";
-import { buildProgressModel, unwrapEntry } from "./progress.js";
+import { clearReportHistory, readLocalHistory, renameLocalHistory } from "./history.js";
+import { pickProblem, practiceFocus, storeSharedFocus, suggestDifficulty } from "./problem-picker.js";
+import { buildProgressModel, pickerEntry } from "./progress.js";
+import { loadPageMap } from "./problem-data.js";
 import { parseGroundingFile, selectedGroundingPacket, storeGroundingPacket } from "./document-grounding.js";
 
 let problem;
 let duration;
 let interviewLoop = "coding_behavioral";
 let reports = [];
+/// The practice focus the share box currently refers to.
+let sharedFocus = null;
 let manualProblem = false;
 let manualDuration = false;
 let manualDifficulty = false;
@@ -41,6 +44,9 @@ const nodes = {
   deleteReports: document.querySelector("#delete-reports"),
   reportDeleteStatus: document.querySelector("#report-delete-status"),
   recommendation: document.querySelector("#recommendation"),
+  practiceFocus: document.querySelector("#practice-focus"),
+  practiceFocusShare: document.querySelector("#practice-focus-share"),
+  practiceFocusShareInput: document.querySelector("#practice-focus-share-input"),
   progressSummary: document.querySelector("#progress-summary"),
   progressTrends: document.querySelector("#progress-trends"),
   progressWeaknesses: document.querySelector("#progress-weaknesses"),
@@ -63,12 +69,45 @@ const nodes = {
 
 // Every card carries the pressed state from the start, not only the one that
 // is on: one pressed button among 149 plain ones does not read as a choice.
+// A card's id is its page name, the only name the browser has for a problem.
 const cards = [...document.querySelectorAll("[data-problem]")].map((button) => ({
   id: button.dataset.problem,
   difficulty: button.dataset.difficulty,
   button,
 }));
+const cardIds = new Set(cards.map((card) => card.id));
 for (const card of cards) mark(card.button, false);
+
+// The published names are off unless the candidate turns them on, and the
+// choice is theirs to keep between visits. A convenience, so storage that
+// throws (a private window, blocked site data) just means off.
+const SHOW_SOURCES_KEY = "codetrial.showProblemSources";
+const showSources = document.querySelector("#show-sources");
+try {
+  showSources.checked = localStorage.getItem(SHOW_SOURCES_KEY) === "1";
+} catch { /* off */ }
+// The published names are not in the page: they arrive with the map, fetched
+// the first time the candidate turns them on.
+const applySources = async () => {
+  if (showSources.checked) {
+    const pages = await loadPageMap().catch(() => null);
+    const sourceOf = new Map(Object.values(pages ?? {}).map((entry) => [entry.page, entry.source]));
+    for (const card of cards) {
+      const source = card.button.querySelector(".problem-source");
+      if (sourceOf.has(card.id)) source.textContent = `LeetCode: ${sourceOf.get(card.id)}`;
+    }
+  }
+  for (const source of document.querySelectorAll(".problem-source")) {
+    source.hidden = !showSources.checked || source.textContent === "";
+  }
+};
+showSources.addEventListener("change", () => {
+  void applySources();
+  try {
+    localStorage.setItem(SHOW_SOURCES_KEY, showSources.checked ? "1" : "0");
+  } catch { /* the page still shows what was chosen */ }
+});
+void applySources();
 const levels = [...document.querySelectorAll('[name="difficulty"]')];
 
 // A picked card is a choice about this one interview, not about the filter the
@@ -167,6 +206,8 @@ start.addEventListener("click", async () => {
   // button was pressed and 60 by the time it was answered, and the same for
   // the round plan and the profile beside them. One read, then go.
   const destination = new URL("/interview", window.location.origin);
+  // The scenario's page name, not the id: the address bar is on screen for the
+  // whole interview, and the id is the published problem's slug.
   destination.searchParams.set("problem", problem.id);
   destination.searchParams.set("duration", String(duration));
   destination.searchParams.set("loop", interviewLoop);
@@ -178,6 +219,7 @@ start.addEventListener("click", async () => {
   if (profile.role) destination.searchParams.set("role", profile.role);
   if (profile.seniority) destination.searchParams.set("seniority", profile.seniority);
   if (profile.targetCompany) destination.searchParams.set("company", profile.targetCompany);
+  const focus = nodes.practiceFocusShareInput.checked ? practiceFocus(reports) : null;
   const selected = { requirements: [], skills: [], anchors: [] };
   for (const input of nodes.groundingChoices.querySelectorAll("input:checked")) selected[input.dataset.group].push(Number(input.value));
   const consented = nodes.groundingConsent.checked;
@@ -204,6 +246,7 @@ start.addEventListener("click", async () => {
   try {
     const packet = selectedGroundingPacket(grounding, selected, consented);
     storeGroundingPacket(sessionStorage, packet);
+    storeSharedFocus(sessionStorage, focus?.weakness ?? null);
   } catch (error) {
     nodes.groundingError.textContent = error.message;
     starting = false;
@@ -362,7 +405,7 @@ async function loadAccount() {
       nodes.loginLink.hidden = false;
       nodes.logout.hidden = true;
       setStartGate(true);
-      renderLocalHistory();
+      await renderLocalHistory();
       return;
     }
   } catch {
@@ -374,7 +417,7 @@ async function loadAccount() {
   nodes.loginLink.hidden = false;
   nodes.logout.hidden = true;
   setStartGate(false);
-  renderLocalHistory();
+  await renderLocalHistory();
 }
 
 async function recordGitHubLogin(reload) {
@@ -408,19 +451,30 @@ async function recordGitHubLogin(reload) {
 async function renderServerHistory() {
   try {
     const data = await fetchJson("/api/reports");
-    // The picker reads the unwrapped entry, the panel takes the wire shape and
-    // unwraps it itself, and both go through the one rule in progress.js.
-    reports = data.reports.map(unwrapEntry);
+    // The picker needs the account row's timestamp for review scheduling and
+    // the verdict as it was saved; the progress panel normalizes its own.
+    // The server reads its rows back under page names, so no map is needed.
+    reports = data.reports.map(pickerEntry);
     showProgress(data.reports, "saved to your account");
   } catch {
     showProgressError("Could not load saved account progress.");
   }
 }
 
-function renderLocalHistory() {
+/// Local history saved before problems had page names carries published ids.
+/// The map, fetched only when such an entry is there, renames them in place
+/// once, so the picker still knows what the candidate has passed and the next
+/// visit fetches nothing. Account history needs none of this: the server reads
+/// it back under page names.
+async function renderLocalHistory() {
   try {
-    reports = readLocalHistory();
-    showProgress(reports, "saved on this device");
+    let entries = readLocalHistory();
+    if (!entries.every((entry) => cardIds.has(pickerEntry(entry).problemId))) {
+      const pages = await loadPageMap().catch(() => null);
+      if (pages) entries = renameLocalHistory(pages);
+    }
+    reports = entries.map(pickerEntry);
+    showProgress(entries, "saved on this device");
   } catch {
     showProgressError("Could not load progress saved on this device.");
   }
@@ -448,7 +502,7 @@ async function deleteSavedReports() {
       showReportDeleteStatus(
         "Account reports were deleted, but reports saved on this device could not be deleted.",
       );
-      renderLocalHistory();
+      await renderLocalHistory();
       settle();
       return;
     }
@@ -500,9 +554,26 @@ function recommend(note = "") {
     return;
   }
   setProblem(choice.picked);
-  nodes.recommendation.textContent = choice.repeat
-    ? `${note}You have passed every problem at this level. Recommended again: ${title(choice.picked)}.`
-    : `${note}Recommended: ${title(choice.picked)}.`;
+  nodes.recommendation.textContent = choice.review
+    ? `${note}Review due after ${choice.review.intervalDays} day${choice.review.intervalDays === 1 ? "" : "s"}: ${title(choice.picked)}.`
+    : choice.repeat
+      ? `${note}You have passed every problem at this level. Recommended again: ${title(choice.picked)}.`
+      : `${note}Recommended: ${title(choice.picked)}.`;
+}
+
+/// Read off `reports` alone, so it is rendered wherever those change: the two
+/// history paths below, and nowhere the selection moves.
+function renderPracticeFocus() {
+  const focus = practiceFocus(reports);
+  nodes.practiceFocus.textContent = focus
+    ? `Carry forward${focus.occurrences === 1 ? "" : ` (${focus.occurrences} reports)`}: ${focus.weakness}. Drill: ${focus.drill}. Success: ${focus.successCriterion}.`
+    : "";
+  nodes.practiceFocus.hidden = focus === null;
+  nodes.practiceFocusShare.hidden = focus === null;
+  // Consent is to share this text. Reloaded history can change it, and a box
+  // left ticked would then send words the candidate never saw beside it.
+  if (focus?.weakness !== sharedFocus) nodes.practiceFocusShareInput.checked = false;
+  sharedFocus = focus?.weakness ?? null;
 }
 
 /// Check the level the candidate's own results point at and return the sentence
@@ -628,6 +699,7 @@ function showProgressError(message) {
   // history it had last managed to load.
   reports = [];
   progressEntries = [];
+  renderPracticeFocus();
   nodes.historyHeader.hidden = false;
   nodes.history.hidden = false;
   nodes.progressSummary.textContent = message;
@@ -636,6 +708,7 @@ function showProgressError(message) {
 }
 
 function showProgress(entries, suffix) {
+  renderPracticeFocus();
   progressEntries = entries;
   progressSuffix = suffix;
   const erasable = entries.length > 0 || readLocalHistory().length > 0;

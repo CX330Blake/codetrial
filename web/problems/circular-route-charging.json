@@ -1,0 +1,60 @@
+{
+  "page": "circular-route-charging",
+  "title": "Circular Route Charging",
+  "source": "Gas Station",
+  "difficulty": "Medium",
+  "brief": [
+    "An electric delivery van runs a fixed loop through a ring of depots. At each depot it picks up some charge, and each leg to the following depot drains some charge. Dispatch wants to know where the van can start its shift with an empty battery and still get all the way around.",
+    "Implement viableStartDepot(pickup, drain), where pickup[i] is the charge picked up at depot i and drain[i] is the charge used to drive from depot i to the following depot, with the last depot leading back to depot 0. Return the index of a depot from which the van can complete the full loop."
+  ],
+  "examples": [
+    {
+      "input": "pickup = [5,1,2,3,4], drain = [4,4,1,5,1]",
+      "output": "4"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def viableStartDepot(self, pickup: list[int], drain: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} pickup\n * @param {number[]} drain\n * @return {number}\n */\nfunction viableStartDepot(pickup, drain) {\n  // Think out loud as you go!\n}\n",
+    "c": "int viableStartDepot(int* pickup, int pickupSize, int* drain, int drainSize) {\n    // Think out loud as you go!\n    return -1;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int viableStartDepot(vector<int>& pickup, vector<int>& drain) {\n        // Think out loud as you go!\n        return -1;\n    }\n};\n",
+    "java": "class Solution {\n    public int viableStartDepot(int[] pickup, int[] drain) {\n        // Think out loud as you go!\n        return -1;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

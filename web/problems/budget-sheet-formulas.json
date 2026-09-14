@@ -1,0 +1,64 @@
+{
+  "page": "budget-sheet-formulas",
+  "title": "Budget Sheet Formulas",
+  "source": "Basic Calculator",
+  "difficulty": "Hard",
+  "brief": [
+    "Our budgeting app lets finance teams type formulas into a cell, such as 1200 - (300 + 45) + 80. The formulas use whole numbers, addition, subtraction, parentheses and spaces, and the app has to show the computed value as soon as the cell is saved.",
+    "Implement evaluateFormula(s), where s is the text of the formula, and return its integer value."
+  ],
+  "examples": [
+    {
+      "input": "s = \"2-(5-6)\"",
+      "output": "3"
+    },
+    {
+      "input": "s = \"10-(2+(3-4))\"",
+      "output": "9"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def evaluateFormula(self, s: str) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nfunction evaluateFormula(s) {\n  // Think out loud as you go!\n}\n",
+    "c": "int evaluateFormula(char* s) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int evaluateFormula(string s) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int evaluateFormula(String s) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

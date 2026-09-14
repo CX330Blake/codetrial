@@ -1,0 +1,60 @@
+{
+  "page": "lab-unit-converter",
+  "title": "Lab Unit Converter",
+  "source": "Evaluate Division",
+  "difficulty": "Medium",
+  "brief": [
+    "A lab information system tracks measurement units with made-up names. Technicians enter known relationships such as one flask equals 2.5 vials, and the system should answer conversion questions between units by chaining those relationships.",
+    "Implement convertUnitRatios(pairs, ratios, queries). Each pairs[i] is a pair [x, y] and ratios[i] says one x equals ratios[i] of y. Each queries[j] is a pair [c, d] asking how many d make up one c. Return one number per query, in query order."
+  ],
+  "examples": [
+    {
+      "input": "pairs = [[\"a\",\"b\"]], ratios = [0.5], queries = [[\"a\",\"b\"],[\"b\",\"a\"],[\"a\",\"c\"],[\"x\",\"y\"]]",
+      "output": "[0.5,2,-1,-1]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<double> convertUnitRatios(vector<vector<string>>& pairs, vector<double>& ratios, vector<vector<string>>& queries) {\n        \n    }\n};",
+    "java": "class Solution {\n    public double[] convertUnitRatios(List<List<String>> pairs, double[] ratios, List<List<String>> queries) {\n        \n    }\n}",
+    "python": "class Solution:\n    def convertUnitRatios(self, pairs: List[List[str]], ratios: List[float], queries: List[List[str]]) -> List[float]:\n        ",
+    "javascript": "/**\n * @param {string[][]} pairs\n * @param {number[]} ratios\n * @param {string[][]} queries\n * @return {number[]}\n */\nvar convertUnitRatios = function(pairs, ratios, queries) {\n    \n};",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\ndouble* convertUnitRatios(char*** pairs, int pairsSize, int* pairsColSize, double* ratios, int ratiosSize, char*** queries, int queriesSize, int* queriesColSize, int* returnSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

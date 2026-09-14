@@ -23,8 +23,8 @@ const FIXTURES = join(ROOT, "tests", "fixtures");
 const lib = await import(join(ROOT, "web", "lib.js"));
 const { ALL_LANGUAGES } = await import(join(ROOT, "web", "compiler-explorer.js"));
 
-const CODE = "def two_sum(nums, target):\n    return []\n";
-const EDITED = "def two_sum(nums, target):\n    seen = {}\n    return []\n";
+const CODE = "def match_pair(amounts, total):\n    return []\n";
+const EDITED = "def match_pair(amounts, total):\n    seen = {}\n    return []\n";
 
 // Fixed rather than Date.now(). testPayload stamps itself from the clock, so
 // the generator freezes it for the same reason it hardcodes the ISO strings

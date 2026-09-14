@@ -20,7 +20,7 @@
       "payload": {
         "type": "end_interview",
         "reason": "candidate_ended",
-        "code": "def two_sum(nums, target):\n    seen = {}\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    seen = {}\n    return []\n",
         "language": "cpp"
       }
     },
@@ -29,7 +29,7 @@
       "payload": {
         "type": "end_interview",
         "reason": "time_expired",
-        "code": "def two_sum(nums, target):\n    seen = {}\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    seen = {}\n    return []\n",
         "language": "python"
       }
     }

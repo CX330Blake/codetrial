@@ -1,0 +1,49 @@
+{
+  "kind": "function",
+  "entry": "countStridePlans",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "two slots",
+      "input": [
+        2
+      ],
+      "expected": 2
+    },
+    {
+      "label": "three slots",
+      "input": [
+        3
+      ],
+      "expected": 3
+    },
+    {
+      "label": "one slot",
+      "input": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "label": "four slots",
+      "input": [
+        4
+      ],
+      "expected": 5
+    },
+    {
+      "label": "longer rail",
+      "input": [
+        10
+      ],
+      "expected": 89
+    }
+  ],
+  "paramNames": [
+    "n"
+  ],
+  "paramTypes": [
+    "integer"
+  ],
+  "returnType": "integer"
+}

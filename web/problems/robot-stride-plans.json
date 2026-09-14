@@ -1,0 +1,60 @@
+{
+  "page": "robot-stride-plans",
+  "title": "Robot Stride Plans",
+  "source": "Climbing Stairs",
+  "difficulty": "Easy",
+  "brief": [
+    "A warehouse robot moves along a rail of numbered slots. Each move it advances either one slot or two slots, and the planner wants to know how many different move sequences take it from slot 0 to exactly slot n.",
+    "Implement countStridePlans(n), where n is the destination slot, and return the number of distinct move sequences that land exactly on it."
+  ],
+  "examples": [
+    {
+      "input": "n = 4",
+      "output": "5"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def countStridePlans(self, n: int) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nfunction countStridePlans(n) {\n  // Think out loud as you go!\n}\n",
+    "c": "int countStridePlans(int n) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int countStridePlans(int n) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int countStridePlans(int n) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

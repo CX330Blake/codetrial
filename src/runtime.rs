@@ -102,7 +102,7 @@ pub fn bootstrap_with_rounds<'a>(
         voice: &config.gemini_voice,
         silence_ms: config.gemini_silence_ms,
         start_sensitivity: &config.gemini_start_sensitivity,
-        greeting: greeting(),
+        greeting: greeting(problem),
     }
 }
 

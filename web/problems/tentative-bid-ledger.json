@@ -1,0 +1,60 @@
+{
+  "page": "tentative-bid-ledger",
+  "title": "Tentative Bid Ledger",
+  "source": "Min Stack",
+  "difficulty": "Medium",
+  "brief": [
+    "An auction desk tool keeps traders' tentative bids in a last-in, first-out ledger: new bids go on top, and undo removes the most recent one. Traders also want to see the lowest bid currently in the ledger at any moment, and that display refreshes after every action.",
+    "Implement the class BidLedger with a constructor taking no arguments and four methods: push(value) adds a bid on top, pop() removes the top bid, top() returns the top bid without removing it, and getMin() returns the smallest bid currently in the ledger."
+  ],
+  "examples": [
+    {
+      "input": "[\"BidLedger\",\"push\",\"push\",\"push\",\"getMin\",\"top\"]\n[[],[4],[6],[-1],[],[]]",
+      "output": "[null,null,null,null,-1,-1]"
+    }
+  ],
+  "starterCode": {
+    "python": "class BidLedger:\n    def __init__(self):\n        pass\n\n    def push(self, value: int) -> None:\n        pass\n\n    def pop(self) -> None:\n        pass\n\n    def top(self) -> int:\n        pass\n\n    def getMin(self) -> int:\n        pass\n",
+    "javascript": "class BidLedger {\n  constructor() {\n  }\n\n  /** @param {number} value @return {void} */\n  push(value) {\n  }\n\n  /** @return {void} */\n  pop() {\n  }\n\n  /** @return {number} */\n  top() {\n  }\n\n  /** @return {number} */\n  getMin() {\n  }\n}\n",
+    "c": "typedef struct {\n    // Think out loud as you go!\n} BidLedger;\n\nBidLedger* bidLedgerCreate() {\n    return NULL;\n}\n\nvoid bidLedgerPush(BidLedger* obj, int value) {\n}\n\nvoid bidLedgerPop(BidLedger* obj) {\n}\n\nint bidLedgerTop(BidLedger* obj) {\n    return 0;\n}\n\nint bidLedgerGetMin(BidLedger* obj) {\n    return 0;\n}\n\nvoid bidLedgerFree(BidLedger* obj) {\n}\n",
+    "cpp": "class BidLedger {\npublic:\n    BidLedger() {\n    }\n\n    void push(int value) {\n    }\n\n    void pop() {\n    }\n\n    int top() {\n        return 0;\n    }\n\n    int getMin() {\n        return 0;\n    }\n};\n",
+    "java": "class BidLedger {\n    public BidLedger() {\n    }\n\n    public void push(int value) {\n    }\n\n    public void pop() {\n    }\n\n    public int top() {\n        return 0;\n    }\n\n    public int getMin() {\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

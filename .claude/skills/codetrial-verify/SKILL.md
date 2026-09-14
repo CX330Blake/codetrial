@@ -44,7 +44,8 @@ what the generator would write now. A failure here is not a bug in your change;
 it means the source moved and the output did not:
 
 ```sh
-python3 scripts/gen-problems.py        # web/problems, web/judges
+python3 scripts/gen-problems.py        # web/problems, web/judges, web/problem-pages.json,
+                                       # src/agent/problem_{topics,variants,guides}.rs
 python3 scripts/gen-problem-cards.py   # the problem cards in web/index.html
 node scripts/gen-wire-fixtures.mjs     # browser/agent wire fixtures
 node scripts/gen-recording-fixtures.mjs

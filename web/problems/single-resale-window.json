@@ -1,0 +1,60 @@
+{
+  "page": "single-resale-window",
+  "title": "Single Resale Window",
+  "source": "Best Time to Buy and Sell Stock",
+  "difficulty": "Easy",
+  "brief": [
+    "A procurement tool forecasts the daily market price of a component for the coming weeks. Buyers are allowed one purchase of a batch and one resale of that batch, and they want to know the best margin the forecast allows.",
+    "Implement bestSingleFlip(prices), where prices[i] is the forecast price on day i, and return the largest profit from buying on one day and selling on a later day."
+  ],
+  "examples": [
+    {
+      "input": "prices = [3,2,6,5,0,3]",
+      "output": "4"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def bestSingleFlip(self, prices: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} prices\n * @return {number}\n */\nfunction bestSingleFlip(prices) {\n  // Think out loud as you go!\n}\n",
+    "c": "int bestSingleFlip(int* prices, int pricesSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int bestSingleFlip(vector<int>& prices) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int bestSingleFlip(int[] prices) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "page": "letter-panel-tracing",
+  "title": "Letter Panel Tracing",
+  "source": "Word Search",
+  "difficulty": "Medium",
+  "brief": [
+    "A museum exhibit has a wall of lettered tiles. Visitors spell a word by touching tiles one after another, where each tile touched must sit directly next to the previous one, and the exhibit needs to know whether a given word can be spelled at all.",
+    "Implement canTraceWord(board, word), where board is the grid of tile letters as rows of single characters and word is the word to spell, and return true if the word can be traced on the wall and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "board = [[\"D\",\"O\",\"G\"],[\"X\",\"A\",\"T\"]], word = \"GOAT\"",
+      "output": "true"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    bool canTraceWord(vector<vector<char>>& board, string word) {\n        \n    }\n};",
+    "java": "class Solution {\n    public boolean canTraceWord(char[][] board, String word) {\n        \n    }\n}",
+    "python": "class Solution:\n    def canTraceWord(self, board: List[List[str]], word: str) -> bool:\n        ",
+    "javascript": "/**\n * @param {character[][]} board\n * @param {string} word\n * @return {boolean}\n */\nvar canTraceWord = function(board, word) {\n    \n};",
+    "c": "bool canTraceWord(char** board, int boardSize, int* boardColSize, char* word) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

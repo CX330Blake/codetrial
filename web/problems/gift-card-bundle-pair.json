@@ -1,0 +1,64 @@
+{
+  "page": "gift-card-bundle-pair",
+  "title": "Gift Card Bundle Pair",
+  "source": "Two Sum II - Input Array Is Sorted",
+  "difficulty": "Medium",
+  "brief": [
+    "An online shop wants to suggest two-item bundles that spend a gift card exactly. The catalogue service hands us the item prices already sorted from cheapest to most expensive.",
+    "Implement matchGiftCardPair(numbers, target), where numbers is the sorted price list and target is the gift card value, and return the positions of the two items whose prices add up to target, as a pair of positions counted from 1."
+  ],
+  "examples": [
+    {
+      "input": "numbers = [1,1,3,4], target = 2",
+      "output": "[1,2]"
+    },
+    {
+      "input": "numbers = [-3,0,2,5,9], target = 7",
+      "output": "[3,4]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def matchGiftCardPair(self, numbers: list[int], target: int) -> list[int]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} numbers\n * @param {number} target\n * @return {number[]}\n */\nfunction matchGiftCardPair(numbers, target) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nint* matchGiftCardPair(int* numbers, int numbersSize, int target, int* returnSize) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<int> matchGiftCardPair(vector<int>& numbers, int target) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public int[] matchGiftCardPair(int[] numbers, int target) {\n        // Think out loud as you go!\n        return new int[]{};\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

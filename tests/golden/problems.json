@@ -260,7 +260,7 @@
     {
       "difficulty": "Medium",
       "id": "edit-distance",
-      "optimal": "Dynamic programming over prefixes: dp[i][j] is the edit distance between word1[..i] and word2[..j]. Matching characters copy the diagonal; otherwise take one plus min(insert, delete, replace). O(mn) time and O(n) space with a rolling row.",
+      "optimal": "Dynamic programming over prefixes: dp[i][j] is the fewest edits between word1[..i] and word2[..j]. Matching characters copy the diagonal; otherwise take one plus min(insert, delete, replace). O(mn) time and O(n) space with a rolling row.",
       "pitfalls": "Forgetting empty-string base cases; counting only insertions and deletions; treating replacement as two edits; off-by-one errors between string indexes and DP prefix lengths.",
       "summary": "Compute the minimum insertions, deletions, and replacements needed to transform one word into another.",
       "title": "Edit Distance"
@@ -350,7 +350,7 @@
       "id": "game-of-life",
       "optimal": "Encode transitional states in place, such as live-to-dead and dead-to-live sentinel values, while neighbor counts read the original live/dead state. Then make a final pass to collapse sentinels to 0 or 1. O(m*n) time and O(1) extra space.",
       "pitfalls": "Updating cells immediately and letting earlier changes affect later neighbor counts; checking only four neighbors; getting boundary checks wrong; forgetting live cells survive with exactly two or three live neighbors.",
-      "summary": "Given a board of 0/1 cells, update it in place to the next Conway's Game of Life state using all eight neighbors and simultaneous updates.",
+      "summary": "Given a board of 0/1 cells, update it in place to the next generation of the classic cellular automaton using all eight neighbors and simultaneous updates.",
       "title": "Game of Life"
     },
     {
@@ -638,7 +638,7 @@
       "id": "median-of-two-sorted-arrays",
       "optimal": "Binary search the partition point in the smaller array so the left partition contains half the values and every left value is <= every right value. O(log min(m, n)) time, O(1) space.",
       "pitfalls": "Fully merging both arrays; binary searching the longer array without boundary care; off-by-one errors for odd versus even totals; failing when one array is empty; using integer division for fractional medians.",
-      "summary": "Return the median of two sorted arrays considered as one sorted sequence.",
+      "summary": "Return the middle value, or the mean of the two middle values, of two sorted arrays taken together as one sorted sequence.",
       "title": "Median of Two Sorted Arrays"
     },
     {
@@ -676,7 +676,7 @@
     {
       "difficulty": "Medium",
       "id": "min-stack",
-      "optimal": "Keep a normal value stack plus a min stack storing the minimum at each depth or storing value/count pairs for minima. Push and pop update both stacks so getMin reads the current minimum directly.",
+      "optimal": "Keep a normal value stack plus a second stack storing the minimum at each depth or storing value/count pairs for minima. Push and pop update both stacks so getMin reads the current minimum directly.",
       "pitfalls": "Recomputing the minimum by scanning on every getMin; losing duplicate minima after one pop; not updating min state on pop; returning stale minima after the minimum value is removed.",
       "summary": "Design a stack supporting push, pop, top, and getMin, where getMin returns the current minimum value and every operation is O(1).",
       "title": "Min Stack"
@@ -750,7 +750,7 @@
       "id": "number-of-islands",
       "optimal": "Scan every cell; when you hit unvisited land, increment the count and flood-fill (DFS/BFS) to sink the whole island. O(m*n) time. Marking visited by mutating the grid in place is fine if the candidate calls it out.",
       "pitfalls": "Missing bounds checks in the flood fill; counting diagonal neighbors; forgetting to mark cells visited (infinite recursion); recursion depth on huge grids (worth probing: could you do it iteratively/BFS?); comparing against integer 1 when the grid holds the character '1'.",
-      "summary": "Given an m x n grid of '1' (land) and '0' (water), count the number of islands. An island is a group of adjacent land cells connected horizontally or vertically (not diagonally).",
+      "summary": "Given an m x n grid of '1' (land) and '0' (water), count the islands. An island is a group of adjacent land cells connected horizontally or vertically (not diagonally).",
       "title": "Number of Islands"
     },
     {
@@ -774,7 +774,7 @@
       "id": "path-sum",
       "optimal": "DFS subtracts each node value from the remaining target and succeeds only at a leaf when the remainder equals the leaf value. O(n) time and O(h) recursion stack; iterative stack is equivalent.",
       "pitfalls": "Accepting a prefix path that stops before a leaf; treating an empty tree with target 0 as true; mishandling negative values; checking only one branch.",
-      "summary": "Given a binary tree root and target sum, decide whether any root-to-leaf path sums exactly to the target.",
+      "summary": "Given a binary tree root and target sum, decide whether any root-to-leaf path adds up exactly to the target.",
       "title": "Path Sum"
     },
     {
@@ -820,9 +820,9 @@
     {
       "difficulty": "Easy",
       "id": "ransom-note",
-      "optimal": "Count magazine characters, then consume counts for each ransomNote character, failing when a needed count is missing. With lowercase letters, a fixed 26-slot array is enough. O(n + m) time and O(1) space.",
+      "optimal": "Count the characters of tiles, then consume counts for each character of message, failing when a needed count is missing. With lowercase letters, a fixed 26-slot array is enough. O(n + m) time and O(1) space.",
       "pitfalls": "Checking only whether each distinct letter exists and ignoring multiplicity; decrementing counts below zero; accidentally treating order as important; using nested scans that become O(n*m).",
-      "summary": "Given ransomNote and magazine strings, return whether the note can be built from magazine characters using each magazine character at most once.",
+      "summary": "Given message and tiles strings, return whether message can be built from the characters of tiles using each character of tiles at most once.",
       "title": "Ransom Note"
     },
     {
@@ -998,7 +998,7 @@
       "id": "snakes-and-ladders",
       "optimal": "Convert square numbers to board coordinates using the alternating row direction, then BFS from square 1 over die rolls 1 through 6. Apply at most one snake or ladder per move and mark visited destinations. O(n^2) time and space.",
       "pitfalls": "Mapping rows from the top instead of bottom; applying chains of snakes/ladders in one move; marking pre-teleport squares instead of destinations; using DFS for a shortest path; off-by-one around square numbers.",
-      "summary": "Given a square Snakes and Ladders board, return the fewest die rolls to reach the final square, or -1 if it cannot be reached.",
+      "summary": "Given a square board with boustrophedon numbering and shortcut jumps, return the fewest die rolls to reach the final square, or -1 if it cannot be reached.",
       "title": "Snakes and Ladders"
     },
     {

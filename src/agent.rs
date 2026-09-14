@@ -13,7 +13,9 @@
 
 mod events;
 mod integrity;
+mod problem_guides;
 mod problem_topics;
+mod problem_variants;
 mod problems;
 mod prompts;
 mod report;
@@ -22,13 +24,15 @@ mod value;
 pub use events::apply_data_event;
 use integrity::integrity_hash;
 pub use integrity::{sanitize_integrity_event, sanitize_test_run};
-pub use problems::{DEFAULT_PROBLEM_ID, PROBLEMS, get_problem, topics_for};
+use problems::variant_for;
+pub use problems::{DEFAULT_PROBLEM_ID, PROBLEMS, find_problem, get_problem, topics_for};
 pub use prompts::{
     InterimReviewInput, LanguageChoiceContext, ReportPromptInput, build_instructions_for_plan,
-    cold_restart, format_test_run, greeting, interim_review_prompt, language_choice, log_hint_text,
-    numbered, proactive_review, read_editor_text, report_prompt, rolling_assessment,
-    significant_change, silence_nudge, spoken_language, test_results_reaction, time_warning,
-    wrap_up,
+    cold_restart, format_test_run, greeting, hint_ladder_used_text, hint_rung_text,
+    hint_rung_withheld_text, interim_review_prompt, language_choice, log_hint_text, numbered,
+    proactive_review, read_editor_text, released_follow_ups, report_prompt, rolling_assessment,
+    significant_change, silence_nudge, spoken_language, test_results_reaction,
+    test_setup_error_reaction, time_warning, wrap_up,
 };
 pub use report::{
     MAX_SUMMARY_TEXT, fallback_report, final_report, report_response_schema, validate_report,
@@ -109,9 +113,9 @@ const ROUND_TRANSITION_SKEW: std::time::Duration = std::time::Duration::from_sec
 /// `the_time_warning_threshold_is_the_same_number_on_both_sides`.
 pub const TIME_WARNING_S: u64 = 300;
 
-pub const INTERVIEW_CONTRACT_BUNDLE_VERSION: u32 = 4;
-pub const LIVE_PROMPT_VERSION: u32 = 1;
-pub const REPORT_PROMPT_VERSION: u32 = 4;
+pub const INTERVIEW_CONTRACT_BUNDLE_VERSION: u32 = 5;
+pub const LIVE_PROMPT_VERSION: u32 = 2;
+pub const REPORT_PROMPT_VERSION: u32 = 5;
 pub const RUBRIC_VERSION: u32 = 1;
 pub const REPORT_SCHEMA_VERSION: u32 = 1;
 
@@ -133,7 +137,43 @@ pub struct Problem {
     pub summary: &'static str,
     pub optimal: &'static str,
     pub pitfalls: &'static str,
-    pub hint_ladder: &'static [&'static str],
+}
+
+/// The exercise as it is posed, beside the problem it is posed from.
+///
+/// Generated from `problem-bank/variants.json`. The candidate's page carries
+/// `title`, `brief` and the worked examples; everything else here is the
+/// interviewer's alone, because an answer to a question nobody asked is the
+/// specification read out rather than an interview.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ProblemVariant {
+    pub title: &'static str,
+    /// The name the browser knows this problem by: page file, judge file, the
+    /// token request and saved history. The id is the published slug and stays
+    /// on the server.
+    pub page: &'static str,
+    pub brief: &'static [&'static str],
+    /// The exact input and output contract in the scenario's words, which the
+    /// interviewer judges against in place of the published statement.
+    pub contract: &'static str,
+    pub constraints: &'static [&'static str],
+    /// Question and answer, answered only when the candidate asks.
+    pub clarifications: &'static [(&'static str, &'static str)],
+    pub follow_ups: &'static [&'static str],
+    /// Three rungs, spoken in order: a nudge, a direction, the key step.
+    pub hints: &'static [&'static str],
+    /// Each language's starter, as the page serves it, by the browser's
+    /// language id. The server's own copy, so the baseline written code is
+    /// measured against is not something a packet can set.
+    pub starters: &'static [(&'static str, &'static str)],
+}
+
+impl ProblemVariant {
+    /// The brief as one passage, the way the interviewer and the reviewer read
+    /// it.
+    pub fn brief_text(&self) -> String {
+        self.brief.join(" ")
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -212,6 +252,13 @@ pub struct QuestionMetadata<'a> {
 }
 
 impl Problem {
+    /// Every problem has one: `scripts/gen-problems.py` refuses a bank entry
+    /// without a variant, and `problem_bank_matches_contract` holds this table
+    /// to `PROBLEMS`.
+    pub fn variant(&self) -> &'static ProblemVariant {
+        variant_for(self.id).expect("every problem has a variant")
+    }
+
     pub fn question_metadata(&self) -> QuestionMetadata<'_> {
         QuestionMetadata {
             difficulty: self.difficulty,
@@ -254,12 +301,17 @@ impl InterviewLoop {
 }
 
 pub const MAX_PROFILE_TEXT_CHARS: usize = 80;
+/// A practice focus is a report's improvement item quoted word for word, and
+/// those run to the 400 characters `sanitizeReport` keeps. The profile bound
+/// cut one mid-sentence before the interviewer read it.
+pub const MAX_PRACTICE_FOCUS_CHARS: usize = 400;
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct InterviewProfile {
     pub role: String,
     pub seniority: Option<Seniority>,
     pub target_company: String,
+    pub practice_focus: String,
 }
 
 pub const MAX_GROUNDING_TEXT_CHARS: usize = 240;
@@ -399,6 +451,10 @@ pub fn sanitize_interview_profile(value: Option<&serde_json::Value>) -> Intervie
                 .and_then(serde_json::Value::as_str),
         ),
         target_company: profile_text(value.and_then(|item| item.get("targetCompany"))),
+        practice_focus: bounded_profile_text(
+            value.and_then(|item| item.get("practiceFocus")),
+            MAX_PRACTICE_FOCUS_CHARS,
+        ),
     }
 }
 
@@ -407,10 +463,15 @@ pub fn interview_profile_json(profile: &InterviewProfile) -> serde_json::Value {
         "role": profile.role,
         "seniority": profile.seniority.map(Seniority::as_str),
         "targetCompany": profile.target_company,
+        "practiceFocus": profile.practice_focus,
     })
 }
 
 fn profile_text(value: Option<&serde_json::Value>) -> String {
+    bounded_profile_text(value, MAX_PROFILE_TEXT_CHARS)
+}
+
+fn bounded_profile_text(value: Option<&serde_json::Value>, max_chars: usize) -> String {
     let normalized = value
         .and_then(serde_json::Value::as_str)
         .unwrap_or_default()
@@ -426,7 +487,7 @@ fn profile_text(value: Option<&serde_json::Value>) -> String {
         .split_whitespace()
         .collect::<Vec<_>>()
         .join(" ");
-    normalized.chars().take(MAX_PROFILE_TEXT_CHARS).collect()
+    normalized.chars().take(max_chars).collect()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -601,6 +662,12 @@ pub struct RuntimeState {
     /// Whether the candidate has typed, as opposed to the browser having
     /// published a template. See `apply_code_update`.
     pub code_edited: bool,
+    /// Each language's starter, seeded from the problem by
+    /// [`RuntimeState::for_problem`] and never overwritten, because the browser
+    /// keeps a buffer per tab and switching back restores the candidate's
+    /// work, and because an emptied editor followed by a paste is work too.
+    /// What the candidate wrote is measured against it; see `code_written`.
+    pub code_templates: std::collections::BTreeMap<String, String>,
     pub language: String,
     /// Whether `language` is a choice the candidate made, as opposed to the
     /// default this state starts in. The two are indistinguishable in the field
@@ -612,6 +679,15 @@ pub struct RuntimeState {
     pub last_test_run: Option<serde_json::Value>,
     pub test_runs: u32,
     pub hints_used: u32,
+    /// The authored rungs for this problem, handed out one at a time by
+    /// `record_hint` rather than held in the live prompt. A model holding all
+    /// three answers the first request with the third, and nothing downstream
+    /// can tell.
+    pub hint_ladder: &'static [&'static str],
+    pub hint_rungs_given: usize,
+    /// The variant's follow-ups, released by the evidence call that completes
+    /// the coding round; see `released_follow_ups`.
+    pub follow_ups: &'static [&'static str],
     pub integrity_events: Vec<serde_json::Value>,
     /// The chain cursor, held apart from the evidence above.
     ///
@@ -659,6 +735,27 @@ pub struct RuntimeState {
     pub ended: bool,
 }
 
+impl RuntimeState {
+    /// A fresh interview of this problem: its hint ladder and its starters,
+    /// which nothing the browser sends may replace. Built here rather than by
+    /// whoever starts a room, because a state missing either answers every hint
+    /// request with "every rung is used" and measures written code against
+    /// nothing.
+    pub fn for_problem(problem: &Problem) -> Self {
+        let variant = problem.variant();
+        Self {
+            hint_ladder: variant.hints,
+            follow_ups: variant.follow_ups,
+            code_templates: variant
+                .starters
+                .iter()
+                .map(|(language, code)| ((*language).to_string(), (*code).to_string()))
+                .collect(),
+            ..Self::default()
+        }
+    }
+}
+
 impl Default for RuntimeState {
     fn default() -> Self {
         Self {
@@ -673,12 +770,16 @@ impl Default for RuntimeState {
             framework_evidence: Vec::new(),
             code: String::new(),
             code_edited: false,
+            code_templates: std::collections::BTreeMap::new(),
             language: "python".to_string(),
             language_chosen: false,
             transcript: Vec::new(),
             last_test_run: None,
             test_runs: 0,
             hints_used: 0,
+            hint_ladder: &[],
+            hint_rungs_given: 0,
+            follow_ups: &[],
             integrity_events: Vec::new(),
             integrity_chain: None,
             integrity_first_heartbeat: None,
@@ -894,6 +995,88 @@ pub fn record_interim_notes(state: &mut RuntimeState, text: &str) {
     }
 }
 
+/// How much the candidate must have added to the template before the editor
+/// counts as holding their code: a short expression, not a keystroke. Counted
+/// in non-whitespace characters, in order; see `added_characters`.
+const MIN_WRITTEN_CHARS: usize = 5;
+
+/// Cells in the table `added_characters` fills, a few milliseconds of work.
+const MAX_WRITTEN_TABLE: usize = 4_000_000;
+
+/// Whether the editor holds code the candidate wrote.
+///
+/// The interviewer's say-so is not enough for the phases that are about code.
+/// A session once ticked Coding with nothing typed at all, because the model
+/// recorded it from what the candidate said they would write.
+pub fn code_written(state: &RuntimeState) -> bool {
+    let template = state
+        .code_templates
+        .get(&state.language)
+        .map_or("", String::as_str);
+    let template = content_chars(template).collect::<Vec<_>>();
+    let code = content_chars(&state.code).collect::<Vec<_>>();
+
+    // A common subsequence is never longer than the starter, so code that
+    // outgrows it by the threshold has written that much whatever it kept, and
+    // a large paste needs no table.
+    code.len() >= template.len() + MIN_WRITTEN_CHARS
+        || added_characters(&template, &code) >= MIN_WRITTEN_CHARS
+}
+
+/// The characters of a piece of code that are content rather than layout.
+pub(crate) fn content_chars(code: &str) -> impl Iterator<Item = char> + '_ {
+    code.chars().filter(|character| !character.is_whitespace())
+}
+
+/// The characters of `code` outside its longest common subsequence with
+/// `template`: what was typed, in order, with nothing credited for deletions.
+///
+/// In order because an unordered count lets a deletion cancel an addition. The
+/// starters carry a "think out loud" comment, and deleting it used to cancel
+/// most of a one-line answer, so `return sqrt(x);` did not count as code. The
+/// shared prefix and suffix, the signature and its closing lines, are trimmed
+/// first so the quadratic table covers only the body that changed; this runs
+/// on an evidence call, a few times an interview.
+fn added_characters(template: &[char], code: &[char]) -> usize {
+    let prefix = template
+        .iter()
+        .zip(code)
+        .take_while(|(expected, written)| expected == written)
+        .count();
+    let (template, code) = (&template[prefix..], &code[prefix..]);
+    let suffix = template
+        .iter()
+        .rev()
+        .zip(code.iter().rev())
+        .take_while(|(expected, written)| expected == written)
+        .count();
+    let (template, code) = (
+        &template[..template.len() - suffix],
+        &code[..code.len() - suffix],
+    );
+
+    // A bound on the table rather than on the packets: past it, count only what
+    // the length alone proves was added. Server starters are a few hundred
+    // characters, so a real buffer never gets here; a forged one cannot make an
+    // evidence call stall the room.
+    if template.len().saturating_mul(code.len()) > MAX_WRITTEN_TABLE {
+        return code.len().saturating_sub(template.len());
+    }
+    let mut previous = vec![0usize; template.len() + 1];
+    let mut current = previous.clone();
+    for written in code {
+        for (at, expected) in template.iter().enumerate() {
+            current[at + 1] = if written == expected {
+                previous[at] + 1
+            } else {
+                current[at].max(previous[at + 1])
+            };
+        }
+        std::mem::swap(&mut previous, &mut current);
+    }
+    code.len() - previous[template.len()]
+}
+
 pub fn record_framework_evidence(
     state: &mut RuntimeState,
     args: &serde_json::Value,
@@ -926,6 +1109,20 @@ pub fn record_framework_evidence(
     };
     if (source == EvidenceSource::SessionTiming) != (kind == EvidenceKind::Skipped) {
         return Err("session_timing is only valid for skipped evidence");
+    }
+
+    // Coding, Test and Optimizations are all about code, so none of them is
+    // reached while the editor holds nothing the candidate wrote: a plan spoken
+    // aloud is the Algorithm phase, and testing or improving it comes after
+    // there is something to run.
+    let about_code = matches!(
+        phase,
+        FrameworkPhase::Coding | FrameworkPhase::Test | FrameworkPhase::Optimizations
+    );
+    if about_code && kind != EvidenceKind::Skipped && !code_written(state) {
+        return Err(
+            "coding, test and optimizations need code the candidate has written in the editor; read_editor shows none yet",
+        );
     }
     let confidence = args
         .get("confidence")
@@ -1094,9 +1291,37 @@ pub fn framework_evidence_json(evidence: &FrameworkEvidence) -> serde_json::Valu
     })
 }
 
-pub fn record_hint(state: &mut RuntimeState) -> String {
+/// Count a hint and, when the candidate asked for it, hand out the next rung.
+///
+/// The last rung names the key step, so it waits until the candidate has an
+/// approach of their own: an Algorithm phase observed from what they said, or
+/// Coding evidence, which the server already refuses without code they wrote.
+/// An Algorithm phase the interviewer only inferred does not count, since that
+/// is the model's word alone. Until then the interviewer gets no clue and is
+/// told to ask what the candidate would try; the request is not counted,
+/// because the candidate was given nothing.
+pub fn record_hint(state: &mut RuntimeState, requested: bool) -> String {
+    let clue = requested
+        .then(|| state.hint_ladder.get(state.hint_rungs_given))
+        .flatten();
+    if clue.is_some() {
+        let last = state.hint_rungs_given + 1 == state.hint_ladder.len();
+        let approach_stated = state.framework_evidence.iter().any(|item| {
+            item.phase == FrameworkPhase::Algorithm && item.kind == EvidenceKind::Observed
+        }) || phases_evidenced(state, &[FrameworkPhase::Coding]);
+        if last && !approach_stated {
+            return hint_rung_withheld_text(state.hints_used);
+        }
+    }
     state.hints_used = state.hints_used.saturating_add(1);
-    log_hint_text(state.hints_used)
+    match clue {
+        Some(clue) => {
+            state.hint_rungs_given += 1;
+            hint_rung_text(state.hints_used, state.hint_rungs_given, clue)
+        }
+        None if requested => hint_ladder_used_text(state.hints_used),
+        None => log_hint_text(state.hints_used),
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1327,3 +1552,7 @@ pub(crate) fn duration_from_metadata(value: Option<&serde_json::Value>) -> u32 {
             duration.clamp(MIN_DURATION_MIN.into(), MAX_DURATION_MIN.into()) as u32
         })
 }
+
+#[cfg(test)]
+#[path = "../tests/unit/agent.rs"]
+mod tests;

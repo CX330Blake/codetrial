@@ -1,0 +1,136 @@
+{
+  "kind": "function",
+  "entry": "countCopperRegions",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "one big region",
+      "input": [
+        [
+          [
+            "1",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "label": "three regions",
+      "input": [
+        [
+          [
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "label": "single copper cell",
+      "input": [
+        [
+          [
+            "1"
+          ]
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "label": "all bare board",
+      "input": [
+        [
+          [
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0"
+          ]
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "label": "diagonal cells stay apart",
+      "input": [
+        [
+          [
+            "1",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "1"
+          ]
+        ]
+      ],
+      "expected": 5
+    }
+  ],
+  "paramNames": [
+    "grid"
+  ],
+  "paramTypes": [
+    "character[][]"
+  ],
+  "returnType": "integer"
+}

@@ -1,0 +1,60 @@
+{
+  "page": "replica-quorum-version",
+  "title": "Replica Quorum Version",
+  "source": "Majority Element",
+  "difficulty": "Easy",
+  "brief": [
+    "A distributed key-value store asks every replica which schema version it is running. Rollouts are only considered settled when one version is reported by more than half of the replicas, and the coordinator needs to know which version that is.",
+    "Implement dominantReplicaVersion(nums), where nums holds the version number reported by each replica, and return the version reported by more than half of them."
+  ],
+  "examples": [
+    {
+      "input": "nums = [6,5,5]",
+      "output": "5"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def dominantReplicaVersion(self, nums: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction dominantReplicaVersion(nums) {\n  // Think out loud as you go!\n}\n",
+    "c": "int dominantReplicaVersion(int* nums, int numsSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int dominantReplicaVersion(vector<int>& nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int dominantReplicaVersion(int[] nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

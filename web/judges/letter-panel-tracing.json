@@ -1,0 +1,128 @@
+{
+  "kind": "function",
+  "entry": "canTraceWord",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "turning path exists",
+      "input": [
+        [
+          [
+            "A",
+            "B",
+            "C",
+            "E"
+          ],
+          [
+            "S",
+            "F",
+            "C",
+            "S"
+          ],
+          [
+            "A",
+            "D",
+            "E",
+            "E"
+          ]
+        ],
+        "ABCCED"
+      ],
+      "expected": true
+    },
+    {
+      "label": "horizontal and vertical path",
+      "input": [
+        [
+          [
+            "A",
+            "B",
+            "C",
+            "E"
+          ],
+          [
+            "S",
+            "F",
+            "C",
+            "S"
+          ],
+          [
+            "A",
+            "D",
+            "E",
+            "E"
+          ]
+        ],
+        "SEE"
+      ],
+      "expected": true
+    },
+    {
+      "label": "cannot reuse cell",
+      "input": [
+        [
+          [
+            "A",
+            "B",
+            "C",
+            "E"
+          ],
+          [
+            "S",
+            "F",
+            "C",
+            "S"
+          ],
+          [
+            "A",
+            "D",
+            "E",
+            "E"
+          ]
+        ],
+        "ABCB"
+      ],
+      "expected": false
+    },
+    {
+      "label": "single cell mismatch",
+      "input": [
+        [
+          [
+            "A"
+          ]
+        ],
+        "B"
+      ],
+      "expected": false
+    },
+    {
+      "label": "path bends twice",
+      "input": [
+        [
+          [
+            "D",
+            "O",
+            "G"
+          ],
+          [
+            "X",
+            "A",
+            "T"
+          ]
+        ],
+        "GOAT"
+      ],
+      "expected": true
+    }
+  ],
+  "paramNames": [
+    "board",
+    "word"
+  ],
+  "paramTypes": [
+    "character[][]",
+    "string"
+  ],
+  "returnType": "boolean"
+}

@@ -1,0 +1,60 @@
+{
+  "page": "letter-grid-tracer",
+  "title": "Letter Grid Tracer",
+  "source": "Word Search II",
+  "difficulty": "Hard",
+  "brief": [
+    "Our word puzzle game shows players a grid of letters and a dictionary of accepted words. Players trace a word by moving from cell to neighbouring cell, and before publishing a puzzle the backend needs to know which dictionary words can actually be traced on it.",
+    "Implement traceableWords(board, words), where board is a list of rows of single lowercase letters and words is the dictionary, and return the words from words that can be traced on the board."
+  ],
+  "examples": [
+    {
+      "input": "board = [[\"c\",\"a\",\"t\"],[\"x\",\"r\",\"o\"]], words = [\"cat\",\"car\",\"rot\",\"tor\",\"art\"]",
+      "output": "[\"cat\",\"car\",\"rot\",\"tor\"]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<string> traceableWords(vector<vector<char>>& board, vector<string>& words) {\n        \n    }\n};",
+    "java": "class Solution {\n    public List<String> traceableWords(char[][] board, String[] words) {\n        \n    }\n}",
+    "python": "class Solution:\n    def traceableWords(self, board: List[List[str]], words: List[str]) -> List[str]:\n        ",
+    "javascript": "/**\n * @param {character[][]} board\n * @param {string[]} words\n * @return {string[]}\n */\nvar traceableWords = function(board, words) {\n    \n};",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nchar** traceableWords(char** board, int boardSize, int* boardColSize, char** words, int wordsSize, int* returnSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

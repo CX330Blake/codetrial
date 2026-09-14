@@ -1,0 +1,64 @@
+{
+  "page": "survey-stake-alignment",
+  "title": "Survey Stake Alignment",
+  "source": "Max Points on a Line",
+  "difficulty": "Hard",
+  "brief": [
+    "A land surveyor drives stakes at integer coordinates across a site. To plan a straight fence that uses as many existing stakes as possible, the planning tool needs the largest number of stakes that lie exactly on one straight line.",
+    "Implement mostCollinearStakes(points), where points is a list of stakes, each given as [x, y], and return the largest number of stakes that lie on a single straight line."
+  ],
+  "examples": [
+    {
+      "input": "points = [[0,0],[2,2],[4,4],[1,2],[2,4]]",
+      "output": "3"
+    },
+    {
+      "input": "points = [[2,1],[2,3],[2,5],[4,5]]",
+      "output": "3"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def mostCollinearStakes(self, points: list[list[int]]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} points\n * @return {number}\n */\nfunction mostCollinearStakes(points) {\n  // Think out loud as you go!\n}\n",
+    "c": "int mostCollinearStakes(int** points, int pointsSize, int* pointsColSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int mostCollinearStakes(vector<vector<int>>& points) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int mostCollinearStakes(int[][] points) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

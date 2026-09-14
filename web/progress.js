@@ -8,8 +8,10 @@ const allowedLanguages = new Set(["python", "javascript", "c", "cpp", "java"]);
 
 /// `/api/reports` wraps each entry in `payload` (accounts.rs list_reports) while
 /// history.js stores the same entry flat. One rule for which of the two an entry
-/// is, so the lobby's picker and its progress panel cannot disagree about it.
-export function unwrapEntry(raw) {
+/// is, so the lobby's picker and its progress panel cannot disagree about it:
+/// the panel reads entries through `normalizeProgressEntry` and the picker
+/// through `pickerEntry`, and both unwrap here.
+function unwrapEntry(raw) {
   const wrapper = raw && typeof raw === "object" ? raw : {};
   const entry = wrapper.payload && typeof wrapper.payload === "object" ? wrapper.payload : wrapper;
   // The wrapper is the stored row and the payload is what the browser saved
@@ -19,17 +21,33 @@ export function unwrapEntry(raw) {
   return entry.problemId === undefined ? { ...entry, problemId: wrapper.problemId } : entry;
 }
 
+/// What the lobby's picker reads: the entry as it was saved, with only the
+/// timestamp normalized. Not the sanitized report the progress panel draws,
+/// because sanitizing a report from an older contract bundle drops its verdict
+/// and turns a missing one into NO_HIRE, which forgot passes an earlier build
+/// recorded and marched a candidate down a level for sessions nobody graded.
+export function pickerEntry(raw) {
+  return { ...unwrapEntry(raw), at: entryTime(raw) };
+}
+
+/// When an entry was saved, in milliseconds, or null. The local entry carries
+/// its date; an account row carries `createdAt` in seconds beside the payload.
+function entryTime(raw) {
+  const wrapper = raw && typeof raw === "object" ? raw : {};
+  const dateValue = unwrapEntry(raw).date ?? (Number.isFinite(wrapper.createdAt) ? wrapper.createdAt * 1000 : null);
+  const at = dateValue == null ? NaN : new Date(dateValue).getTime();
+  return Number.isFinite(at) ? at : null;
+}
+
 export function normalizeProgressEntry(raw) {
   const wrapper = raw && typeof raw === "object" ? raw : {};
   const entry = unwrapEntry(raw);
   const report = sanitizeReport(entry.report);
-  const dateValue = entry.date ?? (Number.isFinite(wrapper.createdAt) ? wrapper.createdAt * 1000 : null);
-  const at = dateValue == null ? NaN : new Date(dateValue).getTime();
   const durationMin = Number.isInteger(entry.durationMin) && entry.durationMin >= 10 && entry.durationMin <= 90
     ? entry.durationMin : null;
   return {
     id: String(entry.id ?? wrapper.id ?? ""),
-    at: Number.isFinite(at) ? at : null,
+    at: entryTime(raw),
     problemId: typeof entry.problemId === "string" ? entry.problemId : String(wrapper.problemId ?? ""),
     problemTitle: typeof entry.problemTitle === "string" ? entry.problemTitle : "Past interview",
     difficulty: allowedDifficulties.has(entry.difficulty) ? entry.difficulty : null,

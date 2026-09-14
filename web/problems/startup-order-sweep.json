@@ -1,0 +1,60 @@
+{
+  "page": "startup-order-sweep",
+  "title": "Startup Order Sweep",
+  "source": "Permutations",
+  "difficulty": "Medium",
+  "brief": [
+    "Our integration harness boots a handful of services, each identified by an integer id. A race condition only shows up for certain boot orders, so we want to run the suite once for every possible order.",
+    "Implement allStartupOrders(nums), where nums holds the service ids, and return every ordering of those ids, each ordering as a list that uses every id once."
+  ],
+  "examples": [
+    {
+      "input": "nums = [-1,2]",
+      "output": "[[-1,2],[2,-1]]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> allStartupOrders(vector<int>& nums) {\n        \n    }\n};",
+    "java": "class Solution {\n    public List<List<Integer>> allStartupOrders(int[] nums) {\n        \n    }\n}",
+    "python": "class Solution:\n    def allStartupOrders(self, nums: List[int]) -> List[List[int]]:\n        ",
+    "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar allStartupOrders = function(nums) {\n    \n};",
+    "c": "/**\n * Return an array of arrays of size *returnSize.\n * The sizes of the arrays are returned as *returnColumnSizes array.\n * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().\n */\nint** allStartupOrders(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

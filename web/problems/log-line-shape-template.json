@@ -1,0 +1,64 @@
+{
+  "page": "log-line-shape-template",
+  "title": "Log Line Shape Template",
+  "source": "Word Pattern",
+  "difficulty": "Easy",
+  "brief": [
+    "Our log classifier describes the shape of a message with a short template of letters, one letter per word. A template like abba means the first and last words are the same, the middle two are the same as each other, and those two words differ.",
+    "Implement matchesTokenTemplate(pattern, s), where pattern is the template and s is a log message of lowercase words separated by single spaces, and return true if the message has exactly the shape the template describes, and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "pattern = \"abcab\", s = \"sun moon star sun moon\"",
+      "output": "true"
+    },
+    {
+      "input": "pattern = \"abba\", s = \"dog cat cat dog fish\"",
+      "output": "false"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def matchesTokenTemplate(self, pattern: str, s: str) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} pattern\n * @param {string} s\n * @return {boolean}\n */\nfunction matchesTokenTemplate(pattern, s) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool matchesTokenTemplate(char* pattern, char* s) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool matchesTokenTemplate(string pattern, string s) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean matchesTokenTemplate(String pattern, String s) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

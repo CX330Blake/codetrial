@@ -1,0 +1,64 @@
+{
+  "page": "twin-sensor-midpoint-reading",
+  "title": "Twin Sensor Midpoint Reading",
+  "source": "Median of Two Sorted Arrays",
+  "difficulty": "Hard",
+  "brief": [
+    "Two temperature sensors in a cold-storage room each upload their readings for the hour already sorted from lowest to highest. The monitoring service reports the median of all readings from both sensors combined.",
+    "Implement pooledMedianReading(nums1, nums2), where nums1 and nums2 are the sorted readings from the two sensors, and return the median of all the readings together."
+  ],
+  "examples": [
+    {
+      "input": "nums1 = [1,2], nums2 = [3,4,5,6,7]",
+      "output": "4"
+    },
+    {
+      "input": "nums1 = [-5,-3], nums2 = [-4,-1]",
+      "output": "-3.5"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def pooledMedianReading(self, nums1: list[int], nums2: list[int]) -> float:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums1\n * @param {number[]} nums2\n * @return {number}\n */\nfunction pooledMedianReading(nums1, nums2) {\n  // Think out loud as you go!\n}\n",
+    "c": "double pooledMedianReading(int* nums1, int nums1Size, int* nums2, int nums2Size) {\n    // Think out loud as you go!\n    return 0.0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    double pooledMedianReading(vector<int>& nums1, vector<int>& nums2) {\n        // Think out loud as you go!\n        return 0.0;\n    }\n};\n",
+    "java": "class Solution {\n    public double pooledMedianReading(int[] nums1, int[] nums2) {\n        // Think out loud as you go!\n        return 0.0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

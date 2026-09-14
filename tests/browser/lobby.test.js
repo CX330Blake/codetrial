@@ -138,6 +138,7 @@ const snapshot = (page) =>
     const one = (selector) => document.querySelector(selector);
     return {
       note: one("#recommendation").textContent,
+      focus: one("#practice-focus").hidden ? "" : one("#practice-focus").textContent,
       card: one(".problem-card.selected")?.dataset.problem ?? null,
       pressed: one('.problem-card[aria-pressed="true"]')?.dataset.problem ?? null,
       duration: one(".duration-button.selected")?.dataset.duration ?? null,
@@ -192,6 +193,9 @@ async function lobby(page) {
 const markupDuration = () =>
   read("web/index.html").match(/duration-button selected"[^>]*data-duration="(\d+)"/)[1];
 
+/// The page name a card ships in the URL, from the map the generator writes.
+const pageOf = (problemId) => JSON.parse(read("web/problem-pages.json"))[problemId].page;
+
 const hired = (problemId) => ({ problemId, payload: { report: { decision: "HIRE" } } });
 const missed = (problemId) => ({ problemId, payload: { report: { decision: "NO_HIRE" } } });
 const savedAttempt = (problemId) => ({
@@ -203,11 +207,31 @@ const savedAttempt = (problemId) => ({
   },
 });
 
+const focusedAttempt = (problemId) => ({
+  problemId,
+  payload: {
+    problemId,
+    date: "2026-01-01T00:00:00Z",
+    report: {
+      codingScore: 60, communicationScore: 60, decision: "NO_HIRE", summary: "Grounded assessment.",
+      codingFeedback: { strengths: [], improvements: ["Test boundaries"] },
+      communicationFeedback: { strengths: [], improvements: [] },
+      improvementPlan: [{
+        phase: "Test", weakness: "Test boundaries", impact: "high", frequency: 1,
+        drill: "Build a test table", durationMin: 10,
+        successCriterion: "Predict each output", selfReview: ["Name a boundary"],
+      }],
+    },
+  },
+});
+
 /// Ids from the real bank, so these break if the bank stops carrying them
 /// rather than testing against problems that do not exist.
-const EASY = ["two-sum", "valid-parentheses"];
-const MEDIUM = ["jump-game", "gas-station"];
-const HARD = ["candy", "trapping-rain-water"];
+// Cards and new history are keyed by page name; `legacy` history below still
+// carries the published ids an earlier build saved.
+const EASY = ["two-sum", "valid-parentheses"].map(pageOf);
+const MEDIUM = ["jump-game", "gas-station"].map(pageOf);
+const HARD = ["candy", "trapping-rain-water"].map(pageOf);
 
 /// A test with a page of its own, closed even when an assertion throws. The
 /// bare `await page.close()` each of these used to end on was skipped by any
@@ -326,6 +350,48 @@ lobbyTest("the recommendation does not move once it is on screen", async (page) 
   assert.equal(seen.length, 1, `the recommendation changed under the reader: ${seen.join(" -> ")}`);
 });
 
+lobbyTest("the lobby carries an assessed drill into the next practice session", async (page) => {
+  reports = [focusedAttempt(EASY[0])];
+  const state = await lobby(page);
+
+  assert.equal(
+    state.focus,
+    "Carry forward: Test boundaries. Drill: Build a test table. Success: Predict each output.",
+  );
+});
+
+lobbyTest("a candidate explicitly chooses whether to share the practice focus", async (page) => {
+  reports = [focusedAttempt(EASY[0])];
+  await lobby(page);
+  assert.equal(await page.locator("#practice-focus-share").isHidden(), false);
+
+  await page.click("#practice-focus-share-input");
+  await page.click("#start");
+  await page.waitForURL(/\/interview/);
+
+  // Handed over in session storage, never the address bar, where a crafted
+  // link could put its own text into the interviewer's instructions.
+  assert.equal(new URL(page.url()).searchParams.get("focus"), null);
+  assert.equal(
+    await page.evaluate(() => sessionStorage.getItem("codetrial.sharedPracticeFocus")),
+    "Test boundaries",
+  );
+});
+
+lobbyTest("a manually selected problem still receives the arriving practice focus", async (page) => {
+  reports = [focusedAttempt(EASY[0])];
+  const release = await heldLobby(page);
+  await page.evaluate((problemId) => {
+    document.querySelector(`[data-problem="${problemId}"]`).click();
+  }, MEDIUM[0]);
+  release();
+  await settles(page, () => !document.querySelector("#practice-focus").hidden);
+
+  const state = await snapshot(page);
+  assert.equal(state.card, MEDIUM[0], "the history must not replace the candidate's selection");
+  assert.match(state.focus, /Carry forward: Test boundaries/);
+});
+
 lobbyTest("start cannot fire before there is a problem to start", async (page) => {
   // Held open, so this is the pre-history state however slow the machine is,
   // rather than a snapshot hoping to beat a timer.
@@ -348,8 +414,37 @@ lobbyTest("the start button ships the problem and length that are on screen", as
   await page.waitForURL(/\/interview/);
 
   const query = new URL(page.url()).searchParams;
+  // The page name, which is what the address bar shows, and not the id.
   assert.equal(query.get("problem"), state.card);
+  assert.notEqual(query.get("problem"), "two-sum");
   assert.equal(query.get("duration"), state.duration);
+  assert.equal(query.get("focus"), null);
+  assert.equal(
+    await page.evaluate(() => sessionStorage.getItem("codetrial.sharedPracticeFocus")),
+    null,
+    "a focus is shared only after an explicit choice",
+  );
+});
+
+lobbyTest("published problem names stay hidden until the candidate asks, and the choice is kept", async (page) => {
+  await lobby(page);
+  const visibleSources = () => page.evaluate(() =>
+    [...document.querySelectorAll(".problem-source")].filter((source) => !source.hidden).length);
+  assert.equal(await visibleSources(), 0, "a published name is on screen by default");
+  assert.equal(await page.evaluate(() => document.querySelectorAll(".problem-source").length), 150);
+
+  await page.evaluate(() => { document.querySelector(".problem-picker").open = true; });
+  await page.check("#show-sources");
+  // The names arrive with the map, fetched on the first request for them.
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll(".problem-source")].filter((source) => !source.hidden).length === 150);
+  assert.match(await page.locator(`[data-problem="${pageOf("two-sum")}"] .problem-source`).textContent(), /LeetCode: Two Sum/);
+  // The recommendation still names the scenario only.
+  assert.doesNotMatch(await page.locator("#recommendation").textContent(), /LeetCode:/);
+
+  await lobby(page);
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll(".problem-source")].filter((source) => !source.hidden).length === 150);
 });
 
 lobbyTest("the lobby never suggests a length past its own default", async (page) => {
@@ -407,11 +502,11 @@ lobbyTest("choosing a problem by hand keeps the filter and the length the candid
   assert.equal(before.duration, "60");
 
   await page.click("details.problem-picker summary");
-  await page.click('[data-problem="candy"]');
+  await page.click(`[data-problem="${pageOf("candy")}"]`);
   const after = await snapshot(page);
 
-  assert.equal(after.card, "candy");
-  assert.equal(after.pressed, "candy", "the selection is a border colour and nothing else");
+  assert.equal(after.card, pageOf("candy"));
+  assert.equal(after.pressed, pageOf("candy"), "the selection is a border colour and nothing else");
   // And every other card says it is not pressed, rather than saying nothing:
   // one pressed button among 149 plain ones does not read as a choice.
   assert.equal(
@@ -456,6 +551,36 @@ lobbyTest("the last difficulty cannot be unchecked into an empty lobby", async (
   );
 });
 
+lobbyTest("history saved on this device under published ids still counts as passed", async (page) => {
+  // An earlier build saved the published id. The lobby renames it through the
+  // page map, fetched because such an entry is there; unrenamed, the ids match
+  // no card, so the streak has no level and the lobby stays put. Account
+  // history arrives renamed by the server, so this is the device's own copy.
+  session = { signedIn: false };
+  await page.addInitScript((entries) => {
+    if (!localStorage.getItem("codetrial_history")) {
+      localStorage.setItem("codetrial_history", JSON.stringify(entries));
+    }
+  }, ["jump-game", "gas-station"].map((problemId, index) => ({
+    problemId, date: `2026-01-0${index + 1}T00:00:00Z`, report: { decision: "HIRE" },
+  })));
+  const state = await lobby(page);
+  assert.match(state.note, /passed your last two Medium problems/);
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("codetrial_history")));
+  assert.deepEqual(saved.map((entry) => entry.problemId).sort(), MEDIUM.slice().sort(), "renamed in place");
+  assert.deepEqual(state.levels, ["Hard"]);
+});
+
+lobbyTest("a lobby with no old history never fetches the published names", async (page) => {
+  const fetched = [];
+  page.on("request", (request) => fetched.push(new URL(request.url()).pathname));
+  reports = [hired(EASY[0])];
+  await lobby(page);
+  assert.ok(!fetched.includes("/problem-pages.json"), "the map was fetched without a reason");
+  const index = await page.content();
+  assert.doesNotMatch(index, /data-problem="two-sum"|LeetCode: Two Sum/);
+});
+
 lobbyTest("a problem already passed is not what gets recommended", async (page) => {
   // Passed one Hard and missed another, so the streak has no opinion and the
   // only thing under test is the exclusion.
@@ -473,6 +598,17 @@ lobbyTest("a problem already passed is not what gets recommended", async (page) 
   assert.equal(picked.level, "Hard");
   assert.equal(picked.hidden, false, "the recommendation is a card the filter hides");
   assert.notEqual(state.card, HARD[0], "a problem the candidate passed came back");
+});
+
+lobbyTest("a completed problem returns with a due-review explanation", async (page) => {
+  reports = [savedAttempt(EASY[0])];
+  await lobby(page);
+  await setLevel(page, "Easy", true);
+  await setLevel(page, "Medium", false);
+
+  const state = await snapshot(page);
+  assert.equal(state.card, EASY[0]);
+  assert.match(state.note, /Review due after 1 day/);
 });
 
 lobbyTest("two passes move the candidate up a level, and the lobby says why", async (page) => {
@@ -593,8 +729,8 @@ lobbyTest("dropping the level of a hand-picked problem does not leave it startab
   // All of this while the history is held open, where there is nothing to
   // choose a replacement with.
   await page.click("details.problem-picker summary");
-  await page.click('[data-problem="jump-game"]');
-  assert.equal((await snapshot(page)).card, "jump-game");
+  await page.click(`[data-problem="${pageOf("jump-game")}"]`);
+  assert.equal((await snapshot(page)).card, pageOf("jump-game"));
 
   await setLevel(page, "Hard", true);
   await setLevel(page, "Medium", false);
@@ -616,27 +752,27 @@ lobbyTest("dropping the level of a hand-picked problem does not leave it startab
   await page.waitForURL(/\/interview/);
   const shipped = new URL(page.url()).searchParams.get("problem");
   assert.equal(shipped, settled.card);
-  assert.notEqual(shipped, "jump-game", "start shipped the problem the filter dropped");
+  assert.notEqual(shipped, pageOf("jump-game"), "start shipped the problem the filter dropped");
 });
 
 lobbyTest("widening the filter keeps a problem the candidate picked by hand", async (page) => {
   const release = await heldLobby(page);
 
   await page.click("details.problem-picker summary");
-  await page.click('[data-problem="jump-game"]');
+  await page.click(`[data-problem="${pageOf("jump-game")}"]`);
 
   // Adding a level does not hide their card, so it is not a reason to discard
   // a choice they made on purpose.
   await setLevel(page, "Hard", true);
   const widened = await snapshot(page);
-  assert.equal(widened.card, "jump-game", "adding a difficulty threw away an explicit pick");
+  assert.equal(widened.card, pageOf("jump-game"), "adding a difficulty threw away an explicit pick");
   assert.deepEqual(widened.levels, ["Medium", "Hard"]);
   assert.equal(widened.startDisabled, false);
 
   // And the arriving history does not overrule it either.
   release();
   await awaitReady(page);
-  assert.equal((await snapshot(page)).card, "jump-game", "the history overruled an explicit pick");
+  assert.equal((await snapshot(page)).card, pageOf("jump-game"), "the history overruled an explicit pick");
 });
 
 lobbyTest("a restore in flight is not a history a difficulty change may read", async (page) => {
@@ -776,7 +912,7 @@ lobbyTest("a start already on its way out is not undone by a later choice", asyn
   const release = await heldLobby(page);
 
   await page.click("details.problem-picker summary");
-  await page.click('[data-problem="jump-game"]');
+  await page.click(`[data-problem="${pageOf("jump-game")}"]`);
   await page.fill("#github-login", "candidate");
 
   // Held rather than slowed: everything below lands while /api/login is in
@@ -791,7 +927,7 @@ lobbyTest("a start already on its way out is not undone by a later choice", asyn
 
   // A second card while the button reads "Recording GitHub...": re-arming it
   // here buys the candidate a second navigation out of one start.
-  await page.click('[data-problem="gas-station"]');
+  await page.click(`[data-problem="${pageOf("gas-station")}"]`);
   assert.equal(
     (await snapshot(page)).startDisabled,
     true,
@@ -809,7 +945,7 @@ lobbyTest("a start already on its way out is not undone by a later choice", asyn
   assert.deepEqual(errors, [], "the start handler threw after the login came back");
   assert.equal(
     new URL(page.url()).searchParams.get("problem"),
-    "jump-game",
+    pageOf("jump-game"),
     "start shipped something other than the problem that was on screen when it was pressed",
   );
   release();

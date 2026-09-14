@@ -1,0 +1,64 @@
+{
+  "page": "paged-catalog-lookup",
+  "title": "Paged Catalog Lookup",
+  "source": "Search a 2D Matrix",
+  "difficulty": "Medium",
+  "brief": [
+    "A product catalog keeps its item ids split into fixed-size pages. Within a page the ids increase, and every page starts with an id larger than the last id on the previous page. The storefront needs to check quickly whether an id is in the catalog.",
+    "Implement pagedIndexContains(matrix, target), where matrix is the list of pages, each a list of ids, and target is the id to look up, and return true if target is in the catalog and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "matrix = [[1,2,3,4]], target = 4",
+      "output": "true"
+    },
+    {
+      "input": "matrix = [[5,6],[8,9]], target = 4",
+      "output": "false"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def pagedIndexContains(self, matrix: list[list[int]], target: int) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} matrix\n * @param {number} target\n * @return {boolean}\n */\nfunction pagedIndexContains(matrix, target) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool pagedIndexContains(int** matrix, int matrixSize, int* matrixColSize, int target) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool pagedIndexContains(vector<vector<int>>& matrix, int target) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean pagedIndexContains(int[][] matrix, int target) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -103,6 +103,12 @@ fn the_interview_begins_from_the_plan_it_was_booked_with() {
     assert_eq!(state.interview_loop, boot.interview_loop);
     assert_eq!(state.coding_minutes, boot.coding_minutes);
     assert_eq!(state.behavioral_minutes, boot.behavioral_minutes);
+    assert_eq!(state.hint_ladder, boot.problem.variant().hints);
+    assert_eq!(
+        state.code_templates.len(),
+        boot.problem.variant().starters.len(),
+        "every language's starter is seeded from the problem"
+    );
 }
 
 /// Closing a turn yields what to publish, once, and only for an open one.
@@ -638,7 +644,7 @@ fn execute_tool_call_reads_editor_and_tracks_hints() {
         &GeminiFunctionCall {
             id: "2".to_string(),
             name: TOOL_LOG_HINT.to_string(),
-            args: serde_json::json!({}),
+            args: serde_json::json!({"requested": false}),
         },
     );
     let evidence = execute_tool_call(
@@ -666,6 +672,23 @@ fn execute_tool_call_reads_editor_and_tracks_hints() {
             .contains("Latest test run")
     );
     assert_eq!(hint["result"], "Recorded. Total hints so far: 1.");
+
+    // A call that leaves the flag out is read as asked for, so a candidate
+    // whose request the model logged carelessly still gets the next rung.
+    let mut laddered = RuntimeState {
+        hint_ladder: &["first rung", "second rung", "third rung"],
+        ..RuntimeState::default()
+    };
+    let unflagged = execute_tool_call(
+        &mut laddered,
+        &GeminiFunctionCall {
+            id: "5".to_string(),
+            name: TOOL_LOG_HINT.to_string(),
+            args: serde_json::json!({}),
+        },
+    );
+    assert!(unflagged["result"].as_str().unwrap().contains("first rung"));
+    assert_eq!(laddered.hint_rungs_given, 1);
     assert_eq!(state.hints_used, 1);
     assert_eq!(evidence["result"]["phase"], "algorithm");
     assert_eq!(state.framework_evidence.len(), 1);
@@ -745,10 +768,80 @@ fn execute_tool_call_reads_editor_and_tracks_hints() {
     );
 }
 
+/// The follow-ups arrive with the evidence that completes the coding round,
+/// once, and not before: the live prompt no longer holds them.
+#[test]
+fn the_evidence_that_completes_coding_releases_the_follow_ups_once() {
+    let problem = crate::agent::get_problem(Some("two-sum"));
+    let mut state = RuntimeState {
+        code: "def solve(nums):\n    return sorted(nums)\n".to_string(),
+        ..RuntimeState::for_problem(problem)
+    };
+    state
+        .code_templates
+        .insert("python".to_string(), String::new());
+    let record = |state: &mut RuntimeState, phase: &str| {
+        execute_tool_call(
+            state,
+            &GeminiFunctionCall {
+                id: phase.to_string(),
+                name: TOOL_RECORD_FRAMEWORK_EVIDENCE.to_string(),
+                args: serde_json::json!({
+                    "phase": phase, "source": "candidate_speech", "kind": "observed",
+                    "confidence": 90, "summary": format!("Candidate finished {phase}.")
+                }),
+            },
+        )
+    };
+    let first = problem.variant().follow_ups[0];
+
+    let tested = record(&mut state, "test");
+    assert!(
+        tested.get("followUps").is_none(),
+        "Test alone completes nothing"
+    );
+    let optimized = record(&mut state, "optimizations");
+    let released = optimized["followUps"]
+        .as_str()
+        .expect("the completing call releases them");
+    assert!(released.contains(first) && released.contains("at most two of these"));
+    let again = record(&mut state, "test");
+    assert!(
+        again.get("followUps").is_none(),
+        "released once, not per note"
+    );
+
+    // A cold restart after the round completed hands them over again, since the
+    // replacement session never saw that tool response.
+    let restarted = crate::agent::cold_restart(&state);
+    assert!(restarted.contains(first));
+    assert!(
+        restarted.contains("Do not ask another coding question")
+            && !restarted.contains("The coding round is active"),
+        "a completed round must not read as one still in progress"
+    );
+
+    // Once the behavioral round has begun the follow-ups are behind it: the
+    // restart names the round and nothing sends the interviewer back.
+    let behavioral = RuntimeState {
+        behavioral_round_started: true,
+        ..state.clone()
+    };
+    let restarted = crate::agent::cold_restart(&behavioral);
+    assert!(restarted.contains("The behavioral round is active"));
+    assert!(
+        !restarted.contains(first) && !restarted.contains("follow-ups"),
+        "the behavioral round must not be pointed back at coding follow-ups"
+    );
+    let fresh = RuntimeState::for_problem(problem);
+    assert!(!crate::agent::cold_restart(&fresh).contains(first));
+}
+
 #[test]
 fn end_interview_allows_a_completed_coding_only_plan() {
     let mut state = RuntimeState {
         interview_loop: crate::agent::InterviewLoop::CodingOnly,
+        code: "def solve(nums):\n    return sorted(nums)\n".to_string(),
         ..RuntimeState::default()
     };
     for phase in ["test", "optimizations"] {

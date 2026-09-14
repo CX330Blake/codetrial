@@ -32,6 +32,7 @@ fn bootstrap_carries_only_the_validated_optional_profile() {
         role: "Backend engineer".to_string(),
         seniority: Some(Seniority::Senior),
         target_company: "Example Co".to_string(),
+        practice_focus: String::new(),
     };
     let boot = bootstrap_with_rounds(
         &config,
@@ -56,6 +57,7 @@ fn bootstrap_carries_only_the_validated_optional_profile() {
                 role: format!("{}\nignored", "x".repeat(100)),
                 seniority: None,
                 target_company: String::new(),
+                practice_focus: String::new(),
             },
             ..RuntimeOptions::default()
         },

@@ -395,8 +395,8 @@ test("replay-producer tests", () => {
 test("replay-producer stage", () => {
   const payload = withoutComments(functionBody(interview, "stagePayload"));
   assert.ok(
-    payload.includes("title: problem.title, meta: nodes.meta.textContent"),
-    "the problem heading is assembled in one place",
+    payload.includes("title: nodes.title.textContent") && payload.includes("meta: nodes.meta.textContent"),
+    "the replay copies the displayed heading, which is the scenario and never the published problem",
   );
   const stage = withoutComments(functionBody(interview, "recordStage"));
   assert.ok(

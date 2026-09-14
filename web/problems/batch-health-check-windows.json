@@ -1,0 +1,64 @@
+{
+  "page": "batch-health-check-windows",
+  "title": "Batch Health Check Windows",
+  "source": "Minimum Number of Arrows to Burst Balloons",
+  "difficulty": "Medium",
+  "brief": [
+    "Our deploy orchestrator gives every rolling service a window on the timeline during which it is safe to probe it. A single health check fired at one instant covers every service whose window contains that instant, and each check is expensive, so we want to fire as few as possible while still covering every service.",
+    "Implement fewestHealthChecks(windows), where windows lists the service windows as [start, end] pairs, and return the smallest number of check instants needed so that every window contains at least one of them."
+  ],
+  "examples": [
+    {
+      "input": "windows = [[1,10],[2,3],[4,5]]",
+      "output": "2"
+    },
+    {
+      "input": "windows = [[-3,-1],[-2,2],[3,4]]",
+      "output": "2"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def fewestHealthChecks(self, windows: list[list[int]]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} windows\n * @return {number}\n */\nfunction fewestHealthChecks(windows) {\n  // Think out loud as you go!\n}\n",
+    "c": "int fewestHealthChecks(int** windows, int windowsSize, int* windowsColSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int fewestHealthChecks(vector<vector<int>>& windows) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int fewestHealthChecks(int[][] windows) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

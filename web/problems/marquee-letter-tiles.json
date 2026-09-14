@@ -1,0 +1,64 @@
+{
+  "page": "marquee-letter-tiles",
+  "title": "Marquee Letter Tiles",
+  "source": "Ransom Note",
+  "difficulty": "Easy",
+  "brief": [
+    "A cinema changes its outdoor marquee every week using a box of loose letter tiles. Before the crew climbs the ladder, a scheduling tool checks whether the tiles in the box are enough to spell the new message.",
+    "Implement canSpellFromTiles(message, tiles), where message is the message to display and tiles is the letters available in the tile box, and return true if the message can be spelled from those tiles, and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "message = \"aabb\", tiles = \"bbaa\"",
+      "output": "true"
+    },
+    {
+      "input": "message = \"abc\", tiles = \"ab\"",
+      "output": "false"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def canSpellFromTiles(self, message: str, tiles: str) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} message\n * @param {string} tiles\n * @return {boolean}\n */\nfunction canSpellFromTiles(message, tiles) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool canSpellFromTiles(char* message, char* tiles) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool canSpellFromTiles(string message, string tiles) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean canSpellFromTiles(String message, String tiles) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

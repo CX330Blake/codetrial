@@ -1,0 +1,64 @@
+{
+  "page": "scanner-code-reconciliation",
+  "title": "Scanner Code Reconciliation",
+  "source": "Edit Distance",
+  "difficulty": "Medium",
+  "brief": [
+    "Our warehouse scanners read product codes off worn labels, and the reads are sometimes garbled. To score how badly a read went, we measure how many single-character fixes turn the scanned code into the true code.",
+    "A fix inserts one character, deletes one character, or replaces one character with another. Implement fewestCharacterFixes(word1, word2), where word1 is the scanned code and word2 is the true code, and return the smallest number of fixes that turns word1 into word2."
+  ],
+  "examples": [
+    {
+      "input": "word1 = \"pilot\", word2 = \"split\"",
+      "output": "3"
+    },
+    {
+      "input": "word1 = \"abc\", word2 = \"adc\"",
+      "output": "1"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def fewestCharacterFixes(self, word1: str, word2: str) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} word1\n * @param {string} word2\n * @return {number}\n */\nfunction fewestCharacterFixes(word1, word2) {\n  // Think out loud as you go!\n}\n",
+    "c": "int fewestCharacterFixes(char* word1, char* word2) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int fewestCharacterFixes(string word1, string word2) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int fewestCharacterFixes(String word1, String word2) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

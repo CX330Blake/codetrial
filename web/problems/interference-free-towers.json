@@ -1,0 +1,60 @@
+{
+  "page": "interference-free-towers",
+  "title": "Interference Free Towers",
+  "source": "N-Queens II",
+  "difficulty": "Hard",
+  "brief": [
+    "A city is laid out as an n by n grid of blocks, and we must install exactly n radio towers, at most one per block. Two towers interfere if they share a row, a column, or any diagonal of the grid, no matter how far apart they are.",
+    "Implement countSafeLayouts(n), where n is the grid size and the number of towers, and return how many different layouts place all n towers with no two interfering."
+  ],
+  "examples": [
+    {
+      "input": "n = 5",
+      "output": "10"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    int countSafeLayouts(int n) {\n        \n    }\n};",
+    "java": "class Solution {\n    public int countSafeLayouts(int n) {\n        \n    }\n}",
+    "python": "class Solution:\n    def countSafeLayouts(self, n: int) -> int:\n        ",
+    "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nvar countSafeLayouts = function(n) {\n    \n};",
+    "c": "int countSafeLayouts(int n) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

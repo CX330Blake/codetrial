@@ -1,0 +1,118 @@
+{
+  "kind": "function",
+  "entry": "planRolloutWaves",
+  "checker": "exact",
+  "argTypes": [
+    "binaryTree"
+  ],
+  "cases": [
+    {
+      "label": "balanced with two leaves",
+      "input": [
+        [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ]
+      ],
+      "expected": [
+        [
+          3
+        ],
+        [
+          9,
+          20
+        ],
+        [
+          15,
+          7
+        ]
+      ]
+    },
+    {
+      "label": "single node",
+      "input": [
+        [
+          1
+        ]
+      ],
+      "expected": [
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "label": "empty tree",
+      "input": [
+        []
+      ],
+      "expected": []
+    },
+    {
+      "label": "sparse keeps left to right",
+      "input": [
+        [
+          1,
+          2,
+          3,
+          null,
+          4,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ]
+      ]
+    },
+    {
+      "label": "gap in last level",
+      "input": [
+        [
+          8,
+          3,
+          10,
+          1,
+          6,
+          null,
+          14
+        ]
+      ],
+      "expected": [
+        [
+          8
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          1,
+          6,
+          14
+        ]
+      ]
+    }
+  ],
+  "paramNames": [
+    "root"
+  ],
+  "paramTypes": [
+    "TreeNode"
+  ],
+  "returnType": "list<list<integer>>"
+}

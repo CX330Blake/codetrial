@@ -1,0 +1,64 @@
+{
+  "page": "muted-alert-filter",
+  "title": "Muted Alert Filter",
+  "source": "Remove Element",
+  "difficulty": "Easy",
+  "brief": [
+    "A monitoring agent on an embedded gateway buffers alert codes in a fixed array. When an operator mutes a code, the agent has to purge every alert with that code from the buffer without allocating a new one.",
+    "Implement dropMutedCode(nums, val), where nums is the alert buffer and val is the muted code. Rearrange nums in place so its first k slots hold exactly the alerts that are not val, and return k."
+  ],
+  "examples": [
+    {
+      "input": "nums = [4,1,4,4,2,4], val = 4",
+      "output": "2, and nums starts with 1,2 in any order"
+    },
+    {
+      "input": "nums = [1,2,3], val = 4",
+      "output": "3, and nums starts with 1,2,3 in any order"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def dropMutedCode(self, nums: list[int], val: int) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @param {number} val\n * @return {number}\n */\nfunction dropMutedCode(nums, val) {\n  // Think out loud as you go!\n}\n",
+    "c": "int dropMutedCode(int* nums, int numsSize, int val) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int dropMutedCode(vector<int>& nums, int val) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int dropMutedCode(int[] nums, int val) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

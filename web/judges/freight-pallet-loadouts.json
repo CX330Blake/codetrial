@@ -1,0 +1,119 @@
+{
+  "kind": "function",
+  "entry": "listPalletLoadouts",
+  "checker": "integerCombinations",
+  "cases": [
+    {
+      "label": "reuse smaller crate",
+      "input": [
+        [
+          2,
+          3,
+          6,
+          7
+        ],
+        7
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          3
+        ],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "label": "multiple loadouts",
+      "input": [
+        [
+          2,
+          3,
+          5
+        ],
+        8
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          3,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ]
+    },
+    {
+      "label": "no loadout",
+      "input": [
+        [
+          2
+        ],
+        1
+      ],
+      "expected": []
+    },
+    {
+      "label": "unsorted crate sizes",
+      "input": [
+        [
+          7,
+          3,
+          2
+        ],
+        7
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          3
+        ],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "label": "two loadouts",
+      "input": [
+        [
+          3,
+          4,
+          5
+        ],
+        9
+      ],
+      "expected": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          4,
+          5
+        ]
+      ]
+    }
+  ],
+  "paramNames": [
+    "candidates",
+    "target"
+  ],
+  "paramTypes": [
+    "integer[]",
+    "integer"
+  ],
+  "returnType": "list<list<integer>>"
+}

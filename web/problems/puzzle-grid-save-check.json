@@ -1,0 +1,60 @@
+{
+  "page": "puzzle-grid-save-check",
+  "title": "Puzzle Grid Save Check",
+  "source": "Valid Sudoku",
+  "difficulty": "Medium",
+  "brief": [
+    "Our puzzle app lets players save a half-finished number-placement grid. Before saving, the backend rejects grids where the player has already broken a placement rule: the grid is 9 by 9, split into nine 3 by 3 blocks, and no digit from 1 to 9 may appear twice in the same row, the same column or the same block.",
+    "Implement isGridConsistent(board), where board is the grid as 9 rows of 9 single-character strings, each a digit or '.', and return true if the filled cells break none of the rules, and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "board = [[\"5\",\"3\",\".\",\".\",\"7\",\".\",\".\",\".\",\"5\"],[\"6\",\".\",\".\",\"1\",\"9\",\"5\",\".\",\".\",\".\"],[\".\",\"9\",\"8\",\".\",\".\",\".\",\".\",\"6\",\".\"],[\"8\",\".\",\".\",\".\",\"6\",\".\",\".\",\".\",\"3\"],[\"4\",\".\",\".\",\"8\",\".\",\"3\",\".\",\".\",\"1\"],[\"7\",\".\",\".\",\".\",\"2\",\".\",\".\",\".\",\"6\"],[\".\",\"6\",\".\",\".\",\".\",\".\",\"2\",\"8\",\".\"],[\".\",\".\",\".\",\"4\",\"1\",\"9\",\".\",\".\",\"5\"],[\".\",\".\",\".\",\".\",\"8\",\".\",\".\",\"7\",\"9\"]]",
+      "output": "false"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def isGridConsistent(self, board: list[list[str]]) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {character[][]} board\n * @return {boolean}\n */\nfunction isGridConsistent(board) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool isGridConsistent(char** board, int boardSize, int* boardColSize) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool isGridConsistent(vector<vector<char>>& board) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean isGridConsistent(char[][] board) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

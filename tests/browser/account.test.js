@@ -9,6 +9,7 @@ import {
   clearReportHistory,
   historyKey,
   readLocalHistory,
+  renameLocalHistory,
   saveReportHistory,
 } from "../../web/history.js";
 import { functionBody, memoryStorage, root } from "./source.js";
@@ -128,7 +129,7 @@ test("the lobby offers one interview and carries no mode to the room", () => {
   assert.match(interview, /message\.type === "framework_state" && Array\.isArray\(message\.phases\)/);
   assert.match(interview, /frameworkRound = "behavioral"/);
   assert.match(interview, /globalThis\.setTimeout\(\(\) => \{\s*nodes\.frameworkHint\.hidden = true;/);
-  assert.match(interview, /JSON\.stringify\(\{ problemId: problem\.id, durationMin, interviewId, interviewLoop, interviewProfile, \.\.\.\(interviewGrounding/);
+  assert.match(interview, /JSON\.stringify\(\{ problemId: problem\.page, durationMin, interviewId, interviewLoop, interviewProfile, \.\.\.\(interviewGrounding/);
   assert.match(interview, /interviewLoop, report: state\.report/);
 });
 
@@ -156,7 +157,7 @@ test("optional interview profile is accessible, bounded, and omitted when blank"
   const interview = read("interview.js");
   assert.match(lobby, /<summary>Optional interview context<\/summary>/);
   assert.match(lobby, /<fieldset>[\s\S]*<legend>Tailor the behavioral question<\/legend>/);
-  for (const id of ["profile-role", "profile-seniority", "profile-company"]) {
+  for (const id of ["profile-role", "profile-seniority", "profile-company", "practice-focus-share", "practice-focus-share-input"]) {
     assert.match(lobby, new RegExp(`id="${id}"`));
   }
   assert.match(lobby, /id="profile-role"[^>]*maxlength="80"/);
@@ -168,6 +169,10 @@ test("optional interview profile is accessible, bounded, and omitted when blank"
   assert.match(app, /if \(profile\.seniority\) destination\.searchParams\.set\("seniority", profile\.seniority\)/);
   assert.match(app, /if \(profile\.targetCompany\) destination\.searchParams\.set\("company", profile\.targetCompany\)/);
   assert.match(interview, /const interviewProfile = \{/);
+  // The focus travels in session storage, never the address bar.
+  assert.match(app, /storeSharedFocus\(sessionStorage, focus\?\.weakness \?\? null\)/);
+  assert.doesNotMatch(app, /searchParams\.set\("focus"/);
+  assert.match(interview, /practiceFocus: consumeSharedFocus\(sessionStorage\)/);
 });
 
 test("document grounding is explicit, clearable, ephemeral, and absent from saved artifacts", () => {
@@ -182,7 +187,10 @@ test("document grounding is explicit, clearable, ephemeral, and absent from save
   assert.match(app, /storeGroundingPacket\(sessionStorage, packet\)/);
   assert.match(interview, /consumeGroundingPacket\(sessionStorage\)/);
   const savedArtifacts = [read("history.js"), read("replay-feed.js"), functionBody(interview, "saveHistory")];
-  for (const source of savedArtifacts) assert.doesNotMatch(source, /interviewGrounding/);
+  for (const source of savedArtifacts) {
+    assert.doesNotMatch(source, /interviewGrounding/);
+    assert.doesNotMatch(source, /practiceFocus/);
+  }
 });
 
 test("report history writes local storage before account sync", async () => {
@@ -400,6 +408,31 @@ test("no handler in these files reaches for the event's current target", () => {
 // The key lives in the origin's local storage, so what it holds is input: an
 // older build, another tab, or anyone with devtools open can leave any JSON
 // under it, and every reader downstream treats what comes back as a list.
+// Old history carries published ids, and translating them costs the lobby a
+// page-map fetch on each visit. Renamed in place once, the next visit has page
+// names and fetches nothing.
+test("history saved under published ids is renamed to page names once", () => {
+  const storage = memoryStorage();
+  const pages = { "two-sum": { page: "some-scenario" } };
+  storage.setItem(historyKey, JSON.stringify([
+    { problemId: "two-sum", date: "2026-01-01" },
+    { problemId: "already-a-page" },
+    { problemId: "__proto__" },
+    "not an entry",
+  ]));
+  const renamed = renameLocalHistory(pages, storage);
+  assert.deepEqual(renamed[0], { problemId: "some-scenario", date: "2026-01-01" });
+  assert.deepEqual(renamed.slice(1), [{ problemId: "already-a-page" }, { problemId: "__proto__" }, "not an entry"]);
+  assert.deepEqual(readLocalHistory(storage), renamed, "the rename is written back");
+
+  const unchanged = memoryStorage();
+  unchanged.setItem(historyKey, "[{\"problemId\":\"already-a-page\"}]");
+  let writes = 0;
+  const counting = { ...unchanged, getItem: (key) => unchanged.getItem(key), setItem: (...args) => { writes += 1; unchanged.setItem(...args); } };
+  renameLocalHistory(pages, counting);
+  assert.equal(writes, 0, "nothing to rename is nothing written");
+});
+
 test("a stored history that is not a list reads as no history", () => {
   const stored = (value) => {
     const storage = memoryStorage();

@@ -10,7 +10,7 @@ use super::{
     ROUND_TRANSITION_SKEW, RuntimeState, TIME_WARNING_S, cold_restart, format_test_run,
     integrity_hash, json_int, language_choice, python_truthy, sanitize_integrity_event,
     sanitize_test_run, spoken_language, spoken_minutes_from_remaining_seconds,
-    test_reaction_decision, test_results_reaction, time_warning,
+    test_reaction_decision, test_results_reaction, test_setup_error_reaction, time_warning,
 };
 use crate::runtime::{TOPIC_CODE_UPDATE, TOPIC_CONTROL, TOPIC_INTEGRITY, TOPIC_TEST_RESULTS};
 
@@ -43,17 +43,22 @@ fn offered_language(language: &str) -> Option<(&str, &'static str)> {
 
 fn apply_code_update(state: &mut RuntimeState, payload: &serde_json::Value) -> DataEventResult {
     // A packet with no string `code` is a malformed packet, not an empty
-    // editor. Defaulting to "" meant one of those wiped the authoritative
-    // buffer, and the buffer is what the report is written from.
-    let new_code = payload.get("code").and_then(serde_json::Value::as_str);
+    // editor, and it changes nothing. Defaulting to "" meant one of those wiped
+    // the authoritative buffer, and the buffer is what the report is written
+    // from; letting its language through filed the old buffer under a new
+    // language, so `state.code` would no longer be the code of
+    // `state.language`.
+    let Some(new_code) = payload.get("code").and_then(serde_json::Value::as_str) else {
+        return DataEventResult::default();
+    };
 
     // Editor packets arrive several times a second and are usually identical to
     // the last one, so only touch the buffer when the text actually moved.
     let first_code_packet = state.code.is_empty();
-    let update_last_code_change = new_code.is_some_and(|code| code != state.code);
-    if let Some(code) = new_code.filter(|_| update_last_code_change) {
+    let update_last_code_change = new_code != state.code;
+    if update_last_code_change {
         state.code.clear();
-        state.code.push_str(code);
+        state.code.push_str(new_code);
     }
 
     // A language switch is silent from the interviewer's side: the click swaps
@@ -98,6 +103,15 @@ fn apply_code_update(state: &mut RuntimeState, payload: &serde_json::Value) -> D
             LanguageChoiceContext::Start
         };
         language_changed = Some(language_choice(spoken.1, context));
+    }
+
+    // The starters come from the problem (`RuntimeState::for_problem`), never
+    // from a packet. A language the problem has no starter for, which only a
+    // state built without one meets, falls back to its first buffer.
+    if !state.code_templates.contains_key(&state.language) {
+        state
+            .code_templates
+            .insert(state.language.clone(), new_code.to_string());
     }
 
     DataEventResult {
@@ -151,13 +165,11 @@ fn apply_test_results(
         return DataEventResult::default();
     }
 
+    let setup_error = payload.get("setupError").is_some_and(python_truthy);
     let all_passed = payload
-        .get("setupError")
-        .is_none_or(|value| !python_truthy(value))
-        && payload
-            .get("total")
-            .and_then(serde_json::Value::as_i64)
-            .is_some_and(|total| total > 0)
+        .get("total")
+        .and_then(serde_json::Value::as_i64)
+        .is_some_and(|total| total > 0)
         && payload.get("passed").and_then(serde_json::Value::as_i64)
             == payload.get("total").and_then(serde_json::Value::as_i64);
     let summary = format_test_run(Some(payload), state.test_runs);
@@ -165,7 +177,11 @@ fn apply_test_results(
     DataEventResult {
         update_last_test_reaction: true,
         update_last_interjection: true,
-        generate_reply: Some(test_results_reaction(&summary, all_passed)),
+        generate_reply: Some(if setup_error {
+            test_setup_error_reaction(&summary)
+        } else {
+            test_results_reaction(&summary, all_passed)
+        }),
         ..DataEventResult::default()
     }
 }

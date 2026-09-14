@@ -1,0 +1,60 @@
+{
+  "page": "shifted-price-snapshot",
+  "title": "Shifted Price Snapshot",
+  "source": "Find Minimum in Rotated Sorted Array",
+  "difficulty": "Medium",
+  "brief": [
+    "Our market data service keeps an order book's distinct price levels, measured in ticks from a reference price, in increasing order. A feed bug makes some snapshots start at an arbitrary level: the levels run upward from there to the highest one, then continue from the lowest level up to just below where the snapshot started.",
+    "Implement lowestPriceLevel(levels), where levels holds the snapshot in the order it arrived, and return the lowest price level in it."
+  ],
+  "examples": [
+    {
+      "input": "levels = [5,6,7,1,2,3,4]",
+      "output": "1"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def lowestPriceLevel(self, levels: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} levels\n * @return {number}\n */\nfunction lowestPriceLevel(levels) {\n  // Think out loud as you go!\n}\n",
+    "c": "int lowestPriceLevel(int* levels, int levelsSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int lowestPriceLevel(vector<int>& levels) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int lowestPriceLevel(int[] levels) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

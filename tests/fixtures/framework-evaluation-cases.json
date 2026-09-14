@@ -32,7 +32,7 @@
     {
       "id": "failed-test-recovery",
       "coverage": ["failed-test-recovery"],
-      "reaction": {"kind":"tests_failed", "code":"def two_sum(nums, target): return []", "required":["what the failures have in common", "diagnosis/Coding", "not proof"], "forbidden":["bug location", "the fix is", "log_hint"]},
+      "reaction": {"kind":"tests_failed", "code":"def two_sum(nums, target): return []", "required":["choose one failing case", "expected result and what their code produced", "diagnosis/Coding", "not proof"], "forbidden":["bug location", "the fix is", "log_hint"]},
       "transcript": "Candidate diagnosed that insertion before lookup reused the same index, reversed the operations, and reran the duplicate case.",
       "evidence": [
         {"phase":"coding","source":"editor_snapshot","kind":"observed","confidence":100,"summary":"Revised the implementation after diagnosis."},

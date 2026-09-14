@@ -63,8 +63,8 @@ def corpus():
     return {
         "version": 1,
         "contract": {
-            "bundleVersion": 4,
-            "reportPromptVersion": 4,
+            "bundleVersion": 5,
+            "reportPromptVersion": 5,
             "rubricVersion": 1,
             "reportSchemaVersion": 1,
             "model": "synthetic-test-only",
@@ -86,8 +86,8 @@ def content():
     template = {
         "version": 1,
         "contract": {
-            "bundleVersion": 4,
-            "reportPromptVersion": 4,
+            "bundleVersion": 5,
+            "reportPromptVersion": 5,
             "rubricVersion": 1,
             "reportSchemaVersion": 1,
             "model": "FILL-ME",

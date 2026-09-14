@@ -4,7 +4,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { buildProgressModel, normalizeProgressEntry, progressPhases, unwrapEntry } from "../../web/progress.js";
+import { buildProgressModel, normalizeProgressEntry, pickerEntry, progressPhases } from "../../web/progress.js";
+import { pickProblem, suggestDifficulty } from "../../web/problem-picker.js";
 
 const web = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "web");
 const assessment = (version, algorithm, action = null, tags = []) => ({
@@ -100,34 +101,31 @@ test("lobby progress surface is accessible and separates the two frameworks", ()
   assert.doesNotMatch(app, /Formative phase trends/);
 });
 
-// `unwrapEntry` is exported and, until now, called by no test: the lobby's
-// picker and its progress panel both read it, but only through a Playwright
-// scenario that skips wherever Chromium is not installed. Its fallback is a
-// named past regression -- `/api/reports` carries the problem id on the stored
-// row while the browser's own payload may not, and without the fallback every
-// account report read as unattributed, so the picker recommended problems the
-// candidate had already passed.
+// The lobby's picker and its progress panel both unwrap entries the same way
+// (`pickerEntry` and `normalizeProgressEntry`), and the unwrap fallback is a
+// named past regression:
+// `/api/reports` carries the problem id on the stored row while the browser's
+// own payload may not, and without the fallback every account report read as
+// unattributed, so the picker recommended problems the candidate had already
+// passed.
 test("an account row lends its problem id to a payload that has none", () => {
   // The row carries it, the payload does not: the fallback is the whole point.
-  assert.deepEqual(
-    unwrapEntry({ problemId: "two-sum", payload: { id: "a", report: { decision: "HIRE" } } }),
-    { id: "a", report: { decision: "HIRE" }, problemId: "two-sum" },
-  );
+  const lent = normalizeProgressEntry({ problemId: "two-sum", payload: { id: "a", report: { decision: "HIRE" } } });
+  assert.equal(lent.problemId, "two-sum");
+  assert.equal(lent.id, "a");
   // The payload's own id wins when it has one, so a row cannot relabel a report.
   assert.equal(
-    unwrapEntry({ problemId: "two-sum", payload: { problemId: "lru-cache" } }).problemId,
+    normalizeProgressEntry({ problemId: "two-sum", payload: { problemId: "lru-cache" } }).problemId,
     "lru-cache",
   );
-  // A flat entry, the shape history.js stores, is returned as itself.
-  assert.deepEqual(unwrapEntry({ problemId: "valid-anagram" }), { problemId: "valid-anagram" });
-  // Neither has one: the result says so rather than inventing an id, and
-  // `undefined` is what `normalizeProgressEntry` turns into "".
-  assert.equal(unwrapEntry({ payload: {} }).problemId, undefined);
+  // A flat entry, the shape history.js stores, is read as itself.
+  assert.equal(normalizeProgressEntry({ problemId: "valid-anagram" }).problemId, "valid-anagram");
+  // Neither has one: the result says so rather than inventing an id.
+  assert.equal(normalizeProgressEntry({ payload: {} }).problemId, "");
   // A wrapper that is not an object, and a payload that is not one, are both
   // read as no wrapper at all rather than throwing on a property access.
-  assert.deepEqual(unwrapEntry(null), { problemId: undefined });
-  assert.deepEqual(unwrapEntry({ payload: "not an object", problemId: "x" }),
-    { payload: "not an object", problemId: "x" });
+  assert.equal(normalizeProgressEntry(null).problemId, "");
+  assert.equal(normalizeProgressEntry({ payload: "not an object", problemId: "x" }).problemId, "x");
 });
 
 // The filter menus the lobby renders come from here, and nothing looked at
@@ -178,4 +176,23 @@ test("a history that is not a list is an empty model, not a throw", () => {
     assert.deepEqual(model.attempts, []);
     assert.deepEqual(model.options.difficulty, []);
   }
+});
+
+// The picker reads verdicts as they were saved. Through the sanitized report a
+// pass from an older contract bundle lost its decision and an ungraded session
+// became NO_HIRE, so the lobby recommended passed problems again and moved a
+// candidate down a level for interviews nobody graded.
+test("the picker keeps saved verdicts that the progress panel cannot score", () => {
+  const bundle3 = { bundleVersion: 3, livePromptVersion: 1, reportPromptVersion: 3, reportSchemaVersion: 1, rubricVersion: 1 };
+  const cards = [{ id: "a", difficulty: "Medium" }, { id: "b", difficulty: "Medium" }];
+  const oldPass = { problemId: "a", payload: { date: "2026-08-01T00:00:00Z", report: { decision: "HIRE", interviewContract: bundle3 } } };
+  const entry = pickerEntry(oldPass);
+  assert.equal(entry.report.decision, "HIRE");
+  assert.equal(entry.at, Date.parse("2026-08-01T00:00:00Z"));
+  assert.equal(normalizeProgressEntry(oldPass).report.incomplete, true, "the panel still refuses to score it");
+  assert.equal(pickProblem(cards, new Set(["Medium"]), [entry], () => 0, Date.parse("2026-08-01T12:00:00Z")).picked.id, "b");
+
+  const levels = [{ id: "a", difficulty: "Medium" }, { id: "b", difficulty: "Medium" }, { id: "e", difficulty: "Easy" }];
+  const ungraded = [{ problemId: "a", report: null }, { problemId: "b" }].map(pickerEntry);
+  assert.equal(suggestDifficulty(levels, ungraded), null, "ungraded sessions read as failures");
 });

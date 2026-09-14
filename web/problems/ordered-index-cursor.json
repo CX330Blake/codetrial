@@ -1,0 +1,60 @@
+{
+  "page": "ordered-index-cursor",
+  "title": "Ordered Index Cursor",
+  "source": "Binary Search Tree Iterator",
+  "difficulty": "Medium",
+  "brief": [
+    "Our storage engine keeps order ids in a binary search tree: every id in a node's left subtree is smaller than the node's id and every id in its right subtree is larger. Reporting clients want to page through the ids in ascending order, one at a time, without the engine copying the whole index up front.",
+    "Implement the OrderedCursor class. OrderedCursor(root) receives the TreeNode at the root of the index. next() returns the next id in ascending order and advances the cursor. hasNext() returns true if at least one id has not been returned yet."
+  ],
+  "examples": [
+    {
+      "input": "[\"OrderedCursor\",\"next\",\"next\",\"next\",\"hasNext\"]\n[[[3,2,null,1]],[],[],[],[]]",
+      "output": "[null,1,2,3,false]"
+    }
+  ],
+  "starterCode": {
+    "python": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass OrderedCursor:\n    def __init__(self, root: Optional[TreeNode]):\n        pass\n\n    def next(self) -> int:\n        pass\n\n    def hasNext(self) -> bool:\n        pass\n",
+    "javascript": "/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *   this.val = (val===undefined ? 0 : val);\n *   this.left = (left===undefined ? null : left);\n *   this.right = (right===undefined ? null : right);\n * }\n */\n/** @param {TreeNode} root */\nvar OrderedCursor = function(root) {\n  // Think out loud as you go!\n};\n\n/** @return {number} */\nOrderedCursor.prototype.next = function() {\n};\n\n/** @return {boolean} */\nOrderedCursor.prototype.hasNext = function() {\n};\n",
+    "c": "/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     struct TreeNode *left;\n *     struct TreeNode *right;\n * };\n */\ntypedef struct {\n    // Think out loud as you go!\n} OrderedCursor;\n\nOrderedCursor* orderedCursorCreate(struct TreeNode* root) {\n    return NULL;\n}\n\nint orderedCursorNext(OrderedCursor* obj) {\n    return 0;\n}\n\nbool orderedCursorHasNext(OrderedCursor* obj) {\n    return false;\n}\n\nvoid orderedCursorFree(OrderedCursor* obj) {\n}\n",
+    "cpp": "/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode() : val(0), left(nullptr), right(nullptr) {}\n *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}\n *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}\n * };\n */\nclass OrderedCursor {\npublic:\n    OrderedCursor(TreeNode* root) {\n    }\n\n    int next() {\n        return 0;\n    }\n\n    bool hasNext() {\n        return false;\n    }\n};\n",
+    "java": "/**\n * Definition for a binary tree node.\n * public class TreeNode {\n *     int val;\n *     TreeNode left;\n *     TreeNode right;\n *     TreeNode() {}\n *     TreeNode(int val) { this.val = val; }\n *     TreeNode(int val, TreeNode left, TreeNode right) {\n *         this.val = val;\n *         this.left = left;\n *         this.right = right;\n *     }\n * }\n */\nclass OrderedCursor {\n    public OrderedCursor(TreeNode root) {\n    }\n\n    public int next() {\n        return 0;\n    }\n\n    public boolean hasNext() {\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

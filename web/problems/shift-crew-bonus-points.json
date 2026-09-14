@@ -1,0 +1,60 @@
+{
+  "page": "shift-crew-bonus-points",
+  "title": "Shift Crew Bonus Points",
+  "source": "Candy",
+  "difficulty": "Hard",
+  "brief": [
+    "A warehouse assigns pickers to stations in a single row and scores each one's shift. Payroll hands out bonus points so every picker gets something, and anyone who outscored the picker at an adjacent station gets strictly more points than that neighbor.",
+    "Implement minimumBonusPoints(scores), where scores[i] is the shift score of the picker at station i, and return the smallest total number of points that satisfies those rules."
+  ],
+  "examples": [
+    {
+      "input": "scores = [1,3,4,5,2]",
+      "output": "11"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def minimumBonusPoints(self, scores: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} scores\n * @return {number}\n */\nfunction minimumBonusPoints(scores) {\n  // Think out loud as you go!\n}\n",
+    "c": "int minimumBonusPoints(int* scores, int scoresSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int minimumBonusPoints(vector<int>& scores) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int minimumBonusPoints(int[] scores) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

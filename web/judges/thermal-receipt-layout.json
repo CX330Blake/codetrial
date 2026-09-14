@@ -1,0 +1,85 @@
+{
+  "kind": "function",
+  "entry": "layoutReceiptLines",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "uneven spaces go left",
+      "input": [
+        [
+          "Keep",
+          "it",
+          "as",
+          "concise",
+          "as",
+          "your",
+          "documentation."
+        ],
+        16
+      ],
+      "expected": [
+        "Keep    it    as",
+        "concise  as your",
+        "documentation.  "
+      ]
+    },
+    {
+      "label": "single word line",
+      "input": [
+        [
+          "What",
+          "must",
+          "be",
+          "acknowledgment",
+          "shall",
+          "be"
+        ],
+        16
+      ],
+      "expected": [
+        "What   must   be",
+        "acknowledgment  ",
+        "shall be        "
+      ]
+    },
+    {
+      "label": "last line left aligned",
+      "input": [
+        [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        3
+      ],
+      "expected": [
+        "a b",
+        "c d",
+        "e  "
+      ]
+    },
+    {
+      "label": "one exact-width word",
+      "input": [
+        [
+          "Longword"
+        ],
+        8
+      ],
+      "expected": [
+        "Longword"
+      ]
+    }
+  ],
+  "paramNames": [
+    "words",
+    "lineWidth"
+  ],
+  "paramTypes": [
+    "string[]",
+    "integer"
+  ],
+  "returnType": "list<string>"
+}

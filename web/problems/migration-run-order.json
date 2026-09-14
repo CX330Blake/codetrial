@@ -1,0 +1,64 @@
+{
+  "page": "migration-run-order",
+  "title": "Migration Run Order",
+  "source": "Course Schedule II",
+  "difficulty": "Medium",
+  "brief": [
+    "Our database migration runner needs to apply a batch of schema migrations. Some migrations depend on others having run first, and the runner must pick an order that respects every dependency.",
+    "Implement planMigrationOrder(migrationCount, dependencies), where migrations are numbered 0 to migrationCount - 1 and each dependencies[i] is a pair [a, b] meaning migration b must run before migration a, and return a list of migration numbers giving the order to run them."
+  ],
+  "examples": [
+    {
+      "input": "migrationCount = 3, dependencies = [[0,1],[0,2],[1,2]]",
+      "output": "[2,1,0] (the only valid order)"
+    },
+    {
+      "input": "migrationCount = 1, dependencies = []",
+      "output": "[0] (one valid order)"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<int> planMigrationOrder(int migrationCount, vector<vector<int>>& dependencies) {\n        \n    }\n};",
+    "java": "class Solution {\n    public int[] planMigrationOrder(int migrationCount, int[][] dependencies) {\n        \n    }\n}",
+    "python": "class Solution:\n    def planMigrationOrder(self, migrationCount: int, dependencies: List[List[int]]) -> List[int]:\n        ",
+    "javascript": "/**\n * @param {number} migrationCount\n * @param {number[][]} dependencies\n * @return {number[]}\n */\nvar planMigrationOrder = function(migrationCount, dependencies) {\n    \n};",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nint* planMigrationOrder(int migrationCount, int** dependencies, int dependenciesSize, int* dependenciesColSize, int* returnSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

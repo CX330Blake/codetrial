@@ -1,0 +1,49 @@
+{
+  "kind": "function",
+  "entry": "settlesToOne",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "reaches one",
+      "input": [
+        19
+      ],
+      "expected": true
+    },
+    {
+      "label": "loops through four",
+      "input": [
+        2
+      ],
+      "expected": false
+    },
+    {
+      "label": "already one",
+      "input": [
+        1
+      ],
+      "expected": true
+    },
+    {
+      "label": "larger settles",
+      "input": [
+        100
+      ],
+      "expected": true
+    },
+    {
+      "label": "larger loop",
+      "input": [
+        116
+      ],
+      "expected": false
+    }
+  ],
+  "paramNames": [
+    "n"
+  ],
+  "paramTypes": [
+    "integer"
+  ],
+  "returnType": "boolean"
+}

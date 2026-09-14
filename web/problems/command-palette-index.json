@@ -1,0 +1,60 @@
+{
+  "page": "command-palette-index",
+  "title": "Command Palette Index",
+  "source": "Implement Trie (Prefix Tree)",
+  "difficulty": "Medium",
+  "brief": [
+    "Our editor's command palette registers command names at startup and then answers two questions as the user types: is this exactly a registered command, and does any registered command begin with what has been typed so far.",
+    "Implement the CommandIndex class. CommandIndex() creates an empty index. insert(word) registers the command name word. search(word) returns true if word itself was registered. startsWith(prefix) returns true if at least one registered command begins with prefix."
+  ],
+  "examples": [
+    {
+      "input": "[\"CommandIndex\",\"insert\",\"insert\",\"search\",\"search\",\"startsWith\"]\n[[],[\"car\"],[\"cat\"],[\"car\"],[\"cap\"],[\"ca\"]]",
+      "output": "[null,null,null,true,false,true]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class CommandIndex {\npublic:\n    CommandIndex() {\n        \n    }\n    \n    void insert(string word) {\n        \n    }\n    \n    bool search(string word) {\n        \n    }\n    \n    bool startsWith(string prefix) {\n        \n    }\n};\n\n/**\n * Your CommandIndex object will be instantiated and called as such:\n * CommandIndex* obj = new CommandIndex();\n * obj->insert(word);\n * bool param_2 = obj->search(word);\n * bool param_3 = obj->startsWith(prefix);\n */",
+    "java": "class CommandIndex {\n\n    public CommandIndex() {\n        \n    }\n    \n    public void insert(String word) {\n        \n    }\n    \n    public boolean search(String word) {\n        \n    }\n    \n    public boolean startsWith(String prefix) {\n        \n    }\n}\n\n/**\n * Your CommandIndex object will be instantiated and called as such:\n * CommandIndex obj = new CommandIndex();\n * obj.insert(word);\n * boolean param_2 = obj.search(word);\n * boolean param_3 = obj.startsWith(prefix);\n */",
+    "python": "class CommandIndex:\n\n    def __init__(self):\n        \n\n    def insert(self, word: str) -> None:\n        \n\n    def search(self, word: str) -> bool:\n        \n\n    def startsWith(self, prefix: str) -> bool:\n        \n\n\n# Your CommandIndex object will be instantiated and called as such:\n# obj = CommandIndex()\n# obj.insert(word)\n# param_2 = obj.search(word)\n# param_3 = obj.startsWith(prefix)",
+    "javascript": "\nvar CommandIndex = function() {\n    \n};\n\n/** \n * @param {string} word\n * @return {void}\n */\nCommandIndex.prototype.insert = function(word) {\n    \n};\n\n/** \n * @param {string} word\n * @return {boolean}\n */\nCommandIndex.prototype.search = function(word) {\n    \n};\n\n/** \n * @param {string} prefix\n * @return {boolean}\n */\nCommandIndex.prototype.startsWith = function(prefix) {\n    \n};\n\n/** \n * Your CommandIndex object will be instantiated and called as such:\n * var obj = new CommandIndex()\n * obj.insert(word)\n * var param_2 = obj.search(word)\n * var param_3 = obj.startsWith(prefix)\n */",
+    "c": "\n\n\ntypedef struct {\n    \n} CommandIndex;\n\n\nCommandIndex* commandIndexCreate() {\n    \n}\n\nvoid commandIndexInsert(CommandIndex* obj, char* word) {\n    \n}\n\nbool commandIndexSearch(CommandIndex* obj, char* word) {\n    \n}\n\nbool commandIndexStartsWith(CommandIndex* obj, char* prefix) {\n    \n}\n\nvoid commandIndexFree(CommandIndex* obj) {\n    \n}\n\n/**\n * Your CommandIndex struct will be instantiated and called as such:\n * CommandIndex* obj = commandIndexCreate();\n * commandIndexInsert(obj, word);\n \n * bool param_2 = commandIndexSearch(obj, word);\n \n * bool param_3 = commandIndexStartsWith(obj, prefix);\n \n * commandIndexFree(obj);\n*/"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

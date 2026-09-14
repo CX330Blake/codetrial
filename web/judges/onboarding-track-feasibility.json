@@ -1,0 +1,92 @@
+{
+  "kind": "function",
+  "entry": "onboardingIsCompletable",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "single requirement",
+      "input": [
+        2,
+        [
+          [
+            1,
+            0
+          ]
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "label": "two module loop",
+      "input": [
+        2,
+        [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "label": "disconnected modules",
+      "input": [
+        5,
+        [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "label": "long loop",
+      "input": [
+        4,
+        [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      ],
+      "expected": false
+    }
+  ],
+  "paramNames": [
+    "moduleCount",
+    "requirements"
+  ],
+  "paramTypes": [
+    "integer",
+    "integer[][]"
+  ],
+  "returnType": "boolean"
+}

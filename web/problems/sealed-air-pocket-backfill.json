@@ -1,0 +1,64 @@
+{
+  "page": "sealed-air-pocket-backfill",
+  "title": "Sealed Air Pocket Backfill",
+  "source": "Surrounded Regions",
+  "difficulty": "Medium",
+  "brief": [
+    "In our level editor a map is a grid of rock and air. Air cells that touch along a side form a pocket. A pocket that cannot reach the edge of the map is sealed off, so players can never get there, and the editor backfills it with rock before saving.",
+    "Implement backfillSealedPockets(board), where board is a list of rows and each cell is the character 'X' for rock or 'O' for air. Update board in place so every sealed pocket becomes rock; the function returns nothing."
+  ],
+  "examples": [
+    {
+      "input": "board = [[\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\"],[\"X\",\"X\",\"X\"]]",
+      "output": "board becomes [[\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\"]]"
+    },
+    {
+      "input": "board = [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"],[\"X\",\"X\",\"O\",\"O\"],[\"X\",\"X\",\"X\",\"X\"]]",
+      "output": "board becomes [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"O\",\"O\"],[\"X\",\"X\",\"X\",\"X\"]]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    void backfillSealedPockets(vector<vector<char>>& board) {\n        \n    }\n};",
+    "java": "class Solution {\n    public void backfillSealedPockets(char[][] board) {\n        \n    }\n}",
+    "python": "class Solution:\n    def backfillSealedPockets(self, board: List[List[str]]) -> None:\n        \"\"\"\n        Do not return anything, modify board in-place instead.\n        \"\"\"\n        ",
+    "javascript": "/**\n * @param {character[][]} board\n * @return {void} Do not return anything, modify board in-place instead.\n */\nvar backfillSealedPockets = function(board) {\n    \n};",
+    "c": "void backfillSealedPockets(char** board, int boardSize, int* boardColSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

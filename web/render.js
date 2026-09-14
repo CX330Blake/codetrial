@@ -89,8 +89,12 @@ function sourceEventMarkup(event) {
 // every other builder in this file is here: a markup string assembled beside a
 // DOM lookup cannot be handed to `node --test`, so the one guarantee that
 // matters about it, that nothing a problem carries becomes live markup, had no
-// test while every sibling renderer did. Problem text is not all first-party:
-// `leetcode-import.js` brings statements in from outside.
+// test while every sibling renderer did.
+//
+// No constraints section and no source statement: the page carries the scenario
+// the interview poses, and the limits and edge-case policies are what the
+// candidate asks Jim for, the way they would ask a person. The published title
+// is named once, small, so the problem can be found again after the interview.
 export function problemMarkup(problem) {
   const example = (example, index) => `
           <section>
@@ -102,13 +106,14 @@ export function problemMarkup(problem) {
         `;
   return `
     <div class="problem-detail">
-      ${problem.statement.map((text) => `<p>${escapeHtml(text)}</p>`).join("")}
+      <p class="interview-kicker">Interview exercise</p>
+      ${problem.source ? `<p class="problem-source">LeetCode: ${escapeHtml(problem.source)}</p>` : ""}
+      ${problem.requestedPage ? `<p class="muted small">The link asked for an exercise this bank does not have, so this is the default exercise.</p>` : ""}
+      ${problem.brief.map((text) => `<p>${escapeHtml(text)}</p>`).join("")}
       <div class="examples">
         ${problem.examples.map(example).join("")}
       </div>
-      <h2>Constraints</h2>
-      <ul>${problem.constraints.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-      <div class="hint-box"><strong>Think out loud.</strong> Jim is listening to your voice and reading your editor in real time - narrate your approach like you would with a human interviewer, and say "can I get a hint?" if you need one.</div>
+      <div class="hint-box"><strong>Think out loud.</strong> Jim is listening to your voice and reading your editor in real time. Ask him about input sizes, edge cases and anything the description leaves open, narrate your approach like you would with a human interviewer, and say "can I get a hint?" if you need one.</div>
     </div>
   `;
 }

@@ -1,0 +1,64 @@
+{
+  "page": "canary-host-selection",
+  "title": "Canary Host Selection",
+  "source": "Combinations",
+  "difficulty": "Medium",
+  "brief": [
+    "Our deployment tool rolls a new build out to a small canary group before the whole fleet. For a failover drill we want to try every possible canary group of a given size, drawn from hosts numbered 1 through n.",
+    "Implement pickCanaryGroups(n, k), where n is the number of hosts and k is the size of each canary group, and return every distinct group of k host numbers."
+  ],
+  "examples": [
+    {
+      "input": "n = 4, k = 3",
+      "output": "[[1,2,3],[1,2,4],[1,3,4],[2,3,4]]"
+    },
+    {
+      "input": "n = 3, k = 1",
+      "output": "[[1],[2],[3]]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> pickCanaryGroups(int n, int k) {\n        \n    }\n};",
+    "java": "class Solution {\n    public List<List<Integer>> pickCanaryGroups(int n, int k) {\n        \n    }\n}",
+    "python": "class Solution:\n    def pickCanaryGroups(self, n: int, k: int) -> List[List[int]]:\n        ",
+    "javascript": "/**\n * @param {number} n\n * @param {number} k\n * @return {number[][]}\n */\nvar pickCanaryGroups = function(n, k) {\n    \n};",
+    "c": "/**\n * Return an array of arrays of size *returnSize.\n * The sizes of the arrays are returned as *returnColumnSizes array.\n * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().\n */\nint** pickCanaryGroups(int n, int k, int* returnSize, int** returnColumnSizes) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

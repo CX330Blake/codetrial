@@ -1,0 +1,60 @@
+{
+  "page": "firmware-buffer-splice",
+  "title": "Firmware Buffer Splice",
+  "source": "Merge Sorted Array",
+  "difficulty": "Easy",
+  "brief": [
+    "A sensor controller keeps readings in a preallocated buffer sorted in ascending order. A second probe delivers its own sorted batch, and the firmware has to fold that batch into the main buffer without allocating another one.",
+    "Implement spliceReadings(nums1, m, nums2, n). nums1 is the main buffer: its first m slots hold sorted readings and its remaining n slots are free space. nums2 holds the n sorted readings from the probe. Rearrange nums1 in place so it holds all m + n readings in ascending order; the function returns nothing."
+  ],
+  "examples": [
+    {
+      "input": "nums1 = [-3,-1,0,0,0], m = 2, nums2 = [-2,-1,2], n = 3",
+      "output": "nums1 becomes [-3,-2,-1,-1,2]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def spliceReadings(self, nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums1\n * @param {number} m\n * @param {number[]} nums2\n * @param {number} n\n * @return {void}\n */\nfunction spliceReadings(nums1, m, nums2, n) {\n  // Think out loud as you go!\n}\n",
+    "c": "void spliceReadings(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n) {\n    // Think out loud as you go!\n}\n",
+    "cpp": "class Solution {\npublic:\n    void spliceReadings(vector<int>& nums1, int m, vector<int>& nums2, int n) {\n        // Think out loud as you go!\n    }\n};\n",
+    "java": "class Solution {\n    public void spliceReadings(int[] nums1, int m, int[] nums2, int n) {\n        // Think out loud as you go!\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

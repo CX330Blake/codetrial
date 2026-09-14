@@ -5,6 +5,13 @@ export const LEVELS = ["Easy", "Medium", "Hard"];
 /// never moves at all.
 const STREAK = 2;
 
+/// Each successful recall earns a longer break before the same problem returns.
+/// This is intentionally a small, explainable schedule: reports record a
+/// verdict and a timestamp, not a confidence rating, so guessing a more precise
+/// retention model would promise accuracy the interview never measured.
+const REVIEW_INTERVAL_DAYS = [1, 3, 7, 14, 30];
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 /// Which level to practise next, read off what the candidate has already done.
 ///
 /// `reports` is newest first, which both sources guarantee: `list_reports`
@@ -49,6 +56,60 @@ export function suggestDifficulty(problems, reports) {
   return null;
 }
 
+const sharedFocusKey = "codetrial.sharedPracticeFocus";
+
+/// The focus a candidate chose to share, handed from the lobby to the interview
+/// in this tab's session storage rather than the address bar. A URL carrying
+/// it is one anybody can craft, putting their text into the interviewer's
+/// instructions with no consent given, and it lands in history and access
+/// logs. Read once: a reload does not share it again unasked.
+export function storeSharedFocus(storage, focus) {
+  try {
+    if (focus) storage.setItem(sharedFocusKey, focus);
+    else storage.removeItem(sharedFocusKey);
+  } catch { /* an unshared focus is the safe outcome */ }
+}
+
+export function consumeSharedFocus(storage) {
+  try {
+    const focus = storage.getItem(sharedFocusKey);
+    storage.removeItem(sharedFocusKey);
+    return typeof focus === "string" ? focus : "";
+  } catch {
+    return "";
+  }
+}
+
+/// Carry one concrete action from the reports into the lobby. A focus repeated
+/// across reports wins; a tie goes to the newest report and its already-ranked
+/// first item. This does not alter the next problem or become new assessment
+/// evidence: it is the candidate's own reminder until they explicitly share it
+/// with the interviewer.
+export function practiceFocus(reports) {
+  const text = (value) => typeof value === "string" && value.trim() !== "";
+  // Insertion order is newest report first and plan order within it, and the
+  // sort below is stable, so ties keep exactly that order without a key.
+  const focuses = new Map();
+  for (const { report } of reports) {
+    if (
+      report?.incomplete
+      || (report?.decision !== "HIRE" && report?.decision !== "NO_HIRE")
+      || !Array.isArray(report?.improvementPlan)
+    ) continue;
+    const reported = new Set();
+    for (const item of report.improvementPlan) {
+      if (!text(item?.weakness) || !text(item?.drill) || !text(item?.successCriterion)) continue;
+      const weakness = item.weakness.trim();
+      if (reported.has(weakness)) continue;
+      reported.add(weakness);
+      const existing = focuses.get(weakness);
+      if (existing) existing.occurrences += 1;
+      else focuses.set(weakness, { weakness, drill: item.drill.trim(), successCriterion: item.successCriterion.trim(), occurrences: 1 });
+    }
+  }
+  return [...focuses.values()].sort((left, right) => right.occurrences - left.occurrences)[0] ?? null;
+}
+
 /// Clamped at both ends: passing two Hard problems leaves the candidate on
 /// Hard, which is still the right answer, and the lobby still says why.
 function step(level, by) {
@@ -56,20 +117,37 @@ function step(level, by) {
   return LEVELS[Math.min(Math.max(index, 0), LEVELS.length - 1)];
 }
 
-/// Pick what to interview on next: a problem at one of the selected levels that
-/// the candidate has not already been hired on. `reports` is the flat entry
-/// shape `history.js` writes; the caller flattens `/api/reports` into it.
+/// Pick what to interview on next. A completed problem returns when its review
+/// is due; otherwise choose an unseen problem before repeating one early.
+/// `reports` is the `pickerEntry` shape from `progress.js`: the entry as saved,
+/// keyed by page name, with a normalized `at`.
 ///
-/// Returns `repeat` rather than hiding it, because a candidate who has passed
-/// everything at a level is owed the sentence saying so instead of a
-/// recommendation that looks new.
-export function pickProblem(problems, difficulties, reports, random = Math.random) {
+/// The optional clock keeps the scheduling rule deterministic in its tests.
+export function pickProblem(problems, difficulties, reports, random = Math.random, now = Date.now()) {
   const eligible = problems.filter((problem) => difficulties.has(problem.difficulty));
+  const reportList = Array.isArray(reports) ? reports : [];
+  const reviews = reviewStatus(reportList, now);
   const passed = new Set(
-    reports.filter((entry) => entry?.report?.decision === "HIRE").map((entry) => entry.problemId),
+    reportList.filter((entry) => entry?.report?.decision === "HIRE").map((entry) => entry.problemId),
   );
+  const due = eligible.filter((problem) => reviews.get(problem.id)?.due);
   const fresh = eligible.filter((problem) => !passed.has(problem.id));
-  const choices = fresh.length ? fresh : eligible;
+  const choices = due.length ? due : fresh.length ? fresh : eligible;
   const picked = choices[Math.floor(random() * choices.length)];
-  return picked ? { picked, repeat: !fresh.length } : null;
+  if (!picked) return null;
+  const review = reviews.get(picked.id);
+  return { picked, repeat: !fresh.length, review: due.length ? review : null };
+}
+
+function reviewStatus(reports, now) {
+  const successes = new Map();
+  for (const entry of reports) {
+    if (entry?.report?.decision !== "HIRE" || !Number.isFinite(entry.at)) continue;
+    const seen = successes.get(entry.problemId);
+    successes.set(entry.problemId, { count: (seen?.count ?? 0) + 1, last: Math.max(seen?.last ?? -Infinity, entry.at) });
+  }
+  return new Map([...successes].map(([problemId, { count, last }]) => {
+    const intervalDays = REVIEW_INTERVAL_DAYS[Math.min(count, REVIEW_INTERVAL_DAYS.length) - 1];
+    return [problemId, { due: last + intervalDays * DAY_MS <= now, intervalDays }];
+  }));
 }

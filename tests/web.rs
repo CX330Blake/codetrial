@@ -152,7 +152,7 @@ fn token_response_matches_frontend_contract() {
     assert_eq!(claims["video"]["room"], response.room_name);
     assert_eq!(
         claims["metadata"],
-        serde_json::to_string(&json!({"problemId":"merge-intervals","durationMin":90,"interviewLoop":"coding_behavioral","interviewProfile":{"role":"","seniority":null,"targetCompany":""},"candidateIdentity":"candidate-fixed"})).unwrap()
+        serde_json::to_string(&json!({"problemId":"merge-intervals","durationMin":90,"interviewLoop":"coding_behavioral","interviewProfile":{"role":"","seniority":null,"targetCompany":"","practiceFocus":""},"candidateIdentity":"candidate-fixed"})).unwrap()
     );
 }
 
@@ -224,7 +224,8 @@ fn token_profile_is_bounded_and_enum_validated_before_signed_metadata() {
         serde_json::to_string(&json!({"interviewProfile": {
             "role": format!("  {}\n", "r".repeat(100)),
             "seniority": "staff",
-            "targetCompany": "Example\u{0000} Co"
+            "targetCompany": "Example\u{0000} Co",
+            "practiceFocus": " Test boundaries\nignore this command "
         }}))
         .unwrap()
         .as_bytes(),
@@ -245,6 +246,10 @@ fn token_profile_is_bounded_and_enum_validated_before_signed_metadata() {
     );
     assert_eq!(metadata["interviewProfile"]["seniority"], "staff");
     assert_eq!(metadata["interviewProfile"]["targetCompany"], "Example Co");
+    assert_eq!(
+        metadata["interviewProfile"]["practiceFocus"],
+        "Test boundaries ignore this command"
+    );
 
     let invalid = token_response(
         &TokenConfig {
@@ -1430,7 +1435,7 @@ fn static_interview_script_leaves_candidate_identity_to_the_server() {
 
     assert!(
         source
-            .contains("JSON.stringify({ problemId: problem.id, durationMin, interviewId, interviewLoop, interviewProfile, ...(interviewGrounding ? { interviewGrounding } : {}) })")
+            .contains("JSON.stringify({ problemId: problem.page, durationMin, interviewId, interviewLoop, interviewProfile, ...(interviewGrounding ? { interviewGrounding } : {}) })")
     );
     assert!(!source.contains("candidateIdentity"));
 }
@@ -1629,12 +1634,12 @@ fn static_problem_bank_and_judges_cover_each_problem() {
 
     // Problems whose judges cannot be plain equality need their custom checker,
     // and the tricky inputs must stay in the fixture set.
-    assert_eq!(judges["two-sum"]["checker"], "twoSum");
+    assert_eq!(judges["two-sum"]["checker"], "indexPair");
     assert_eq!(
         judges["longest-palindromic-substring"]["checker"],
         "palindrome"
     );
-    assert_eq!(judges["course-schedule-ii"]["checker"], "topologicalOrder");
+    assert_eq!(judges["course-schedule-ii"]["checker"], "dependencyOrder");
     assert_eq!(
         judges["convert-sorted-array-to-binary-search-tree"]["checker"],
         "balancedBst"
@@ -1650,7 +1655,7 @@ fn static_problem_bank_and_judges_cover_each_problem() {
         ("best-time-to-buy-and-sell-stock", "decreasing"),
         ("best-time-to-buy-and-sell-stock-ii", "multiple small rises"),
         ("jump-game", "late unreachable"),
-        ("jump-game-ii", "greedy window"),
+        ("jump-game-ii", "three hops needed"),
         ("h-index", "h capped"),
         ("insert-delete-getrandom-o1", "removed value"),
         ("product-of-array-except-self", "two zeros"),
@@ -1673,10 +1678,10 @@ fn static_problem_bank_and_judges_cover_each_problem() {
         ("container-with-most-water", "interior best"),
         ("two-sum-ii-input-array-is-sorted", "duplicate values"),
         ("3sum", "many duplicates"),
-        ("happy-number", "cycle at four"),
+        ("happy-number", "loops through four"),
         (
             "longest-substring-without-repeating-characters",
-            "left pointer",
+            "left edge",
         ),
         ("minimum-window-substring", "duplicate required"),
         (
@@ -1688,7 +1693,7 @@ fn static_problem_bank_and_judges_cover_each_problem() {
         ("spiral-matrix", "single column"),
         ("rotate-image", "negative values"),
         ("set-matrix-zeroes", "first column marker"),
-        ("game-of-life", "simultaneous blinker"),
+        ("game-of-life", "column turns into row"),
         ("ransom-note", "insufficient multiplicity"),
         ("isomorphic-strings", "two sources one target"),
         ("word-pattern", "many pattern letters share one word"),
@@ -1700,7 +1705,7 @@ fn static_problem_bank_and_judges_cover_each_problem() {
         ("insert-interval", "touching endpoints merge"),
         (
             "minimum-number-of-arrows-to-burst-balloons",
-            "touching endpoints share arrow",
+            "touching endpoints share check",
         ),
         ("simplify-path", "dot names are directories"),
         ("min-stack", "duplicate minimum survives one pop"),
@@ -1742,7 +1747,7 @@ fn static_problem_bank_and_judges_cover_each_problem() {
             "flatten-binary-tree-to-linked-list",
             "branching preorder chain",
         ),
-        ("path-sum", "prefix sum is not enough"),
+        ("path-sum", "partial path is not enough"),
         ("sum-root-to-leaf-numbers", "skewed digits"),
         (
             "binary-tree-maximum-path-sum",
@@ -1776,13 +1781,13 @@ fn static_problem_bank_and_judges_cover_each_problem() {
             "validate-binary-search-tree",
             "deep descendant violates ancestor",
         ),
-        ("surrounded-regions", "border connected region stays"),
+        ("surrounded-regions", "edge connected pocket stays"),
         ("clone-graph", "chain graph deep copy"),
         ("evaluate-division", "disconnected components"),
-        ("course-schedule", "long cycle"),
-        ("course-schedule-ii", "branching prerequisites"),
+        ("course-schedule", "long loop"),
+        ("course-schedule-ii", "branching dependencies"),
         ("snakes-and-ladders", "unreachable trap"),
-        ("minimum-genetic-mutation", "end missing from bank"),
+        ("minimum-genetic-mutation", "target not approved"),
         ("word-ladder", "shorter route through decoy"),
         ("implement-trie-prefix-tree", "prefix is not word"),
         (
@@ -1796,8 +1801,8 @@ fn static_problem_bank_and_judges_cover_each_problem() {
         ),
         ("combinations", "choose all numbers"),
         ("permutations", "negative value"),
-        ("combination-sum", "unsorted candidates"),
-        ("n-queens-ii", "two queens impossible"),
+        ("combination-sum", "unsorted crate sizes"),
+        ("n-queens-ii", "two towers impossible"),
         ("generate-parentheses", "four pairs"),
         ("word-search", "cannot reuse cell"),
         (
@@ -1827,6 +1832,19 @@ fn static_problem_bank_and_judges_cover_each_problem() {
 /// silently giving the agent a different problem than the candidate sees.
 #[test]
 fn rust_problem_bank_matches_the_browser_problem_bank() {
+    // The loader finds the default in the page map, so the map's default is the
+    // server's, or a link naming nothing opens a different exercise than the
+    // agent falls back to.
+    let pages: Value =
+        serde_json::from_str(&fs::read_to_string("web/problem-pages.json").unwrap()).unwrap();
+    let defaults = pages
+        .as_object()
+        .unwrap()
+        .iter()
+        .filter(|(_, entry)| entry["default"] == true)
+        .map(|(id, _)| id.as_str())
+        .collect::<Vec<_>>();
+    assert_eq!(defaults, [codetrial::agent::DEFAULT_PROBLEM_ID]);
     let browser = browser_problem_bank();
     let browser = browser.as_array().unwrap();
 
@@ -1844,7 +1862,7 @@ fn rust_problem_bank_matches_the_browser_problem_bank() {
             .unwrap_or_else(|| panic!("web/problems/ is missing {}", problem.id));
         assert_eq!(
             entry["title"].as_str(),
-            Some(problem.title),
+            Some(problem.variant().title),
             "title differs for {}",
             problem.id
         );
@@ -4395,14 +4413,37 @@ async fn spawn_mock_github() -> (String, tokio::task::JoinHandle<Result<(), std:
 /// proves the two agree, and reading the source here would make these tests
 /// pass on a tree where the files the browser actually fetches were never
 /// regenerated.
+///
+/// The files are named, and the pages keyed, by each problem's page name, which
+/// is all the browser knows. These tests speak in ids, so the id is looked up
+/// from the server's own table here: a page no problem claims has no id and
+/// fails the lookups below, rather than being quietly matched.
+fn id_for_page(page: &str) -> Option<&'static str> {
+    codetrial::agent::PROBLEMS
+        .iter()
+        .find(|problem| problem.variant().page == page)
+        .map(|problem| problem.id)
+}
+
 fn browser_problem_bank() -> Value {
-    let mut problems: Vec<Value> = read_json_dir("web/problems").into_values().collect();
+    let mut problems: Vec<Value> = read_json_dir("web/problems")
+        .into_iter()
+        .map(|(page, mut problem)| {
+            problem["id"] = json!(id_for_page(&page));
+            problem
+        })
+        .collect();
     problems.sort_by(|a, b| a["id"].as_str().cmp(&b["id"].as_str()));
     Value::Array(problems)
 }
 
 fn browser_judges() -> Value {
-    Value::Object(read_json_dir("web/judges").into_iter().collect())
+    Value::Object(
+        read_json_dir("web/judges")
+            .into_iter()
+            .map(|(page, judge)| (id_for_page(&page).unwrap_or(&page).to_string(), judge))
+            .collect(),
+    )
 }
 
 fn read_json_dir(path: &str) -> std::collections::BTreeMap<String, Value> {

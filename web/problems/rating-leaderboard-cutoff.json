@@ -1,0 +1,64 @@
+{
+  "page": "rating-leaderboard-cutoff",
+  "title": "Rating Leaderboard Cutoff",
+  "source": "Kth Largest Element in an Array",
+  "difficulty": "Medium",
+  "brief": [
+    "Our game publishes a weekly leaderboard of rating changes, which can be negative after a bad week. Prizes go to the top k places, and the prize service needs the rating change that sits at place k.",
+    "Implement kthRankedScore(nums, k), where nums holds every player's rating change in no particular order and k is the place being asked about, counting from the top, and return the rating change at that place."
+  ],
+  "examples": [
+    {
+      "input": "nums = [-1,-1,-2,-3], k = 2",
+      "output": "-1"
+    },
+    {
+      "input": "nums = [2,1], k = 2",
+      "output": "1"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def kthRankedScore(self, nums: list[int], k: int) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nfunction kthRankedScore(nums, k) {\n  // Think out loud as you go!\n}\n",
+    "c": "int kthRankedScore(int* nums, int numsSize, int k) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int kthRankedScore(vector<int>& nums, int k) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int kthRankedScore(int[] nums, int k) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

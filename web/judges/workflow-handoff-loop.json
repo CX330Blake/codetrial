@@ -1,0 +1,89 @@
+{
+  "kind": "function",
+  "entry": "hasHandoffLoop",
+  "checker": "exact",
+  "argTypes": [
+    "linkedList",
+    "cyclePos"
+  ],
+  "cyclePosParam": 1,
+  "cases": [
+    {
+      "label": "loop begins in middle",
+      "input": [
+        [
+          3,
+          2,
+          0,
+          -4
+        ],
+        1
+      ],
+      "expected": true
+    },
+    {
+      "label": "loop at head",
+      "input": [
+        [
+          1,
+          2
+        ],
+        0
+      ],
+      "expected": true
+    },
+    {
+      "label": "single task no loop",
+      "input": [
+        [
+          1
+        ],
+        -1
+      ],
+      "expected": false
+    },
+    {
+      "label": "empty list",
+      "input": [
+        [],
+        -1
+      ],
+      "expected": false
+    },
+    {
+      "label": "tail points to itself",
+      "input": [
+        [
+          5,
+          6,
+          7
+        ],
+        2
+      ],
+      "expected": true
+    },
+    {
+      "label": "loop back to the third task",
+      "input": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        2
+      ],
+      "expected": true
+    }
+  ],
+  "paramNames": [
+    "head",
+    "pos"
+  ],
+  "paramTypes": [
+    "ListNode",
+    "integer"
+  ],
+  "returnType": "boolean"
+}
