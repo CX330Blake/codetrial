@@ -49,10 +49,14 @@ run_capture()
 
 run_capture "$TMP/rust.json"
 
-PY_CAPTURE="$ROOT/tests/golden/report-python.json" RUST_CAPTURE="$TMP/rust.json" node << 'NODE'
+PY_CAPTURE="$ROOT/tests/golden/report-python.json" RUST_CAPTURE="$TMP/rust.json" WEB_ROOT="$ROOT/web" node << 'NODE'
 const fs = require("fs");
 const python = JSON.parse(fs.readFileSync(process.env.PY_CAPTURE, "utf8"));
 const rust = JSON.parse(fs.readFileSync(process.env.RUST_CAPTURE, "utf8"));
+// The Python reference was captured when the heading was the published title.
+// The Rust interview now shows the scenario it poses for the same problem, read
+// off the generated map rather than copied here.
+const scenario = JSON.parse(fs.readFileSync(`${process.env.WEB_ROOT}/problem-pages.json`, "utf8"))["two-sum"].title;
 
 function assert(condition, message) {
   if (!condition) {
@@ -77,8 +81,10 @@ function shape(report, mode) {
 }
 
 assert(python.problemTitle === "Two Sum", "python problem mismatch");
-assert(rust.problemTitle === "Two Sum", "rust problem mismatch");
-assert(python.problemTitle === rust.problemTitle, "problem mismatch");
+assert(rust.problemTitle === scenario, "rust problem mismatch");
+// The title above and the heading it matched are read from the same map, so
+// they agree even when the map has the published title in it.
+assert(rust.problemTitle !== python.problemTitle, "rust interview shows the published title");
 assert(python.testResultText === rust.testResultText, "test result mismatch");
 assert(python.testResultText !== "Couldn't run your code", "test run setup failed");
 assert(Array.isArray(python.reportKeys), "python reference missing report keys");

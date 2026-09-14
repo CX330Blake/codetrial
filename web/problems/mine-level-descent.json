@@ -1,0 +1,64 @@
+{
+  "page": "mine-level-descent",
+  "title": "Mine Level Descent",
+  "source": "Triangle",
+  "difficulty": "Medium",
+  "brief": [
+    "A mining simulation models a shaft as a stack of levels: the top level has one chamber, and each level below has one more chamber than the level above it. Crossing a chamber costs energy, and some chambers have supply caches that give energy back, shown as negative costs.",
+    "From chamber j on one level, a crew can drop only into chamber j or chamber j + 1 on the next level down. Implement cheapestDescent(triangle), where triangle holds the chamber costs level by level from the top, and return the smallest total cost of a descent that starts at the top chamber and ends on the bottom level."
+  ],
+  "examples": [
+    {
+      "input": "triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]",
+      "output": "11"
+    },
+    {
+      "input": "triangle = [[2],[-3,4],[6,-5,7]]",
+      "output": "-6"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def cheapestDescent(self, triangle: list[list[int]]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} triangle\n * @return {number}\n */\nfunction cheapestDescent(triangle) {\n  // Think out loud as you go!\n}\n",
+    "c": "int cheapestDescent(int** triangle, int triangleSize, int* triangleColSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int cheapestDescent(vector<vector<int>>& triangle) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int cheapestDescent(List<List<Integer>> triangle) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "page": "compound-growth-factor",
+  "title": "Compound Growth Factor",
+  "source": "Pow(x, n)",
+  "difficulty": "Medium",
+  "brief": [
+    "A financial planning service projects balances with a per-period growth factor. To project forward or discount backward, it needs the factor applied over a whole number of periods, where a negative number of periods means going back in time.",
+    "Implement growthOverPeriods(x, n), where x is the per-period factor as a floating-point number and n is the integer number of periods, and return x raised to the power n."
+  ],
+  "examples": [
+    {
+      "input": "x = 2.1, n = 3",
+      "output": "9.261"
+    },
+    {
+      "input": "x = 5.5, n = 0",
+      "output": "1"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def growthOverPeriods(self, x: float, n: int) -> float:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} x\n * @param {number} n\n * @return {number}\n */\nfunction growthOverPeriods(x, n) {\n  // Think out loud as you go!\n}\n",
+    "c": "double growthOverPeriods(double x, int n) {\n    // Think out loud as you go!\n    return 0.0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    double growthOverPeriods(double x, int n) {\n        // Think out loud as you go!\n        return 0.0;\n    }\n};\n",
+    "java": "class Solution {\n    public double growthOverPeriods(double x, int n) {\n        // Think out loud as you go!\n        return 0.0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

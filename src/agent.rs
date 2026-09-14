@@ -13,7 +13,9 @@
 
 mod events;
 mod integrity;
+mod problem_guides;
 mod problem_topics;
+mod problem_variants;
 mod problems;
 mod prompts;
 mod report;
@@ -22,13 +24,15 @@ mod value;
 pub use events::apply_data_event;
 use integrity::integrity_hash;
 pub use integrity::{sanitize_integrity_event, sanitize_test_run};
-pub use problems::{DEFAULT_PROBLEM_ID, PROBLEMS, get_problem, topics_for};
+use problems::variant_for;
+pub use problems::{DEFAULT_PROBLEM_ID, PROBLEMS, find_problem, get_problem, topics_for};
 pub use prompts::{
     InterimReviewInput, LanguageChoiceContext, ReportPromptInput, build_instructions_for_plan,
-    cold_restart, format_test_run, greeting, interim_review_prompt, language_choice, log_hint_text,
-    numbered, proactive_review, read_editor_text, report_prompt, rolling_assessment,
-    significant_change, silence_nudge, spoken_language, test_results_reaction,
-    test_setup_error_reaction, time_warning, wrap_up,
+    cold_restart, format_test_run, greeting, hint_ladder_used_text, hint_rung_text,
+    hint_rung_withheld_text, interim_review_prompt, language_choice, log_hint_text, numbered,
+    proactive_review, read_editor_text, report_prompt, rolling_assessment, significant_change,
+    silence_nudge, spoken_language, test_results_reaction, test_setup_error_reaction, time_warning,
+    wrap_up,
 };
 pub use report::{
     MAX_SUMMARY_TEXT, fallback_report, final_report, report_response_schema, validate_report,
@@ -109,9 +113,9 @@ const ROUND_TRANSITION_SKEW: std::time::Duration = std::time::Duration::from_sec
 /// `the_time_warning_threshold_is_the_same_number_on_both_sides`.
 pub const TIME_WARNING_S: u64 = 300;
 
-pub const INTERVIEW_CONTRACT_BUNDLE_VERSION: u32 = 4;
-pub const LIVE_PROMPT_VERSION: u32 = 1;
-pub const REPORT_PROMPT_VERSION: u32 = 4;
+pub const INTERVIEW_CONTRACT_BUNDLE_VERSION: u32 = 5;
+pub const LIVE_PROMPT_VERSION: u32 = 2;
+pub const REPORT_PROMPT_VERSION: u32 = 5;
 pub const RUBRIC_VERSION: u32 = 1;
 pub const REPORT_SCHEMA_VERSION: u32 = 1;
 
@@ -133,7 +137,39 @@ pub struct Problem {
     pub summary: &'static str,
     pub optimal: &'static str,
     pub pitfalls: &'static str,
-    pub hint_ladder: &'static [&'static str],
+}
+
+/// The exercise as it is posed, beside the problem it is posed from.
+///
+/// Generated from `problem-bank/variants.json`. The candidate's page carries
+/// `title`, `brief` and the worked examples; everything else here is the
+/// interviewer's alone, because an answer to a question nobody asked is the
+/// specification read out rather than an interview.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ProblemVariant {
+    pub title: &'static str,
+    /// The name the browser knows this problem by: page file, judge file, the
+    /// token request and saved history. The id is the published slug and stays
+    /// on the server.
+    pub page: &'static str,
+    pub brief: &'static [&'static str],
+    /// The exact input and output contract in the scenario's words, which the
+    /// interviewer judges against in place of the published statement.
+    pub contract: &'static str,
+    pub constraints: &'static [&'static str],
+    /// Question and answer, answered only when the candidate asks.
+    pub clarifications: &'static [(&'static str, &'static str)],
+    pub follow_ups: &'static [&'static str],
+    /// Three rungs, spoken in order: a nudge, a direction, the key step.
+    pub hints: &'static [&'static str],
+}
+
+impl ProblemVariant {
+    /// The brief as one passage, the way the interviewer and the reviewer read
+    /// it.
+    pub fn brief_text(&self) -> String {
+        self.brief.join(" ")
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -212,6 +248,13 @@ pub struct QuestionMetadata<'a> {
 }
 
 impl Problem {
+    /// Every problem has one: `scripts/gen-problems.py` refuses a bank entry
+    /// without a variant, and `problem_bank_matches_contract` holds this table
+    /// to `PROBLEMS`.
+    pub fn variant(&self) -> &'static ProblemVariant {
+        variant_for(self.id).expect("every problem has a variant")
+    }
+
     pub fn question_metadata(&self) -> QuestionMetadata<'_> {
         QuestionMetadata {
             difficulty: self.difficulty,
@@ -626,6 +669,12 @@ pub struct RuntimeState {
     pub last_test_run: Option<serde_json::Value>,
     pub test_runs: u32,
     pub hints_used: u32,
+    /// The authored rungs for this problem, handed out one at a time by
+    /// `record_hint` rather than held in the live prompt. A model holding all
+    /// three answers the first request with the third, and nothing downstream
+    /// can tell.
+    pub hint_ladder: &'static [&'static str],
+    pub hint_rungs_given: usize,
     pub integrity_events: Vec<serde_json::Value>,
     /// The chain cursor, held apart from the evidence above.
     ///
@@ -693,6 +742,8 @@ impl Default for RuntimeState {
             last_test_run: None,
             test_runs: 0,
             hints_used: 0,
+            hint_ladder: &[],
+            hint_rungs_given: 0,
             integrity_events: Vec::new(),
             integrity_chain: None,
             integrity_first_heartbeat: None,
@@ -1108,9 +1159,28 @@ pub fn framework_evidence_json(evidence: &FrameworkEvidence) -> serde_json::Valu
     })
 }
 
-pub fn record_hint(state: &mut RuntimeState) -> String {
+/// Count a hint and, when the candidate asked for it, hand out the next rung.
+///
+/// The last rung names the key step, so it waits until the candidate has
+/// recorded an approach of their own: algorithm or coding evidence. Until then
+/// the request is still a hint, counted as one, and the interviewer is pointed
+/// back at the rung before it.
+pub fn record_hint(state: &mut RuntimeState, requested: bool) -> String {
     state.hints_used = state.hints_used.saturating_add(1);
-    log_hint_text(state.hints_used)
+    if !requested {
+        return log_hint_text(state.hints_used);
+    }
+    let Some(clue) = state.hint_ladder.get(state.hint_rungs_given) else {
+        return hint_ladder_used_text(state.hints_used);
+    };
+    let last = state.hint_rungs_given + 1 == state.hint_ladder.len();
+    let approach_stated = phases_evidenced(state, &[FrameworkPhase::Algorithm])
+        || phases_evidenced(state, &[FrameworkPhase::Coding]);
+    if last && !approach_stated {
+        return hint_rung_withheld_text(state.hints_used);
+    }
+    state.hint_rungs_given += 1;
+    hint_rung_text(state.hints_used, state.hint_rungs_given, clue)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

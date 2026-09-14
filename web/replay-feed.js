@@ -13,13 +13,12 @@
 
 let state = null;
 let nodes = null;
-let problem = null;
 let recordingEnabled = false;
 let consentVersion = "";
 let replayVersion = 1;
 
 export function initReplay(deps) {
-  ({ state, nodes, problem, recordingEnabled, consentVersion, replayVersion } = deps);
+  ({ state, nodes, recordingEnabled, consentVersion, replayVersion } = deps);
 }
 
 const REPLAY_FLUSH_MS = 1000;
@@ -166,7 +165,7 @@ async function sendQueuedBatch() {
 /// heading with nothing, and a reader who joined late would find the problem
 /// title blank.
 function stagePayload(extra) {
-  return { title: problem.title, meta: nodes.meta.textContent, ...extra };
+  return { title: nodes.title.textContent, meta: nodes.meta.textContent, ...extra };
 }
 
 export function recordStage() {

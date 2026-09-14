@@ -1,0 +1,60 @@
+{
+  "page": "pipeline-stage-gains",
+  "title": "Pipeline Stage Gains",
+  "source": "Product of Array Except Self",
+  "difficulty": "Medium",
+  "brief": [
+    "A signal processing chain applies a sequence of integer gain factors, one per stage. To plan maintenance, engineers want to know, for each stage, what the combined gain of the chain would be if that one stage were bypassed.",
+    "Implement gainWithoutStage(nums), where nums[i] is the gain factor of stage i, and return an array of the same length whose value at position i is the product of every factor except nums[i]."
+  ],
+  "examples": [
+    {
+      "input": "nums = [-1,2,-3,4]",
+      "output": "[-24,12,-8,6]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def gainWithoutStage(self, nums: list[int]) -> list[int]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @return {number[]}\n */\nfunction gainWithoutStage(nums) {\n  // Think out loud as you go!\n}\n",
+    "c": "int* gainWithoutStage(int* nums, int numsSize, int* returnSize) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<int> gainWithoutStage(vector<int>& nums) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public int[] gainWithoutStage(int[] nums) {\n        // Think out loud as you go!\n        return new int[]{};\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

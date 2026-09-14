@@ -203,6 +203,27 @@ p {
   font-weight: 700;
 }
 
+.problem-source {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--sub);
+  font-size: 0.8125rem;
+}
+
+.source-toggle {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+.interview-kicker {
+  margin-bottom: 0.5rem;
+  color: var(--sub);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .problem-meta {
   margin-top: 1.25rem;
   color: var(--sub);

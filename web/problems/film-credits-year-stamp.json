@@ -1,0 +1,60 @@
+{
+  "page": "film-credits-year-stamp",
+  "title": "Film Credits Year Stamp",
+  "source": "Integer to Roman",
+  "difficulty": "Medium",
+  "brief": [
+    "A video post-production tool renders the closing credits of a film, and the studio's house style prints the copyright year and sequel numbers as Roman numerals.",
+    "Implement formatCreditYear(num), where num is the number to print, and return its Roman numeral as an uppercase string."
+  ],
+  "examples": [
+    {
+      "input": "num = 944",
+      "output": "\"CMXLIV\""
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def formatCreditYear(self, num: int) -> str:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} num\n * @return {string}\n */\nfunction formatCreditYear(num) {\n  // Think out loud as you go!\n}\n",
+    "c": "char* formatCreditYear(int num) {\n    // Think out loud as you go!\n    return \"\";\n}\n",
+    "cpp": "class Solution {\npublic:\n    string formatCreditYear(int num) {\n        // Think out loud as you go!\n        return \"\";\n    }\n};\n",
+    "java": "class Solution {\n    public String formatCreditYear(int num) {\n        // Think out loud as you go!\n        return \"\";\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "page": "vanity-dial-expansion",
+  "title": "Vanity Dial Expansion",
+  "source": "Letter Combinations of a Phone Number",
+  "difficulty": "Medium",
+  "brief": [
+    "A marketing team is choosing vanity numbers for a hotline. Given the digits a customer would dial, their tool lists every letter string those keys could spell on a standard telephone keypad, so the strings can be checked against brand words.",
+    "Implement expandKeypadDigits(digits), where digits is a string of keypad digits, and return every letter string the digits can spell, one letter per digit."
+  ],
+  "examples": [
+    {
+      "input": "digits = \"79\"",
+      "output": "[\"pw\",\"px\",\"py\",\"pz\",\"qw\",\"qx\",\"qy\",\"qz\",\"rw\",\"rx\",\"ry\",\"rz\",\"sw\",\"sx\",\"sy\",\"sz\"]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<string> expandKeypadDigits(string digits) {\n        \n    }\n};",
+    "java": "class Solution {\n    public List<String> expandKeypadDigits(String digits) {\n        \n    }\n}",
+    "python": "class Solution:\n    def expandKeypadDigits(self, digits: str) -> List[str]:\n        ",
+    "javascript": "/**\n * @param {string} digits\n * @return {string[]}\n */\nvar expandKeypadDigits = function(digits) {\n    \n};",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nchar** expandKeypadDigits(char* digits, int* returnSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

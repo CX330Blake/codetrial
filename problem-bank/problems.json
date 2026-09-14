@@ -257,7 +257,7 @@
     "constraints": [
       "1 <= nums.length <= 5 * 10^4",
       "-10^9 <= nums[i] <= 10^9",
-      "A majority element always exists."
+      "One value always appears more than half the time."
     ],
     "starterCode": {
       "python": "class Solution:\n    def majorityElement(self, nums: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",

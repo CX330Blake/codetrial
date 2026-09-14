@@ -1,0 +1,64 @@
+{
+  "page": "billboard-pole-banner",
+  "title": "Billboard Pole Banner",
+  "source": "Container With Most Water",
+  "difficulty": "Medium",
+  "brief": [
+    "A billboard contractor has surveyed a row of support poles standing one metre apart and recorded each pole's height. A rectangular banner can be strung between any two poles: it is as wide as the distance between them and can only be as tall as the shorter of the two.",
+    "Implement largestBannerArea(height), where height lists the pole heights from left to right, and return the largest banner area that can be hung between two of the poles."
+  ],
+  "examples": [
+    {
+      "input": "height = [4,3,2,1,4]",
+      "output": "16"
+    },
+    {
+      "input": "height = [1,2,4,3]",
+      "output": "4"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def largestBannerArea(self, height: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} height\n * @return {number}\n */\nfunction largestBannerArea(height) {\n  // Think out loud as you go!\n}\n",
+    "c": "int largestBannerArea(int* height, int heightSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int largestBannerArea(vector<int>& height) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int largestBannerArea(int[] height) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

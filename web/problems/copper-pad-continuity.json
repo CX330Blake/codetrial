@@ -1,0 +1,64 @@
+{
+  "page": "copper-pad-continuity",
+  "title": "Copper Pad Continuity",
+  "source": "Number of Islands",
+  "difficulty": "Medium",
+  "brief": [
+    "An inspection camera scans a circuit board into a grid of cells. Each cell is either copper or bare board, and copper cells that touch along a side belong to the same electrical region.",
+    "Implement countCopperRegions(grid), where grid is a list of rows and each cell is the character '1' for copper or '0' for bare board, and return how many separate copper regions the board has."
+  ],
+  "examples": [
+    {
+      "input": "grid = [[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]",
+      "output": "3"
+    },
+    {
+      "input": "grid = [[\"1\"]]",
+      "output": "1"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def countCopperRegions(self, grid: list[list[str]]) -> int:\n        pass\n",
+    "javascript": "/**\n * @param {character[][]} grid\n * @return {number}\n */\nfunction countCopperRegions(grid) {\n}\n",
+    "c": "int countCopperRegions(char** grid, int gridSize, int* gridColSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int countCopperRegions(vector<vector<char>>& grid) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int countCopperRegions(char[][] grid) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

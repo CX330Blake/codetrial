@@ -1,0 +1,64 @@
+{
+  "page": "recent-card-repeat-alert",
+  "title": "Recent Card Repeat Alert",
+  "source": "Contains Duplicate II",
+  "difficulty": "Easy",
+  "brief": [
+    "A payment fraud service assigns each card a numeric fingerprint and watches the transaction feed in order. It raises an alert when the same fingerprint appears twice within a short distance of each other in the feed.",
+    "Implement repeatWithinWindow(nums, k), where nums lists the fingerprints in feed order and k is the maximum allowed distance between two positions, and return true if some fingerprint occurs at two positions no more than k apart, and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "nums = [-1,2,-1], k = 2",
+      "output": "true"
+    },
+    {
+      "input": "nums = [1,2,3,1,2,3], k = 2",
+      "output": "false"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def repeatWithinWindow(self, nums: list[int], k: int) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {boolean}\n */\nfunction repeatWithinWindow(nums, k) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool repeatWithinWindow(int* nums, int numsSize, int k) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool repeatWithinWindow(vector<int>& nums, int k) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean repeatWithinWindow(int[] nums, int k) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "page": "log-timestamp-span",
+  "title": "Log Timestamp Span",
+  "source": "Find First and Last Position of Element in Sorted Array",
+  "difficulty": "Medium",
+  "brief": [
+    "Our log store keeps entries ordered by timestamp, and many entries can share the same timestamp. The incident tool needs to pull every entry written at one particular timestamp.",
+    "Implement timestampIndexSpan(nums, target), where nums holds the entry timestamps in order and target is the timestamp of interest, and return a pair [first, last] with the zero-based positions of the first and last entries whose timestamp equals target."
+  ],
+  "examples": [
+    {
+      "input": "nums = [5,7,7,8,8,10], target = 8",
+      "output": "[3,4]"
+    },
+    {
+      "input": "nums = [2,2,2], target = 2",
+      "output": "[0,2]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def timestampIndexSpan(self, nums: list[int], target: int) -> list[int]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number[]}\n */\nfunction timestampIndexSpan(nums, target) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nint* timestampIndexSpan(int* nums, int numsSize, int target, int* returnSize) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<int> timestampIndexSpan(vector<int>& nums, int target) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public int[] timestampIndexSpan(int[] nums, int target) {\n        // Think out loud as you go!\n        return new int[0];\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

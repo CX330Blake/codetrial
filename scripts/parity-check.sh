@@ -30,10 +30,14 @@ fi
 
 BROWSER_CHECK_AGENT=rust BROWSER_CHECK_CAPTURE="$TMP/rust.json" "$ROOT/scripts/browser-check.sh"
 
-PY_CAPTURE="$ROOT/tests/golden/browser-python.json" RUST_CAPTURE="$TMP/rust.json" node << 'NODE'
+PY_CAPTURE="$ROOT/tests/golden/browser-python.json" RUST_CAPTURE="$TMP/rust.json" WEB_ROOT="$ROOT/web" node << 'NODE'
 const fs = require("fs");
 const python = JSON.parse(fs.readFileSync(process.env.PY_CAPTURE, "utf8"));
 const rust = JSON.parse(fs.readFileSync(process.env.RUST_CAPTURE, "utf8"));
+// The Python reference was captured when the heading was the published title.
+// The Rust interview now shows the scenario it poses for the same problem, read
+// off the generated map rather than copied here.
+const scenario = JSON.parse(fs.readFileSync(`${process.env.WEB_ROOT}/problem-pages.json`, "utf8"))["two-sum"].title;
 
 function assert(condition, message) {
   if (!condition) {
@@ -50,13 +54,13 @@ const openedWithInterviewer = (capture) =>
   && capture.firstTranscriptSpeaker !== ""
   && capture.firstTranscriptSpeaker !== "you";
 
+assert(python.problemTitle === "Two Sum", `${python.mode}: wrong problem`);
+assert(rust.problemTitle === scenario, `${rust.mode}: wrong problem`);
 for (const capture of [python, rust]) {
-  assert(capture.problemTitle === "Two Sum", `${capture.mode}: wrong problem`);
   assert(["Listening", "Thinking", "Speaking"].includes(capture.agentState), `${capture.mode}: missing assistant state`);
   assert(capture.transcriptSegmentCount > 0, `${capture.mode}: missing transcript`);
   assert(openedWithInterviewer(capture), `${capture.mode}: missing interviewer transcript`);
 }
-assert(python.problemTitle === rust.problemTitle, "problem mismatch");
 assert(Array.isArray(rust.rustAgentParticipants) && rust.rustAgentParticipants.length === 1, "rust room was not isolated to one agent");
-console.log(`browser parity comparison passed: problem=${python.problemTitle} rustState=${rust.agentState} firstSpeaker=${python.firstTranscriptSpeaker}/${rust.firstTranscriptSpeaker}`);
+console.log(`browser parity comparison passed: problem=${python.problemTitle} as ${rust.problemTitle} rustState=${rust.agentState} firstSpeaker=${python.firstTranscriptSpeaker}/${rust.firstTranscriptSpeaker}`);
 NODE

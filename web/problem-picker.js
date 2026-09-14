@@ -120,7 +120,7 @@ function step(level, by) {
 /// Pick what to interview on next. A completed problem returns when its review
 /// is due; otherwise choose an unseen problem before repeating one early.
 /// `reports` is the `pickerEntry` shape from `progress.js`: the entry as saved,
-/// with a normalized `at`.
+/// keyed by page name, with a normalized `at`.
 ///
 /// The optional clock keeps the scheduling rule deterministic in its tests.
 export function pickProblem(problems, difficulties, reports, random = Math.random, now = Date.now()) {

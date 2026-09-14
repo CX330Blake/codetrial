@@ -1,0 +1,64 @@
+{
+  "page": "shared-buffer-keystroke-audit",
+  "title": "Shared Buffer Keystroke Audit",
+  "source": "Interleaving String",
+  "difficulty": "Medium",
+  "brief": [
+    "Two keyboards type into one shared text buffer in a collaborative editor. Each device keeps its own keystroke log, and when a buffer looks corrupted we want to check whether it could have come from those two logs.",
+    "Implement isFaithfulMerge(s1, s2, s3), where s1 and s2 are the keystroke logs of the two devices and s3 is the final buffer, and return true if s3 can be produced by weaving together the keystrokes of s1 and s2 while keeping each device's keystrokes in their original order, or false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbcbcac\"",
+      "output": "true"
+    },
+    {
+      "input": "s1 = \"a\", s2 = \"b\", s3 = \"a\"",
+      "output": "false"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def isFaithfulMerge(self, s1: str, s2: str, s3: str) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s1\n * @param {string} s2\n * @param {string} s3\n * @return {boolean}\n */\nfunction isFaithfulMerge(s1, s2, s3) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool isFaithfulMerge(char* s1, char* s2, char* s3) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool isFaithfulMerge(string s1, string s2, string s3) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean isFaithfulMerge(String s1, String s2, String s3) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
@@ -31,23 +31,53 @@ test("leetcode fetcher never asks GraphQL for statement prose", async () => {
   assert.match(query, /metaData/);
 });
 
-test("all browser problems expose only ordered neutral interview metadata", async () => {
+test("all browser problems pose a scenario and expose only neutral interview metadata", async () => {
+  // The variant rules themselves (no source title, a renamed entry point,
+  // examples drawn from the judge, neutral case labels) are enforced by the
+  // generator and tested in tests/test_gen_problems.py. What is left for here is
+  // the shape of what actually ships.
   const bank = JSON.parse(await readFile(repoFile("problem-bank/problems.json"), "utf8"));
   const stages = ["repeat", "example", "algorithm", "coding", "test", "optimizations"];
-  const allowed = ["competencies", "difficulty", "followUpDirections", "reactoStages"];
+  const allowed = ["difficulty", "followUpDirections", "reactoStages"];
+  // The map is the only file that joins a published id to its page, and it
+  // agrees with the pages and judges the browser loads by page name.
+  const pageMap = JSON.parse(await readFile(repoFile("web/problem-pages.json"), "utf8"));
+  assert.deepEqual(Object.keys(pageMap).sort(), bank.map(({ id }) => id).sort());
+  const files = (await readdir(repoFile("web/problems/"))).map((file) => file.slice(0, -".json".length));
+  assert.deepEqual(files.sort(), Object.values(pageMap).map(({ page }) => page).sort());
+  const judges = (await readdir(repoFile("web/judges/"))).map((file) => file.slice(0, -".json".length));
+  assert.deepEqual(judges.sort(), files);
 
   for (const source of bank) {
-    const problem = JSON.parse(await readFile(repoFile(`web/problems/${source.id}.json`), "utf8"));
+    const entry = pageMap[source.id];
+    assert.deepEqual([entry.source, entry.title], [source.title, entry.title]);
+    const problem = JSON.parse(await readFile(repoFile(`web/problems/${entry.page}.json`), "utf8"));
+    assert.ok(!entry.page.includes(source.id), `${source.id} is served under its published slug`);
+    assert.equal(problem.page, entry.page, `${source.id} does not know the page it is served as`);
+    assert.equal(problem.title, entry.title);
+    // What a scenario link loads names the problem by nothing but its page. A
+    // one-word id is exempt, as one-word titles are: `triangle` is also the
+    // name of that judge's parameter.
+    // The published title is shown small beside the scenario; the id is not.
+    assert.equal(problem.source, source.title);
+    if (!/^[a-z]+$/.test(source.id)) {
+      const judge = await readFile(repoFile(`web/judges/${entry.page}.json`), "utf8");
+      for (const text of [JSON.stringify(problem), judge]) {
+        assert.ok(!text.includes(`"${source.id}"`), `${entry.page} carries the published id`);
+      }
+    }
     const metadata = problem.interviewMetadata;
     assert.deepEqual(Object.keys(metadata).sort(), allowed);
     assert.equal(metadata.difficulty, source.difficulty);
-    assert.deepEqual(metadata.competencies, source.topics);
     assert.deepEqual(metadata.reactoStages, stages);
     assert.deepEqual(metadata.followUpDirections.map(({ stage }) => stage), stages);
     assert.ok(metadata.followUpDirections.every(({ direction }) =>
       direction.startsWith("Ask ") && !/hash|stack|tree|sort|pointer|dynamic programming/i.test(direction)));
-    assert.equal("optimal" in metadata, false);
-    assert.equal("pitfalls" in metadata, false);
-    assert.equal("hintLadder" in metadata, false);
+    assert.deepEqual(
+      Object.keys(problem).sort(),
+      ["brief", "difficulty", "examples", "interviewMetadata", "page", "source", "starterCode", "title"],
+      source.id,
+    );
+    assert.notEqual(problem.title, source.title);
   }
 });

@@ -593,6 +593,52 @@ pub fn redact_api_key(text: &str, api_key: &str) -> String {
         .replace(&percent_encode_query_value(api_key), "[REDACTED]")
 }
 
+/// The tools the live interviewer is offered, public so the behaviour check in
+/// `tests/interview_behavior.rs` offers a text model exactly the same ones.
+pub fn live_tool_declarations() -> Value {
+    json!([
+        {
+            "name": TOOL_READ_EDITOR,
+            "description": "Return the current editor language, numbered code, and latest test run summary."
+        },
+        {
+            "name": TOOL_LOG_HINT,
+            "description": "Record a hint. Before a hint the candidate asked for, call with requested true and give the clue it returns; after any other hint, call with requested false.",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "requested": { "type": "BOOLEAN", "description": "True when the candidate asked for this hint." }
+                },
+                "required": ["requested"]
+            }
+        },
+        {
+            "name": TOOL_RECORD_FRAMEWORK_EVIDENCE,
+            "description": "Record trusted REACTO or STAR evidence only after it is present in candidate speech, an editor snapshot, or a test event.",
+
+            // Schema.Type is an enum, so these are its value names, not free
+            // text. Lowercase happens to be accepted here and is rejected on
+            // the report schema, which is not a difference worth relying on
+            // twice in one process.
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "phase": { "type": "STRING", "enum": ["repeat", "example", "algorithm", "coding", "test", "optimizations", "situation", "task", "action", "result"] },
+                    "source": { "type": "STRING", "enum": ["candidate_speech", "editor_snapshot", "test_event", "session_timing"] },
+                    "kind": { "type": "STRING", "enum": ["observed", "inferred", "skipped"] },
+                    "confidence": { "type": "INTEGER", "minimum": 0, "maximum": 100 },
+                    "summary": { "type": "STRING", "description": "Short evidence-grounded summary without scores or private rubric text." }
+                },
+                "required": ["phase", "source", "kind", "confidence", "summary"]
+            }
+        },
+        {
+            "name": TOOL_END_INTERVIEW,
+            "description": "Close the interview because it is genuinely finished and there is nothing further to ask. The platform speaks the closing; do not say goodbye before calling this."
+        }
+    ])
+}
+
 /// `resume` carries a handle from a previous connection's
 /// `sessionResumptionUpdate`. Absent, this asks the server to start a fresh
 /// resumable session; present, it continues the earlier one with its history
@@ -618,45 +664,7 @@ fn live_setup_message(boot: &RuntimeBootstrap<'_>, resume: Option<&str>) -> Valu
                     { "text": boot.instructions }
                 ]
             },
-            "tools": [
-                {
-                    "functionDeclarations": [
-                        {
-                            "name": TOOL_READ_EDITOR,
-                            "description": "Return the current editor language, numbered code, and latest test run summary."
-                        },
-                        {
-                            "name": TOOL_LOG_HINT,
-                            "description": "Record that the interviewer gave the candidate a hint."
-                        },
-                        {
-                            "name": TOOL_RECORD_FRAMEWORK_EVIDENCE,
-                            "description": "Record trusted REACTO or STAR evidence only after it is present in candidate speech, an editor snapshot, or a test event.",
-
-                            // Schema.Type is an enum, so these are its value
-                            // names, not free text. Lowercase happens to be
-                            // accepted here and is rejected on the report
-                            // schema, which is not a difference worth relying
-                            // on twice in one process.
-                            "parameters": {
-                                "type": "OBJECT",
-                                "properties": {
-                                    "phase": { "type": "STRING", "enum": ["repeat", "example", "algorithm", "coding", "test", "optimizations", "situation", "task", "action", "result"] },
-                                    "source": { "type": "STRING", "enum": ["candidate_speech", "editor_snapshot", "test_event", "session_timing"] },
-                                    "kind": { "type": "STRING", "enum": ["observed", "inferred", "skipped"] },
-                                    "confidence": { "type": "INTEGER", "minimum": 0, "maximum": 100 },
-                                    "summary": { "type": "STRING", "description": "Short evidence-grounded summary without scores or private rubric text." }
-                                },
-                                "required": ["phase", "source", "kind", "confidence", "summary"]
-                            }
-                        },
-                        {
-                            "name": TOOL_END_INTERVIEW,
-                            "description": "Close the interview because it is genuinely finished and there is nothing further to ask. The platform speaks the closing; do not say goodbye before calling this."
-                        }
-                    ]
-                }
-            ],
+            "tools": [{ "functionDeclarations": live_tool_declarations() }],
             "inputAudioTranscription": {},
             "outputAudioTranscription": {},
             "realtimeInputConfig": {

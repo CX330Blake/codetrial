@@ -1,0 +1,60 @@
+{
+  "page": "approved-sequence-edits",
+  "title": "Approved Sequence Edits",
+  "source": "Minimum Genetic Mutation",
+  "difficulty": "Medium",
+  "brief": [
+    "A synthetic biology team designs short DNA constructs, each exactly eight bases long using A, C, G and T. The lab can change one base at a time, and safety review only allows a construct to exist if it is on the approved list.",
+    "Implement fewestBaseEdits(current, target, approved), where current is the construct the lab has, target is the construct it wants, and approved lists the constructs safety review allows, and return the fewest single-base edits needed to turn current into target."
+  ],
+  "examples": [
+    {
+      "input": "current = \"AAAAACCC\", target = \"AACCCCCC\", approved = [\"AAAACCCC\",\"AAACCCCC\",\"AACCCCCC\"]",
+      "output": "3"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    int fewestBaseEdits(string current, string target, vector<string>& approved) {\n        \n    }\n};",
+    "java": "class Solution {\n    public int fewestBaseEdits(String current, String target, String[] approved) {\n        \n    }\n}",
+    "python": "class Solution:\n    def fewestBaseEdits(self, current: str, target: str, approved: List[str]) -> int:\n        ",
+    "javascript": "/**\n * @param {string} current\n * @param {string} target\n * @param {string[]} approved\n * @return {number}\n */\nvar fewestBaseEdits = function(current, target, approved) {\n    \n};",
+    "c": "int fewestBaseEdits(char* current, char* target, char** approved, int approvedSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "page": "pricing-rule-bytecode",
+  "title": "Pricing Rule Bytecode",
+  "source": "Evaluate Reverse Polish Notation",
+  "difficulty": "Medium",
+  "brief": [
+    "Our pricing engine compiles each discount rule into a flat list of tokens in postfix order: each operator is written after the two operands it combines, so no parentheses are ever needed. The runtime has to compute the final integer value of a compiled rule.",
+    "Implement computeRuleValue(tokens), where tokens is the compiled rule as a list of strings, each either an integer or one of the operators +, -, * and /, and return the integer the rule evaluates to."
+  ],
+  "examples": [
+    {
+      "input": "tokens = [\"2\",\"1\",\"+\",\"3\",\"*\"]",
+      "output": "9"
+    },
+    {
+      "input": "tokens = [\"5\",\"3\",\"-\"]",
+      "output": "2"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def computeRuleValue(self, tokens: list[str]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string[]} tokens\n * @return {number}\n */\nfunction computeRuleValue(tokens) {\n  // Think out loud as you go!\n}\n",
+    "c": "int computeRuleValue(char** tokens, int tokensSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int computeRuleValue(vector<string>& tokens) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int computeRuleValue(String[] tokens) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

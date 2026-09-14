@@ -1,0 +1,64 @@
+{
+  "page": "integer-magnitude-estimator",
+  "title": "Integer Magnitude Estimator",
+  "source": "Sqrt(x)",
+  "difficulty": "Easy",
+  "brief": [
+    "A microcontroller without a floating point unit computes signal energy readings as integers, and the display shows the magnitude as the whole-number root of the energy. We need that value using integer arithmetic only.",
+    "Implement integerRootFloor(x), where x is the energy reading, and return the largest non-negative integer whose square is at most x."
+  ],
+  "examples": [
+    {
+      "input": "x = 8",
+      "output": "2"
+    },
+    {
+      "input": "x = 1",
+      "output": "1"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def integerRootFloor(self, x: int) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} x\n * @return {number}\n */\nfunction integerRootFloor(x) {\n  // Think out loud as you go!\n}\n",
+    "c": "int integerRootFloor(int x) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int integerRootFloor(int x) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int integerRootFloor(int x) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

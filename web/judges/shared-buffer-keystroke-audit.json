@@ -1,0 +1,63 @@
+{
+  "kind": "function",
+  "entry": "isFaithfulMerge",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "interleaves",
+      "input": [
+        "aabcc",
+        "dbbca",
+        "aadbbcbcac"
+      ],
+      "expected": true
+    },
+    {
+      "label": "cannot interleave",
+      "input": [
+        "aabcc",
+        "dbbca",
+        "aadbbbaccc"
+      ],
+      "expected": false
+    },
+    {
+      "label": "all empty",
+      "input": [
+        "",
+        "",
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "label": "length mismatch",
+      "input": [
+        "a",
+        "b",
+        "a"
+      ],
+      "expected": false
+    },
+    {
+      "label": "shared letters",
+      "input": [
+        "aa",
+        "ab",
+        "aaba"
+      ],
+      "expected": true
+    }
+  ],
+  "paramNames": [
+    "s1",
+    "s2",
+    "s3"
+  ],
+  "paramTypes": [
+    "string",
+    "string",
+    "string"
+  ],
+  "returnType": "boolean"
+}

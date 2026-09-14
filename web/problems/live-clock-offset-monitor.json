@@ -1,0 +1,64 @@
+{
+  "page": "live-clock-offset-monitor",
+  "title": "Live Clock Offset Monitor",
+  "source": "Find Median from Data Stream",
+  "difficulty": "Hard",
+  "brief": [
+    "A time-sync agent receives clock offset samples, in milliseconds, one at a time from the servers in a cluster. Offsets can be negative when a server runs behind. At any moment, the dashboard can ask for the median of all offsets received so far.",
+    "Implement the class OffsetMonitor: the constructor OffsetMonitor() starts with no samples, addNum(num) records one offset sample num, and findMedian() returns the median of all samples recorded so far as a floating-point number."
+  ],
+  "examples": [
+    {
+      "input": "[\"OffsetMonitor\",\"addNum\",\"addNum\",\"findMedian\",\"addNum\",\"findMedian\"]\n[[],[-1],[-2],[],[3],[]]",
+      "output": "[null,null,null,-1.5,null,-1]"
+    },
+    {
+      "input": "[\"OffsetMonitor\",\"addNum\",\"addNum\",\"addNum\",\"addNum\",\"findMedian\"]\n[[],[10],[20],[30],[40],[]]",
+      "output": "[null,null,null,null,null,25]"
+    }
+  ],
+  "starterCode": {
+    "python": "class OffsetMonitor:\n    def __init__(self):\n        # Think out loud as you go!\n        pass\n\n    def addNum(self, num: int) -> None:\n        # Think out loud as you go!\n        pass\n\n    def findMedian(self) -> float:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "var OffsetMonitor = function() {\n  // Think out loud as you go!\n};\n\n/** \n * @param {number} num\n * @return {void}\n */\nOffsetMonitor.prototype.addNum = function(num) {\n  // Think out loud as you go!\n};\n\n/**\n * @return {number}\n */\nOffsetMonitor.prototype.findMedian = function() {\n  // Think out loud as you go!\n};\n",
+    "c": "// C class-style OffsetMonitor tests are not supported in this runner yet.\n",
+    "cpp": "class OffsetMonitor {\npublic:\n    OffsetMonitor() {\n        // Think out loud as you go!\n    }\n\n    void addNum(int num) {\n        // Think out loud as you go!\n    }\n\n    double findMedian() {\n        // Think out loud as you go!\n        return 0.0;\n    }\n};\n",
+    "java": "class OffsetMonitor {\n    public OffsetMonitor() {\n        // Think out loud as you go!\n    }\n\n    public void addNum(int num) {\n        // Think out loud as you go!\n    }\n\n    public double findMedian() {\n        // Think out loud as you go!\n        return 0.0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

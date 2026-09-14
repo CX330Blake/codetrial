@@ -93,13 +93,13 @@ test("one segment id is one turn, patched in place as the agent republishes it",
   // stable id, so the row grows rather than the panel.
   view.upsert("interviewer-0", "interviewer", "Hey, I'm", false, 1_000);
   view.upsert("interviewer-0", "interviewer", "Hey, I'm Jim.", false, 1_500);
-  view.upsert("interviewer-0", "interviewer", "Hey, I'm Jim. Today you're looking at Two Sum,", true, 2_000);
+  view.upsert("interviewer-0", "interviewer", "Hey, I'm Jim. Today we're matching chargebacks,", true, 2_000);
 
   assert.equal(panel.children.length, 1);
-  assert.equal(rowText(panel, 0), "Hey, I'm Jim. Today you're looking at Two Sum,");
+  assert.equal(rowText(panel, 0), "Hey, I'm Jim. Today we're matching chargebacks,");
   assert.deepEqual(
     view.values().map((segment) => `${segment.speaker}:${segment.text}`),
-    ["interviewer:Hey, I'm Jim. Today you're looking at Two Sum,"],
+    ["interviewer:Hey, I'm Jim. Today we're matching chargebacks,"],
   );
 });
 
@@ -121,10 +121,10 @@ test("a stale republish does not shorten a turn or reopen it", () => {
   const panel = newPanel();
   const view = createTranscriptView(stubDocument, panel);
 
-  view.upsert("interviewer-0", "interviewer", "Today you're looking at Two Sum", true, 1_300);
+  view.upsert("interviewer-0", "interviewer", "Today we're matching chargebacks", true, 1_300);
   view.upsert("interviewer-0", "interviewer", "Today", false, 1_200);
 
-  assert.equal(rowText(panel, 0), "Today you're looking at Two Sum");
+  assert.equal(rowText(panel, 0), "Today we're matching chargebacks");
 });
 
 test("a second speaker appends without disturbing the first", () => {
@@ -449,11 +449,9 @@ test("report markup marks a no-hire and an empty editor", () => {
 });
 
 test("problem markup escapes every field a problem carries", () => {
-  // Not all problem text is written in this repository: `leetcode-import.js`
-  // brings statements, examples and constraints in from outside, and all three
-  // land in the same panel.
   const body = problemMarkup({
-    statement: ["<script>s</script>"],
+    source: "<script>t</script>",
+    brief: ["<script>s</script>"],
     examples: [
       {
         input: "<script>i</script>",
@@ -461,20 +459,46 @@ test("problem markup escapes every field a problem carries", () => {
         explanation: "<script>x</script>",
       },
     ],
-    constraints: ["<script>c</script>"],
   });
 
   assert.doesNotMatch(body, /<script>/, "no problem field may become live markup");
-  for (const marker of ["s", "i", "o", "x", "c"]) {
+  for (const marker of ["t", "s", "i", "o", "x"]) {
     assert.match(body, new RegExp(`&lt;script&gt;${marker}&lt;/script&gt;`));
   }
 });
 
+test("problem markup shows the scenario and leaves the limits to be asked for", () => {
+  // A published statement or constraints list on the problem object must not
+  // reach the panel: the limits are what the candidate asks the interviewer.
+  const body = problemMarkup({
+    brief: ["Pay out the amount."],
+    statement: ["Published statement"],
+    constraints: ["1 <= n <= 10^4"],
+    examples: [{ input: "a", output: "b" }],
+  });
+
+  assert.match(body, /Pay out the amount\./);
+  assert.doesNotMatch(body, /Published statement|Constraints|10\^4/);
+  assert.match(body, /Ask him about input sizes, edge cases/);
+});
+
+test("problem markup names the published title once, small, and only when it has one", () => {
+  const body = problemMarkup({
+    source: "Two Sum",
+    brief: ["Match the disputed charge."],
+    examples: [{ input: "a", output: "b" }],
+  });
+  assert.equal(body.match(/Two Sum/g).length, 1);
+  assert.match(body, /<p class="problem-source">LeetCode: Two Sum<\/p>/);
+
+  const unnamed = problemMarkup({ brief: ["one"], examples: [{ input: "a", output: "b" }] });
+  assert.doesNotMatch(unnamed, /problem-source|LeetCode|undefined/);
+});
+
 test("problem markup omits the explanation line rather than printing undefined", () => {
   const body = problemMarkup({
-    statement: ["one"],
+    brief: ["one"],
     examples: [{ input: "a", output: "b" }],
-    constraints: ["c"],
   });
 
   assert.doesNotMatch(body, /Explanation/);
@@ -857,12 +881,12 @@ test("the page and the exported markdown tell the same chain story", () => {
 
 test("report views identify active and legacy scoring contracts", () => {
   const active = sanitizeReport({ incomplete: true, interviewContract: {
-    bundleVersion: 4, livePromptVersion: 1, reportPromptVersion: 4,
+    bundleVersion: 5, livePromptVersion: 2, reportPromptVersion: 5,
     rubricVersion: 1, reportSchemaVersion: 1,
   } });
   const session = { report: active, problemTitle: "Two Sum", language: "python", code: "" };
-  assert.match(reportMarkup(session), /Contract bundle 4 · rubric 1 · report schema 1/);
-  assert.match(reportMarkdown({ ...session, transcript: [] }), /Contract: bundle 4; live prompt 1; report prompt 4; rubric 1; report schema 1/);
+  assert.match(reportMarkup(session), /Contract bundle 5 · rubric 1 · report schema 1/);
+  assert.match(reportMarkdown({ ...session, transcript: [] }), /Contract: bundle 5; live prompt 2; report prompt 5; rubric 1; report schema 1/);
 
   const legacy = { ...session, report: sanitizeReport({ incomplete: true }) };
   assert.match(reportMarkup(legacy), /Legacy\/unversioned contract/);

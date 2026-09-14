@@ -1,0 +1,60 @@
+{
+  "page": "arrangement-count-suffix",
+  "title": "Arrangement Count Suffix",
+  "source": "Factorial Trailing Zeroes",
+  "difficulty": "Medium",
+  "brief": [
+    "A scheduling tool reports how many ways n distinct jobs can be ordered, which is the product 1 times 2 times ... times n. The number is huge, so the report shows it in a compact form and needs to know how many zero digits it ends with.",
+    "Implement countEndingZeros(n), where n is the number of jobs, and return how many consecutive zeros appear at the end of that product written in decimal."
+  ],
+  "examples": [
+    {
+      "input": "n = 100",
+      "output": "24"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def countEndingZeros(self, n: int) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nfunction countEndingZeros(n) {\n  // Think out loud as you go!\n}\n",
+    "c": "int countEndingZeros(int n) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int countEndingZeros(int n) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int countEndingZeros(int n) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

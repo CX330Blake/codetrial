@@ -60,35 +60,35 @@ test("provider degradation states distinguish availability and evaluation truth"
   assert.notEqual(providerUiState("live").message, providerUiState("reconnecting").message);
 });
 
-const twoSum = { checker: "twoSum" };
+const indexPair = { checker: "indexPair" };
 const palindrome = { checker: "palindrome" };
 const exact = { checker: "exact" };
 const tripletSet = { checker: "tripletSet" };
 const integerRows = { checker: "integerRows" };
 const integerCombinations = { checker: "integerCombinations" };
-const anagramGroups = { checker: "anagramGroups" };
+const unorderedGroups = { checker: "unorderedGroups" };
 const balancedBst = { checker: "balancedBst" };
-const topologicalOrder = { checker: "topologicalOrder" };
+const dependencyOrder = { checker: "dependencyOrder" };
 const approxNumber = { checker: "approxNumber" };
 
-test("twoSum checker accepts any valid index pair, not just the expected one", () => {
+test("indexPair checker accepts any valid index pair, not just the expected one", () => {
   const testCase = { input: [[2, 7, 11, 15], 9], expected: [0, 1] };
 
-  assert.equal(checkAnswer(twoSum, testCase, [0, 1]), true);
-  assert.equal(checkAnswer(twoSum, testCase, [1, 0]), true);
+  assert.equal(checkAnswer(indexPair, testCase, [0, 1]), true);
+  assert.equal(checkAnswer(indexPair, testCase, [1, 0]), true);
 });
 
-test("twoSum checker rejects reused, out-of-range, and non-integer indices", () => {
+test("indexPair checker rejects reused, out-of-range, and non-integer indices", () => {
   const testCase = { input: [[3, 3], 6], expected: [0, 1] };
 
-  assert.equal(checkAnswer(twoSum, testCase, [0, 1]), true, "duplicate values are solvable");
-  assert.equal(checkAnswer(twoSum, testCase, [0, 0]), false, "same element twice");
-  assert.equal(checkAnswer(twoSum, testCase, [0, 5]), false, "index past the end");
-  assert.equal(checkAnswer(twoSum, testCase, [0, -1]), false, "negative index");
-  assert.equal(checkAnswer(twoSum, testCase, [0, 1.5]), false, "non-integer index");
-  assert.equal(checkAnswer(twoSum, testCase, [0]), false, "wrong arity");
-  assert.equal(checkAnswer(twoSum, testCase, "01"), false, "not an array");
-  assert.equal(checkAnswer(twoSum, { input: [[1, 2], 9], expected: [] }, [0, 1]), false, "sum mismatch");
+  assert.equal(checkAnswer(indexPair, testCase, [0, 1]), true, "duplicate values are solvable");
+  assert.equal(checkAnswer(indexPair, testCase, [0, 0]), false, "same element twice");
+  assert.equal(checkAnswer(indexPair, testCase, [0, 5]), false, "index past the end");
+  assert.equal(checkAnswer(indexPair, testCase, [0, -1]), false, "negative index");
+  assert.equal(checkAnswer(indexPair, testCase, [0, 1.5]), false, "non-integer index");
+  assert.equal(checkAnswer(indexPair, testCase, [0]), false, "wrong arity");
+  assert.equal(checkAnswer(indexPair, testCase, "01"), false, "not an array");
+  assert.equal(checkAnswer(indexPair, { input: [[1, 2], 9], expected: [] }, [0, 1]), false, "sum mismatch");
 });
 
 test("palindrome checker accepts any equal-length palindromic substring", () => {
@@ -144,13 +144,13 @@ test("integer row checkers handle nested backtracking outputs", () => {
   assert.equal(checkAnswer(integerCombinations, { input: [], expected: [[1, 1]] }, [[1]]), false, "row multiplicity matters");
 });
 
-test("anagramGroups checker ignores group and word order", () => {
+test("unorderedGroups checker ignores group and word order", () => {
   const testCase = { input: [], expected: [["eat", "tea", "ate"], ["tan", "nat"], ["bat"]] };
 
-  assert.equal(checkAnswer(anagramGroups, testCase, [["bat"], ["nat", "tan"], ["ate", "eat", "tea"]]), true);
-  assert.equal(checkAnswer(anagramGroups, testCase, [["bat"], ["nat"], ["ate", "eat", "tea"]]), false, "missing word");
-  assert.equal(checkAnswer(anagramGroups, testCase, [["bat", "tab"], ["nat", "tan"], ["ate", "eat"]]), false, "wrong grouping");
-  assert.equal(checkAnswer(anagramGroups, { input: [], expected: [["", ""]] }, [[""]]), false, "duplicate count matters");
+  assert.equal(checkAnswer(unorderedGroups, testCase, [["bat"], ["nat", "tan"], ["ate", "eat", "tea"]]), true);
+  assert.equal(checkAnswer(unorderedGroups, testCase, [["bat"], ["nat"], ["ate", "eat", "tea"]]), false, "missing word");
+  assert.equal(checkAnswer(unorderedGroups, testCase, [["bat", "tab"], ["nat", "tan"], ["ate", "eat"]]), false, "wrong grouping");
+  assert.equal(checkAnswer(unorderedGroups, { input: [], expected: [["", ""]] }, [[""]]), false, "duplicate count matters");
 });
 
 test("balancedBst checker accepts any balanced BST with the same inorder values", () => {
@@ -160,16 +160,16 @@ test("balancedBst checker accepts any balanced BST with the same inorder values"
   assert.equal(checkAnswer(balancedBst, { input: [[1, 2, 3]], expected: [] }, [2, 3, 1]), false);
 });
 
-test("topologicalOrder checker accepts any valid course order", () => {
+test("dependencyOrder checker accepts any valid course order", () => {
   const testCase = { input: [4, [[1, 0], [2, 0], [3, 1], [3, 2]]], expected: [0, 1, 2, 3] };
 
-  assert.equal(checkAnswer(topologicalOrder, testCase, [0, 2, 1, 3]), true);
-  assert.equal(checkAnswer(topologicalOrder, testCase, [0, 1, 2, 3]), true);
-  assert.equal(checkAnswer(topologicalOrder, testCase, [0, 1, 3, 2]), false, "course before prerequisite");
-  assert.equal(checkAnswer(topologicalOrder, testCase, [0, 1, 1, 3]), false, "duplicate course");
-  assert.equal(checkAnswer(topologicalOrder, testCase, [0, 1, 3]), false, "missing course");
-  assert.equal(checkAnswer(topologicalOrder, { input: [2, [[1, 0], [0, 1]]], expected: [] }, []), true);
-  assert.equal(checkAnswer(topologicalOrder, { input: [2, [[1, 0], [0, 1]]], expected: [] }, [0, 1]), false);
+  assert.equal(checkAnswer(dependencyOrder, testCase, [0, 2, 1, 3]), true);
+  assert.equal(checkAnswer(dependencyOrder, testCase, [0, 1, 2, 3]), true);
+  assert.equal(checkAnswer(dependencyOrder, testCase, [0, 1, 3, 2]), false, "course before prerequisite");
+  assert.equal(checkAnswer(dependencyOrder, testCase, [0, 1, 1, 3]), false, "duplicate course");
+  assert.equal(checkAnswer(dependencyOrder, testCase, [0, 1, 3]), false, "missing course");
+  assert.equal(checkAnswer(dependencyOrder, { input: [2, [[1, 0], [0, 1]]], expected: [] }, []), true);
+  assert.equal(checkAnswer(dependencyOrder, { input: [2, [[1, 0], [0, 1]]], expected: [] }, [0, 1]), false);
 });
 
 test("renderValue serializes and truncates long output", () => {
@@ -561,15 +561,25 @@ test("report contract migration preserves legacy and rejects unknown provenance"
   assert.equal(legacy.summary, "old report");
 
   const active = {
-    bundleVersion: 4,
-    livePromptVersion: 1,
-    reportPromptVersion: 4,
+    bundleVersion: 5,
+    livePromptVersion: 2,
+    reportPromptVersion: 5,
     rubricVersion: 1,
     reportSchemaVersion: 1,
   };
   assert.deepEqual(sanitizeReport({ incomplete: true, interviewContract: active }).interviewContract, active);
 
+  // Bundle 4 shares the rubric and the schema, so its scores survive the bump
+  // and the report still names the bundle that produced it.
+  const previous = { ...active, bundleVersion: 4, livePromptVersion: 1, reportPromptVersion: 4 };
+  const kept = sanitizeReport({ codingScore: 70, communicationScore: 60, decision: "NO_HIRE", interviewContract: previous });
+  assert.deepEqual(kept.interviewContract, previous);
+  assert.equal(kept.codingScore, 70);
+  assert.doesNotMatch(kept.summary, /unsupported or malformed interview contract/);
+
   for (const interviewContract of [
+    { ...active, bundleVersion: 3, livePromptVersion: 1, reportPromptVersion: 3 },
+    { ...previous, rubricVersion: 2 },
     { ...active, reportSchemaVersion: 2 },
     { ...active, rubricVersion: "1" },
     { ...active, extra: 1 },

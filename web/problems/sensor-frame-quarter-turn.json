@@ -1,0 +1,64 @@
+{
+  "page": "sensor-frame-quarter-turn",
+  "title": "Sensor Frame Quarter Turn",
+  "source": "Rotate Image",
+  "difficulty": "Medium",
+  "brief": [
+    "A camera module on an embedded board was mounted sideways, so every square frame it produces needs a quarter turn clockwise before it is encoded. Memory on the board is tight, so the frame buffer has to be rearranged where it sits.",
+    "Implement turnFrameClockwise(matrix), where matrix is a square frame given as a list of rows of pixel values. Turn it 90 degrees clockwise by modifying matrix itself; the function returns nothing."
+  ],
+  "examples": [
+    {
+      "input": "matrix = [[-1,-2],[-3,-4]]",
+      "output": "matrix becomes [[-3,-1],[-4,-2]]"
+    },
+    {
+      "input": "matrix = [[1,2,3],[4,5,6],[7,8,9]]",
+      "output": "matrix becomes [[7,4,1],[8,5,2],[9,6,3]]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def turnFrameClockwise(self, matrix: list[list[int]]) -> None:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} matrix\n * @return {void}\n */\nfunction turnFrameClockwise(matrix) {\n  // Think out loud as you go!\n}\n",
+    "c": "void turnFrameClockwise(int** matrix, int matrixSize, int* matrixColSize) {\n    // Think out loud as you go!\n}\n",
+    "cpp": "class Solution {\npublic:\n    void turnFrameClockwise(vector<vector<int>>& matrix) {\n        // Think out loud as you go!\n    }\n};\n",
+    "java": "class Solution {\n    public void turnFrameClockwise(int[][] matrix) {\n        // Think out loud as you go!\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

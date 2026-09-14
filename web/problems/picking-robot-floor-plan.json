@@ -1,0 +1,64 @@
+{
+  "page": "picking-robot-floor-plan",
+  "title": "Picking Robot Floor Plan",
+  "source": "Unique Paths II",
+  "difficulty": "Medium",
+  "brief": [
+    "Our warehouse floor is laid out as a grid of bays, and some bays are taken up by shelving. A picking robot starts in the top-left bay and has to reach the loading dock in the bottom-right bay, and it can only ever move one bay east or one bay south.",
+    "Implement countRobotRoutes(layout), where layout holds the floor plan row by row with 1 for a bay blocked by shelving and 0 for an open bay, and return how many different routes take the robot from the top-left bay to the bottom-right bay without entering a blocked bay."
+  ],
+  "examples": [
+    {
+      "input": "layout = [[0,0,0],[0,1,0],[0,0,0]]",
+      "output": "2"
+    },
+    {
+      "input": "layout = [[0,1,0]]",
+      "output": "0"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def countRobotRoutes(self, layout: list[list[int]]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} layout\n * @return {number}\n */\nfunction countRobotRoutes(layout) {\n  // Think out loud as you go!\n}\n",
+    "c": "int countRobotRoutes(int** layout, int layoutSize, int* layoutColSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int countRobotRoutes(vector<vector<int>>& layout) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int countRobotRoutes(int[][] layout) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

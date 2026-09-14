@@ -1,0 +1,64 @@
+{
+  "page": "workflow-handoff-loop",
+  "title": "Workflow Handoff Loop",
+  "source": "Linked List Cycle",
+  "difficulty": "Easy",
+  "brief": [
+    "Our workflow engine chains tasks together: each task is a ListNode whose next field names the task that runs after it, and the last task has no successor. A bad configuration can make some task hand off to a task earlier in the chain, which would make the engine spin forever.",
+    "Implement hasHandoffLoop(head), where head is the first task in the chain, or null for an empty chain, and return true if following next from head ever reaches a task a second time, and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "head = [3,2,0,-4], pos = 1",
+      "output": "true"
+    },
+    {
+      "input": "head = [5,6,7], pos = 2",
+      "output": "true"
+    }
+  ],
+  "starterCode": {
+    "python": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, x):\n#         self.val = x\n#         self.next = None\n\nclass Solution:\n    def hasHandoffLoop(self, head: Optional[ListNode]) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val) {\n *   this.val = val;\n *   this.next = null;\n * }\n */\n\n/**\n * @param {ListNode} head\n * @return {boolean}\n */\nfunction hasHandoffLoop(head) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     struct ListNode *next;\n * };\n */\nbool hasHandoffLoop(struct ListNode *head) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    bool hasHandoffLoop(ListNode *head) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode(int x) {\n *         val = x;\n *         next = null;\n *     }\n * }\n */\npublic class Solution {\n    public boolean hasHandoffLoop(ListNode head) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

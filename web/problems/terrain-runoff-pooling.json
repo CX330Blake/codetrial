@@ -1,0 +1,60 @@
+{
+  "page": "terrain-runoff-pooling",
+  "title": "Terrain Runoff Pooling",
+  "source": "Trapping Rain Water",
+  "difficulty": "Hard",
+  "brief": [
+    "A flood modelling tool slices a terrain survey into a row of columns of equal width and records the ground height of each. After a heavy storm, water settles in the dips between higher ground and runs off past the two ends of the profile.",
+    "Implement pooledWaterVolume(height), where height[i] is the ground height of column i, and return the total units of water that stay pooled on top of the columns."
+  ],
+  "examples": [
+    {
+      "input": "height = [5,4,1,2]",
+      "output": "1"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def pooledWaterVolume(self, height: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} height\n * @return {number}\n */\nfunction pooledWaterVolume(height) {\n  // Think out loud as you go!\n}\n",
+    "c": "int pooledWaterVolume(int* height, int heightSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int pooledWaterVolume(vector<int>& height) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int pooledWaterVolume(int[] height) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

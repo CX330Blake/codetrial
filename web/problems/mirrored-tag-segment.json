@@ -1,0 +1,60 @@
+{
+  "page": "mirrored-tag-segment",
+  "title": "Mirrored Tag Segment",
+  "source": "Longest Palindromic Substring",
+  "difficulty": "Medium",
+  "brief": [
+    "Our barcode scanner sometimes reads a tag twice, once forwards and once backwards, and the firmware team uses mirrored stretches in the raw read as a diagnostic signal. They want the longest contiguous stretch of a read that is the same forwards and backwards.",
+    "Implement longestMirroredRun(s), where s is the raw read, and return that longest mirrored stretch as a string taken from s."
+  ],
+  "examples": [
+    {
+      "input": "s = \"racecar\"",
+      "output": "\"racecar\""
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def longestMirroredRun(self, s: str) -> str:\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @return {string}\n */\nfunction longestMirroredRun(s) {\n}\n",
+    "c": "char* longestMirroredRun(char* s) {\n    // Think out loud as you go!\n    return \"\";\n}\n",
+    "cpp": "class Solution {\npublic:\n    string longestMirroredRun(string s) {\n        // Think out loud as you go!\n        return \"\";\n    }\n};\n",
+    "java": "class Solution {\n    public String longestMirroredRun(String s) {\n        // Think out loud as you go!\n        return \"\";\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

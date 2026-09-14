@@ -1,0 +1,71 @@
+{
+  "kind": "function",
+  "entry": "fewestTokens",
+  "checker": "exact",
+  "cases": [
+    {
+      "label": "makes amount",
+      "input": [
+        [
+          1,
+          2,
+          5
+        ],
+        11
+      ],
+      "expected": 3
+    },
+    {
+      "label": "impossible amount",
+      "input": [
+        [
+          2
+        ],
+        3
+      ],
+      "expected": -1
+    },
+    {
+      "label": "zero amount",
+      "input": [
+        [
+          1
+        ],
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "label": "three denominations",
+      "input": [
+        [
+          1,
+          3,
+          4
+        ],
+        6
+      ],
+      "expected": 2
+    },
+    {
+      "label": "large coin ignored",
+      "input": [
+        [
+          5,
+          7
+        ],
+        1
+      ],
+      "expected": -1
+    }
+  ],
+  "paramNames": [
+    "tokens",
+    "amount"
+  ],
+  "paramTypes": [
+    "integer[]",
+    "integer"
+  ],
+  "returnType": "integer"
+}

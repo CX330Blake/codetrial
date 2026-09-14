@@ -1,0 +1,64 @@
+{
+  "page": "orbital-energy-window",
+  "title": "Orbital Energy Window",
+  "source": "Maximum Sum Circular Subarray",
+  "difficulty": "Medium",
+  "brief": [
+    "A satellite follows a circular orbit divided into segments. On each segment it gains energy in sunlight or loses energy in shadow, and mission planners want the continuous stretch of orbit with the best net energy for running an experiment.",
+    "The orbit loops, so a stretch may run past the last segment and continue from the first, but no segment can be counted twice. Implement bestOrbitWindow(nums), where nums holds the net energy of each segment in orbit order, and return the largest net energy of any continuous stretch."
+  ],
+  "examples": [
+    {
+      "input": "nums = [1,-2,3,-2]",
+      "output": "3"
+    },
+    {
+      "input": "nums = [8,-1,-3,8]",
+      "output": "16"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def bestOrbitWindow(self, nums: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction bestOrbitWindow(nums) {\n  // Think out loud as you go!\n}\n",
+    "c": "int bestOrbitWindow(int* nums, int numsSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int bestOrbitWindow(vector<int>& nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int bestOrbitWindow(int[] nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

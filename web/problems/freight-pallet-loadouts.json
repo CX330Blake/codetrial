@@ -1,0 +1,64 @@
+{
+  "page": "freight-pallet-loadouts",
+  "title": "Freight Pallet Loadouts",
+  "source": "Combination Sum",
+  "difficulty": "Medium",
+  "brief": [
+    "A warehouse packs outgoing pallets from standard crate sizes, and a pallet only ships when its load fills the target capacity exactly. Planners want to see every way to fill a pallet from the crate sizes on hand.",
+    "Implement listPalletLoadouts(candidates, target), where candidates holds the available crate sizes and target is the pallet capacity, and return every distinct loadout, each as a list of crate sizes that add up to exactly target."
+  ],
+  "examples": [
+    {
+      "input": "candidates = [2,3,5], target = 8",
+      "output": "[[2,2,2,2],[2,3,3],[3,5]]"
+    },
+    {
+      "input": "candidates = [7,3,2], target = 7",
+      "output": "[[2,2,3],[7]]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> listPalletLoadouts(vector<int>& candidates, int target) {\n        \n    }\n};",
+    "java": "class Solution {\n    public List<List<Integer>> listPalletLoadouts(int[] candidates, int target) {\n        \n    }\n}",
+    "python": "class Solution:\n    def listPalletLoadouts(self, candidates: List[int], target: int) -> List[List[int]]:\n        ",
+    "javascript": "/**\n * @param {number[]} candidates\n * @param {number} target\n * @return {number[][]}\n */\nvar listPalletLoadouts = function(candidates, target) {\n    \n};",
+    "c": "/**\n * Return an array of arrays of size *returnSize.\n * The sizes of the arrays are returned as *returnColumnSizes array.\n * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().\n */\nint** listPalletLoadouts(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

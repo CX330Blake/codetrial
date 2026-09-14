@@ -1,0 +1,64 @@
+{
+  "page": "hashtag-vocabulary-splitter",
+  "title": "Hashtag Vocabulary Splitter",
+  "source": "Word Break",
+  "difficulty": "Medium",
+  "brief": [
+    "Our social app lets people write hashtags without spaces, like nightmarketfood. Before a tag goes to the search index, we want to know whether it can be read entirely as a run of terms from our approved vocabulary.",
+    "Implement canSplitIntoTerms(s, vocabulary), where s is the tag text without the hash sign and vocabulary lists the allowed terms, and return true if s can be cut into consecutive pieces that are each a vocabulary term, or false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "s = \"a\", vocabulary = [\"a\"]",
+      "output": "true"
+    },
+    {
+      "input": "s = \"applepenapple\", vocabulary = [\"apple\",\"pen\"]",
+      "output": "true"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def canSplitIntoTerms(self, s: str, vocabulary: list[str]) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @param {string[]} vocabulary\n * @return {boolean}\n */\nfunction canSplitIntoTerms(s, vocabulary) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool canSplitIntoTerms(char* s, char** vocabulary, int vocabularySize) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool canSplitIntoTerms(string s, vector<string>& vocabulary) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean canSplitIntoTerms(String s, List<String> vocabulary) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

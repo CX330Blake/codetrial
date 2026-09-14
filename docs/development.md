@@ -153,7 +153,67 @@ because the fetcher never asks LeetCode for problem prose, and each judge case
 carries its input without an expected value, because `exampleTestcases` is
 inputs only. Both are written by someone who has read the problem.
 
+A ported problem also needs its entry in `problem-bank/variants.json`, and the
+generator refuses to run without one. The page shows a scenario written around
+the same contract instead of the published problem, and the interviewer holds
+the rest. Each variant has a `title` and a `brief`, which the page shows; a
+private `contract` the interviewer judges against; one or two `examples`, each
+naming a judge case by index and not all of them published ones;
+`clarifications` answered only when asked, with the constraints and edge-case
+policies the brief leaves out; `followUps` for after a tested solution; and
+three `hints`, a nudge, a direction and the key step.
+
+A function problem also declares a new `entry` and a class problem a new
+`className`, since the published name is as recognisable as the title. Either
+may declare `parameters` where a parameter name gives it away, and `terms` for
+any other word a starter snippet carries, such as a comment naming the
+published node type. The bank keeps LeetCode's names; the generator puts the
+variant's in place in the judge and starter code it writes, and refuses a
+variant whose title, brief, contract, examples, constraints, starter code or
+judge cases still name the published problem.
+
+The browser knows a problem only by its page name, made from the scenario
+title: the interview URL, the page and judge files, the token request and saved
+history all use it, and the server resolves it to the problem. Each page names
+its published title once, as `source`, which the interview shows in small print
+beside the scenario so the problem can be found again afterwards. The published
+id is in one file, `web/problem-pages.json`, which the browser fetches only to
+open a link that still carries a published id, to read history saved before
+pages had names, or when the candidate asks the lobby to show the titles on the
+cards. The title reaches the live interview page only: saved history, the
+downloaded report and the replay keep the scenario's.
+
+None of this is secrecy. The page map, each page's `source` and every judge
+are served to anyone who asks, and a candidate with developer tools can map a
+scenario back to its published problem and read its test cases. The disguise
+exists so an honest candidate meets the problem the way an interview poses it;
+nothing that must hold against a determined one, integrity checks included,
+may rely on it.
+Keep a variant's title stable once it ships: a retired page name opens the
+default exercise, with a note saying so.
+
+`problem-bank/guides.json` holds optional solution notes for the report
+reviewer, with the license they are used under. The generator refuses a note
+for a problem the bank does not have, or one still carrying page furniture from
+the import, and writes `src/agent/problem_guides.rs`. Only the report prompt
+reads them.
+
 ## Checks outside the gate
+
+Whether the interviewer actually follows the live prompt, rather than whether
+the prompt says the right things, needs a Gemini key. The check scripts a
+candidate through three problems against a text model given the same
+instructions, greeting and tools, and fails on a named source, a volunteered
+limit, an unanswered size question, or a hint that goes past the rung it was
+served:
+
+```bash
+scripts/interview-behavior-check.sh
+BEHAVIOR_PROBLEMS=3sum,lru-cache scripts/interview-behavior-check.sh
+```
+
+A free key allows fifteen requests a minute, so the check waits out rate
+limits; three problems take about two minutes.
 
 The end-to-end browser check additionally needs Playwright and Chromium:
 

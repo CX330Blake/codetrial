@@ -1,0 +1,64 @@
+{
+  "page": "packet-chunk-block-offsets",
+  "title": "Packet Chunk Block Offsets",
+  "source": "Substring with Concatenation of All Words",
+  "difficulty": "Hard",
+  "brief": [
+    "A packet inspection tool looks for a known message that was split into fixed-length chunk codes and may have been reassembled in any order. The payload is a single lowercase string, and we want every place where the full set of chunks appears back to back.",
+    "Implement findChunkBlockOffsets(s, words), where s is the payload and words lists the chunk codes, all of the same length, and return every starting offset in s where a contiguous block is made of exactly those chunks, each used once, in some order."
+  ],
+  "examples": [
+    {
+      "input": "s = \"wordgoodgoodgoodbestword\", words = [\"word\",\"good\",\"best\",\"good\"]",
+      "output": "[8]"
+    },
+    {
+      "input": "s = \"barfoothefoobarman\", words = [\"foo\",\"bar\"]",
+      "output": "[0,9]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def findChunkBlockOffsets(self, s: str, words: list[str]) -> list[int]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @param {string[]} words\n * @return {number[]}\n */\nfunction findChunkBlockOffsets(s, words) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nint* findChunkBlockOffsets(char* s, char** words, int wordsSize, int* returnSize) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<int> findChunkBlockOffsets(string s, vector<string>& words) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public List<Integer> findChunkBlockOffsets(String s, String[] words) {\n        // Think out loud as you go!\n        return new ArrayList<>();\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

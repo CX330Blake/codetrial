@@ -1,0 +1,65 @@
+{
+  "page": "portal-dice-race",
+  "title": "Portal Dice Race",
+  "source": "Snakes and Ladders",
+  "difficulty": "Medium",
+  "brief": [
+    "We are building a digital dice race game played on an n by n grid. Squares are numbered 1 to n^2 starting at the bottom-left corner: the bottom row counts left to right, the row above it right to left, and the direction keeps alternating up the board. Some squares hold a portal that carries a token to another square, which may be ahead or behind.",
+    "On each turn the player chooses a roll from 1 to 6 and moves forward that many squares; if the token lands on a portal, it is moved to the portal's destination. Level designers want to know how quickly each level can be beaten.",
+    "Implement fewestTurnsToFinish(board), where board lists the grid rows from top to bottom and board[r][c] is -1 for a plain square or the destination square number of a portal, and return the fewest turns needed to go from square 1 to square n^2."
+  ],
+  "examples": [
+    {
+      "input": "board = [[-1,-1],[-1,3]]",
+      "output": "1"
+    },
+    {
+      "input": "board = [[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]]",
+      "output": "2"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    int fewestTurnsToFinish(vector<vector<int>>& board) {\n        \n    }\n};",
+    "java": "class Solution {\n    public int fewestTurnsToFinish(int[][] board) {\n        \n    }\n}",
+    "python": "class Solution:\n    def fewestTurnsToFinish(self, board: List[List[int]]) -> int:\n        ",
+    "javascript": "/**\n * @param {number[][]} board\n * @return {number}\n */\nvar fewestTurnsToFinish = function(board) {\n    \n};",
+    "c": "int fewestTurnsToFinish(int** board, int boardSize, int* boardColSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

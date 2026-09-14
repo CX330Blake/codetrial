@@ -1,0 +1,64 @@
+{
+  "page": "thermal-receipt-layout",
+  "title": "Thermal Receipt Layout",
+  "source": "Text Justification",
+  "difficulty": "Hard",
+  "brief": [
+    "Our point-of-sale terminals print store announcements on a narrow thermal printer that has a fixed number of character columns. Marketing wants the text to look typeset: every printed line should fill the full width so both the left and right edges line up.",
+    "Implement layoutReceiptLines(words, lineWidth), where words is the announcement split into words in reading order and lineWidth is the printer width in characters. Return the printed lines in order, each a string of exactly lineWidth characters, packing words onto lines and padding with spaces between them."
+  ],
+  "examples": [
+    {
+      "input": "words = [\"What\",\"must\",\"be\",\"acknowledgment\",\"shall\",\"be\"], lineWidth = 16",
+      "output": "[\"What   must   be\",\"acknowledgment  \",\"shall be        \"]"
+    },
+    {
+      "input": "words = [\"a\",\"b\",\"c\",\"d\",\"e\"], lineWidth = 3",
+      "output": "[\"a b\",\"c d\",\"e  \"]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def layoutReceiptLines(self, words: list[str], lineWidth: int) -> list[str]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string[]} words\n * @param {number} lineWidth\n * @return {string[]}\n */\nfunction layoutReceiptLines(words, lineWidth) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nchar** layoutReceiptLines(char** words, int wordsSize, int lineWidth, int* returnSize) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<string> layoutReceiptLines(vector<string>& words, int lineWidth) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public List<String> layoutReceiptLines(String[] words, int lineWidth) {\n        // Think out loud as you go!\n        return new ArrayList<>();\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

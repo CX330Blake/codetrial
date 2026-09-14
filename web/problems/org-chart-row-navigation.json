@@ -1,0 +1,60 @@
+{
+  "page": "org-chart-row-navigation",
+  "title": "Org Chart Row Navigation",
+  "source": "Populating Next Right Pointers in Each Node II",
+  "difficulty": "Medium",
+  "brief": [
+    "Our org chart viewer keeps the reporting hierarchy as a binary tree of Node objects, each with left and right children and an extra next field. For keyboard navigation, pressing the right arrow must jump to the next person on the same row of the chart, so each person's next field has to lead to whoever sits just after them in that row.",
+    "Implement linkRowNeighbors(root), where root is the top of the chart, and fill in every next field so it leads to the following person in the same row, or null for the last person in a row. Return root."
+  ],
+  "examples": [
+    {
+      "input": "root = [1,2,3,null,5,null,7]",
+      "output": "[[1],[2,3],[5,7]]"
+    }
+  ],
+  "starterCode": {
+    "python": "\"\"\"\n# Definition for a Node.\nclass Node:\n    def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next: 'Node' = None):\n        self.val = val\n        self.left = left\n        self.right = right\n        self.next = next\n\"\"\"\n\nclass Solution:\n    def linkRowNeighbors(self, root: 'Node') -> 'Node':\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * // Definition for a _Node.\n * function _Node(val, left, right, next) {\n *    this.val = val === undefined ? null : val;\n *    this.left = left === undefined ? null : left;\n *    this.right = right === undefined ? null : right;\n *    this.next = next === undefined ? null : next;\n * }\n */\n\n/**\n * @param {_Node} root\n * @return {_Node}\n */\nfunction linkRowNeighbors(root) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Definition for a Node.\n * struct Node {\n *     int val;\n *     struct Node *left;\n *     struct Node *right;\n *     struct Node *next;\n * };\n */\n\nstruct Node* linkRowNeighbors(struct Node* root) {\n    // Think out loud as you go!\n    return NULL;\n}\n",
+    "cpp": "/*\n// Definition for a Node.\nclass Node {\npublic:\n    int val;\n    Node* left;\n    Node* right;\n    Node* next;\n\n    Node() : val(0), left(NULL), right(NULL), next(NULL) {}\n\n    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}\n\n    Node(int _val, Node* _left, Node* _right, Node* _next)\n        : val(_val), left(_left), right(_right), next(_next) {}\n};\n*/\n\nclass Solution {\npublic:\n    Node* linkRowNeighbors(Node* root) {\n        // Think out loud as you go!\n        return nullptr;\n    }\n};\n",
+    "java": "/*\n// Definition for a Node.\nclass Node {\n    public int val;\n    public Node left;\n    public Node right;\n    public Node next;\n\n    public Node() {}\n    \n    public Node(int _val) {\n        val = _val;\n    }\n\n    public Node(int _val, Node _left, Node _right, Node _next) {\n        val = _val;\n        left = _left;\n        right = _right;\n        next = _next;\n    }\n};\n*/\n\nclass Solution {\n    public Node linkRowNeighbors(Node root) {\n        // Think out loud as you go!\n        return null;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

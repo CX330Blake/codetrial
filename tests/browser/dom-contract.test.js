@@ -22,6 +22,11 @@ import { dirname, join, resolve } from "node:path";
 
 const web = join(root, "web");
 const read = (name) => readFileSync(join(web, name), "utf8");
+// The page names these tests use, read from the generated map rather than
+// written here, so renaming a scenario does not break a test about loading.
+const pageMap = JSON.parse(read("problem-pages.json"));
+const twoSum = pageMap["two-sum"];
+const fallback = Object.values(pageMap).find((entry) => entry.default).page;
 
 /// Stands in for the server: serves web/ off disk and 404s what is not there.
 /// Returns the undo, because a `globalThis.fetch` left installed makes the next
@@ -126,7 +131,7 @@ test("every script and stylesheet a page loads exists on disk", () => {
   assert.deepEqual(missing, [], "the page requests assets that are not served");
 });
 
-test("problem loader fetches one problem and falls back to the default", async () => {
+test("problem loader resolves legacy ids and falls back to the default", async () => {
   // Stands in for the server: serves web/ and 404s anything not on disk, which
   // is what a request for a problem outside the bank gets.
   const served = [];
@@ -134,9 +139,18 @@ test("problem loader fetches one problem and falls back to the default", async (
   try {
     const { loadProblem, loadJudge } = await import(join(web, "problem-data.js"));
 
-    assert.equal((await loadProblem("two-sum")).id, "two-sum");
-    assert.equal((await loadProblem("missing")).id, "two-sum");
-    assert.ok((await loadJudge("two-sum")).cases.length > 0);
+    const scenario = await loadProblem(twoSum.page);
+    assert.equal(scenario.page, twoSum.page);
+    assert.equal("id" in scenario, false, "a scenario load carries no published id");
+    assert.equal(scenario.requestedPage, undefined);
+    // An old link carries the published id and still opens its scenario.
+    assert.equal((await loadProblem("two-sum")).title, twoSum.title);
+    // A name the bank does not have opens the default, and says so.
+    const missing = await loadProblem("missing");
+    assert.equal(missing.page, fallback);
+    assert.equal(missing.requestedPage, "missing");
+    assert.equal((await loadProblem("__proto__")).requestedPage, "__proto__");
+    assert.ok((await loadJudge(twoSum.page)).cases.length > 0);
     assert.equal(await loadJudge("missing"), null);
   } finally {
     restore();
@@ -145,10 +159,15 @@ test("problem loader fetches one problem and falls back to the default", async (
   // The point of the split: one problem asked for is one problem fetched, not
   // a module carrying the answers to the other 149.
   assert.deepEqual(served, [
+    `/problems/${twoSum.page}.json`,
     "/problems/two-sum.json",
+    "/problem-pages.json",
+    `/problems/${twoSum.page}.json`,
     "/problems/missing.json",
-    "/problems/two-sum.json",
-    "/judges/two-sum.json",
+    `/problems/${fallback}.json`,
+    "/problems/__proto__.json",
+    `/problems/${fallback}.json`,
+    `/judges/${twoSum.page}.json`,
     "/judges/missing.json",
   ]);
 });
@@ -180,6 +199,27 @@ test("an unreachable bank is reported as unreachable, not as an empty one", asyn
     await assert.rejects(() => loadJudge("two-sum"), /returned 503/);
   } finally {
     restore();
+  }
+});
+
+test("a page map that could not be fetched is asked for again", async () => {
+  const served = [];
+  const fromDisk = serveWebFromDisk(served);
+  const fromDiskFetch = globalThis.fetch;
+  let down = true;
+  globalThis.fetch = async (url) => {
+    if (down) throw new TypeError("Failed to fetch");
+    return fromDiskFetch(url);
+  };
+  try {
+    const { loadPageMap } = await import(`${join(web, "problem-data.js")}?map-retry`);
+    await assert.rejects(() => loadPageMap(), /could not be reached/);
+    down = false;
+    assert.equal((await loadPageMap())["two-sum"].page, twoSum.page);
+    await loadPageMap();
+    assert.deepEqual(served, ["/problem-pages.json"], "fetched once it arrived, not per call");
+  } finally {
+    fromDisk();
   }
 });
 
@@ -318,7 +358,7 @@ test("runtime config can withdraw compiled language test runs", async () => {
   try {
     const { runBrowserTests } = await import(`../../web/runners.js?compiled-runs-disabled=${Date.now()}`);
     for (const language of ["c", "cpp", "java"]) {
-      const summary = await runBrowserTests("two-sum", "", language);
+      const summary = await runBrowserTests(twoSum.page, "", language);
       assert.equal(summary.language, language);
       assert.equal(summary.passed, 0);
       assert.match(summary.setupError, /tests are not wired up yet/);

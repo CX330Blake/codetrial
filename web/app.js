@@ -2,6 +2,7 @@ import { FRAMEWORKS, codingLoop } from "./lib.js";
 import { clearReportHistory, readLocalHistory } from "./history.js";
 import { pickProblem, practiceFocus, storeSharedFocus, suggestDifficulty } from "./problem-picker.js";
 import { buildProgressModel, pickerEntry } from "./progress.js";
+import { loadPageMap } from "./problem-data.js";
 import { parseGroundingFile, selectedGroundingPacket, storeGroundingPacket } from "./document-grounding.js";
 
 let problem;
@@ -68,12 +69,45 @@ const nodes = {
 
 // Every card carries the pressed state from the start, not only the one that
 // is on: one pressed button among 149 plain ones does not read as a choice.
+// A card's id is its page name, the only name the browser has for a problem.
 const cards = [...document.querySelectorAll("[data-problem]")].map((button) => ({
   id: button.dataset.problem,
   difficulty: button.dataset.difficulty,
   button,
 }));
+const cardIds = new Set(cards.map((card) => card.id));
 for (const card of cards) mark(card.button, false);
+
+// The published names are off unless the candidate turns them on, and the
+// choice is theirs to keep between visits. A convenience, so storage that
+// throws (a private window, blocked site data) just means off.
+const SHOW_SOURCES_KEY = "codetrial.showProblemSources";
+const showSources = document.querySelector("#show-sources");
+try {
+  showSources.checked = localStorage.getItem(SHOW_SOURCES_KEY) === "1";
+} catch { /* off */ }
+// The published names are not in the page: they arrive with the map, fetched
+// the first time the candidate turns them on.
+const applySources = async () => {
+  if (showSources.checked) {
+    const pages = await loadPageMap().catch(() => null);
+    const sourceOf = new Map(Object.values(pages ?? {}).map((entry) => [entry.page, entry.source]));
+    for (const card of cards) {
+      const source = card.button.querySelector(".problem-source");
+      if (sourceOf.has(card.id)) source.textContent = `LeetCode: ${sourceOf.get(card.id)}`;
+    }
+  }
+  for (const source of document.querySelectorAll(".problem-source")) {
+    source.hidden = !showSources.checked || source.textContent === "";
+  }
+};
+showSources.addEventListener("change", () => {
+  void applySources();
+  try {
+    localStorage.setItem(SHOW_SOURCES_KEY, showSources.checked ? "1" : "0");
+  } catch { /* the page still shows what was chosen */ }
+});
+void applySources();
 const levels = [...document.querySelectorAll('[name="difficulty"]')];
 
 // A picked card is a choice about this one interview, not about the filter the
@@ -172,6 +206,8 @@ start.addEventListener("click", async () => {
   // button was pressed and 60 by the time it was answered, and the same for
   // the round plan and the profile beside them. One read, then go.
   const destination = new URL("/interview", window.location.origin);
+  // The scenario's page name, not the id: the address bar is on screen for the
+  // whole interview, and the id is the published problem's slug.
   destination.searchParams.set("problem", problem.id);
   destination.searchParams.set("duration", String(duration));
   destination.searchParams.set("loop", interviewLoop);
@@ -369,7 +405,7 @@ async function loadAccount() {
       nodes.loginLink.hidden = false;
       nodes.logout.hidden = true;
       setStartGate(true);
-      renderLocalHistory();
+      await renderLocalHistory();
       return;
     }
   } catch {
@@ -381,7 +417,7 @@ async function loadAccount() {
   nodes.loginLink.hidden = false;
   nodes.logout.hidden = true;
   setStartGate(false);
-  renderLocalHistory();
+  await renderLocalHistory();
 }
 
 async function recordGitHubLogin(reload) {
@@ -417,17 +453,29 @@ async function renderServerHistory() {
     const data = await fetchJson("/api/reports");
     // The picker needs the account row's timestamp for review scheduling and
     // the verdict as it was saved; the progress panel normalizes its own.
-    reports = data.reports.map(pickerEntry);
+    reports = await withPageNames(data.reports.map(pickerEntry));
     showProgress(data.reports, "saved to your account");
   } catch {
     showProgressError("Could not load saved account progress.");
   }
 }
 
-function renderLocalHistory() {
+/// History saved before problems had page names carries published ids. They
+/// are translated through the map, which is fetched only when such an entry is
+/// there, so the picker still knows what the candidate has passed.
+async function withPageNames(entries) {
+  if (entries.every((entry) => cardIds.has(entry.problemId))) return entries;
+  const pages = await loadPageMap().catch(() => null);
+  return entries.map((entry) => {
+    const page = pages && Object.hasOwn(pages, entry.problemId) ? pages[entry.problemId].page : null;
+    return page ? { ...entry, problemId: page } : entry;
+  });
+}
+
+async function renderLocalHistory() {
   try {
     const entries = readLocalHistory();
-    reports = entries.map(pickerEntry);
+    reports = await withPageNames(entries.map(pickerEntry));
     showProgress(entries, "saved on this device");
   } catch {
     showProgressError("Could not load progress saved on this device.");
@@ -456,7 +504,7 @@ async function deleteSavedReports() {
       showReportDeleteStatus(
         "Account reports were deleted, but reports saved on this device could not be deleted.",
       );
-      renderLocalHistory();
+      await renderLocalHistory();
       settle();
       return;
     }

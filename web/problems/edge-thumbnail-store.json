@@ -1,0 +1,60 @@
+{
+  "page": "edge-thumbnail-store",
+  "title": "Edge Thumbnail Store",
+  "source": "LRU Cache",
+  "difficulty": "Medium",
+  "brief": [
+    "Each edge server in our image CDN keeps a small in-memory store of recently served thumbnails, keyed by thumbnail id. The store has a fixed number of slots. When it is full and a new thumbnail arrives, the server drops the entry that has gone the longest without being read or written.",
+    "Implement the class ThumbnailStore with a constructor ThumbnailStore(capacity) giving the number of slots, a method get(key) that returns the stored value for key, and a method put(key, value) that stores value under key, evicting as described when a new key arrives and the store is full."
+  ],
+  "examples": [
+    {
+      "input": "[\"ThumbnailStore\",\"put\",\"get\",\"put\",\"get\",\"get\"]\n[[1],[2,1],[2],[3,2],[2],[3]]",
+      "output": "[null,null,1,null,-1,2]"
+    }
+  ],
+  "starterCode": {
+    "python": "class ThumbnailStore:\n    def __init__(self, capacity: int):\n        pass\n\n    def get(self, key: int) -> int:\n        pass\n\n    def put(self, key: int, value: int) -> None:\n        pass\n",
+    "javascript": "class ThumbnailStore {\n  /** @param {number} capacity */\n  constructor(capacity) {\n  }\n\n  /** @param {number} key @return {number} */\n  get(key) {\n  }\n\n  /** @param {number} key @param {number} value @return {void} */\n  put(key, value) {\n  }\n}\n",
+    "c": "typedef struct {\n    // Think out loud as you go!\n} ThumbnailStore;\n\nThumbnailStore* thumbnailStoreCreate(int capacity) {\n    return NULL;\n}\n\nint thumbnailStoreGet(ThumbnailStore* obj, int key) {\n    return -1;\n}\n\nvoid thumbnailStorePut(ThumbnailStore* obj, int key, int value) {\n}\n\nvoid thumbnailStoreFree(ThumbnailStore* obj) {\n}\n",
+    "cpp": "class ThumbnailStore {\npublic:\n    ThumbnailStore(int capacity) {\n    }\n\n    int get(int key) {\n        return -1;\n    }\n\n    void put(int key, int value) {\n    }\n};\n",
+    "java": "class ThumbnailStore {\n    public ThumbnailStore(int capacity) {\n    }\n\n    public int get(int key) {\n        return -1;\n    }\n\n    public void put(int key, int value) {\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

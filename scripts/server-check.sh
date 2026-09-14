@@ -64,7 +64,7 @@ while ! curl -fsS "$BASE_URL" > "$TMP/home.html" 2> /dev/null; do
 done
 
 grep -F "Practice a live technical interview" "$TMP/home.html" > /dev/null
-grep -F "Valid Parentheses" "$TMP/home.html" > /dev/null
+grep -F 'data-problem="template-delimiter-audit"' "$TMP/home.html" > /dev/null
 grep -F "Start interview" "$TMP/home.html" > /dev/null
 
 status=$(curl -sS \

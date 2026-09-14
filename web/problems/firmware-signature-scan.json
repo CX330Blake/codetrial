@@ -1,0 +1,60 @@
+{
+  "page": "firmware-signature-scan",
+  "title": "Firmware Signature Scan",
+  "source": "Find the Index of the First Occurrence in a String",
+  "difficulty": "Easy",
+  "brief": [
+    "Our update verifier scans firmware images, encoded here as strings of lowercase letters, for a known signature before flashing a device. The flashing tool needs to know where the signature begins.",
+    "Implement signatureOffset(image, signature), where image is the encoded firmware image and signature is the signature to find, and return the index at which signature first appears in image."
+  ],
+  "examples": [
+    {
+      "input": "image = \"mississippi\", signature = \"issip\"",
+      "output": "4"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def signatureOffset(self, image: str, signature: str) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} image\n * @param {string} signature\n * @return {number}\n */\nfunction signatureOffset(image, signature) {\n  // Think out loud as you go!\n}\n",
+    "c": "int signatureOffset(char* image, char* signature) {\n    // Think out loud as you go!\n    return -1;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int signatureOffset(string image, string signature) {\n        // Think out loud as you go!\n        return -1;\n    }\n};\n",
+    "java": "class Solution {\n    public int signatureOffset(String image, String signature) {\n        // Think out loud as you go!\n        return -1;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

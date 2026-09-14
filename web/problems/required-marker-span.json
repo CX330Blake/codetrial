@@ -1,0 +1,64 @@
+{
+  "page": "required-marker-span",
+  "title": "Required Marker Span",
+  "source": "Minimum Window Substring",
+  "difficulty": "Hard",
+  "brief": [
+    "A genomics pipeline scans a long read, written as a string of letters, for the tightest region that contains a set of required marker letters. Some markers must be present more than once for the region to be useful.",
+    "Implement shortestCoveringSpan(s, t), where s is the read and t lists the required markers, and return the shortest contiguous piece of s that contains every letter of t at least as many times as it appears in t."
+  ],
+  "examples": [
+    {
+      "input": "s = \"ADOBECODEBANC\", t = \"ABC\"",
+      "output": "\"BANC\""
+    },
+    {
+      "input": "s = \"aa\", t = \"aa\"",
+      "output": "\"aa\""
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def shortestCoveringSpan(self, s: str, t: str) -> str:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @param {string} t\n * @return {string}\n */\nfunction shortestCoveringSpan(s, t) {\n  // Think out loud as you go!\n}\n",
+    "c": "char* shortestCoveringSpan(char* s, char* t) {\n    // Think out loud as you go!\n    return \"\";\n}\n",
+    "cpp": "class Solution {\npublic:\n    string shortestCoveringSpan(string s, string t) {\n        // Think out loud as you go!\n        return \"\";\n    }\n};\n",
+    "java": "class Solution {\n    public String shortestCoveringSpan(String s, String t) {\n        // Think out loud as you go!\n        return \"\";\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

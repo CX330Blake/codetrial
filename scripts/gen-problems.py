@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 import urllib.error
@@ -15,6 +16,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "problem-bank" / "problems.json"
 JUDGE_SOURCE = ROOT / "problem-bank" / "judges.json"
+# The exercise a candidate is actually given. A candidate shown the practice
+# problem as published recognises it and recites an answer, which is not what an
+# interview measures, so the page carries a scenario written around the same
+# contract and the source title, wording and constraints stay on the server.
+VARIANT_SOURCE = ROOT / "problem-bank" / "variants.json"
+# Solution notes for the report reviewer, with the license they came under.
+GUIDE_SOURCE = ROOT / "problem-bank" / "guides.json"
 # One file per problem, fetched on demand, rather than one module holding all
 # 150. Two reasons, and the second is the important one:
 #
@@ -27,8 +35,16 @@ JUDGE_SOURCE = ROOT / "problem-bank" / "judges.json"
 #     `apply_test_results` in src/agent.rs for where that boundary is drawn.
 OUTPUT_DIR = ROOT / "web" / "problems"
 JUDGE_OUTPUT_DIR = ROOT / "web" / "judges"
+PAGE_MAP_OUTPUT = ROOT / "web" / "problem-pages.json"
+# The exercise a link naming nothing the bank has opens, `DEFAULT_PROBLEM_ID` in
+# src/agent/problems.rs. Marked in the page map rather than written into the
+# loader, which every page serves: the loader would otherwise carry a published
+# id on every load.
+DEFAULT_PROBLEM_ID = "two-sum"
 DIRS = (OUTPUT_DIR, JUDGE_OUTPUT_DIR)
 RUST_TOPICS = ROOT / "src" / "agent" / "problem_topics.rs"
+RUST_VARIANTS = ROOT / "src" / "agent" / "problem_variants.rs"
+RUST_GUIDES = ROOT / "src" / "agent" / "problem_guides.rs"
 REACTO_STAGES = ("repeat", "example", "algorithm", "coding", "test", "optimizations")
 NEUTRAL_DIRECTIONS = {
     "repeat": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities.",
@@ -38,11 +54,21 @@ NEUTRAL_DIRECTIONS = {
     "test": "Ask the candidate to predict useful cases and expected results before running them.",
     "optimizations": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup.",
 }
+# No competencies: they are the topic tags, and "Dynamic Programming" beside
+# the problem names the technique before the candidate has said a word.
 PUBLIC_METADATA_KEYS = {
     "difficulty",
-    "competencies",
     "reactoStages",
     "followUpDirections",
+}
+VARIANT_KEYS = {
+    "title",
+    "brief",
+    "contract",
+    "examples",
+    "clarifications",
+    "followUps",
+    "hints",
 }
 MANIFEST = ROOT / "scripts" / "top-interview-150.json"
 CACHE = ROOT / "problem-bank" / "leetcode"
@@ -489,7 +515,6 @@ def validated_problems() -> list[dict]:
 def public_metadata(problem: dict) -> dict:
     return {
         "difficulty": problem["difficulty"],
-        "competencies": problem["topics"],
         "reactoStages": list(REACTO_STAGES),
         "followUpDirections": [
             {"stage": stage, "direction": NEUTRAL_DIRECTIONS[stage]}
@@ -498,11 +523,548 @@ def public_metadata(problem: dict) -> dict:
     }
 
 
-def rust_topics(problems: list[dict]) -> str:
+def compact(value: object) -> str:
+    return json.dumps(value, separators=(",", ":"))
+
+
+def case_input(judge: dict, case: dict) -> str:
+    """A judge case written the way an example on the page writes its input."""
+    if judge["kind"] == "class":
+        operations, arguments = case["input"]
+        return f"{compact(operations)}\n{compact(arguments)}"
+    return ", ".join(
+        f"{name} = {compact(value)}"
+        for name, value in zip(judge["paramNames"], case["input"])
+    )
+
+
+def input_values(text: str) -> tuple:
+    """The numbers and quoted strings an example input holds, in order.
+
+    Names are dropped, parameters and operations alike, and numbers compare by
+    value, so two spellings of the same input agree.
+    """
+    values = []
+    # `null` is a value too: a tree written level by level with its gaps, and
+    # dropping them makes two different trees read the same.
+    for quoted, number, literal in re.findall(
+        r'"((?:[^"\\]|\\.)*)"|(-?\d+(?:\.\d+)?)|\b(null|true|false)\b', text
+    ):
+        values.append(float(number) if number else literal or quoted)
+    return tuple(values)
+
+
+def camel_words(text: str) -> str:
+    """Letters and digits only, lowercased: `coinChange` and "Coin Change" agree."""
+    return "".join(character for character in text.lower() if character.isalnum())
+
+
+def spelled_words(text: str) -> list[str]:
+    """Lowercase words, with identifiers split where their case changes, so
+    `minStackCreate` reads as min, stack, create and `LRUCache` as lru, cache."""
+    text = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1 \2", text)
+    text = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
+    return re.findall(r"[a-z0-9]+", text.lower())
+
+
+def names_source(title: str, text: str) -> bool:
+    """Whether text gives away the published problem it was written from.
+
+    One rule, and `tests/common/words.rs` applies the same one to the prompts
+    and to what the interviewer says. A title that is a single ordinary word,
+    "Candy" or "Triangle", is also a word a scenario uses, so it is not held
+    against anything. Any other title counts when a run of consecutive words
+    spells it with the spaces gone, identifiers split at their case changes:
+    "LRUCache", "minStackCreate", "lru cache" and "3 Sum" all name their
+    problems, and "those 3 sums" does not. Parameter names are not exempt: a
+    brief that says "merge intervals" names the problem whatever the parameter
+    is called.
+    """
+    if title.isalpha():
+        return False
+    target = camel_words(title)
+    words = spelled_words(text)
+    for start in range(len(words)):
+        joined = ""
+        for word in words[start:]:
+            joined += word
+            if joined == target:
+                return True
+            if len(joined) >= len(target):
+                break
+    return False
+
+
+def sized(problem_id: str, where: str, value: object, low: int, high: int) -> list:
+    if not isinstance(value, list) or not low <= len(value) <= high:
+        raise RuntimeError(f"{problem_id}: {where} must hold {low}..{high} entries")
+    return value
+
+
+def spoken_text(problem_id: str, where: str, value: object) -> str:
+    """One string of variant prose, held to what both of its readers accept.
+
+    ASCII because the same text is compiled into Rust, where the source stays
+    ASCII, and spoken by the interviewer, where a backtick is read aloud.
+    """
+    if not named(value) or value != value.strip():
+        raise RuntimeError(f"{problem_id}: {where} must be non-empty, unpadded text")
+    if not value.isascii() or not value.isprintable() or "`" in value:
+        raise RuntimeError(
+            f"{problem_id}: {where} must be printable ASCII with no backticks"
+        )
+    return value
+
+
+def text_list(
+    problem_id: str, where: str, value: object, low: int, high: int
+) -> list[str]:
+    return [
+        spoken_text(problem_id, f"{where}[{at}]", item)
+        for at, item in enumerate(sized(problem_id, where, value, low, high))
+    ]
+
+
+# Printed beside OK or FAIL in the results panel, so a label saying where a
+# case came from, or which approach it defeats, is read by the candidate the
+# moment they press Run.
+REVEALING_LABEL = re.compile(
+    r"leetcode|sample|greedy|dynamic|\bheap|pointer|binary search|prefix sum|\bxor\b",
+    re.IGNORECASE,
+)
+
+
+def check_labels(problem_id: str, judge: dict) -> None:
+    for case in judge["cases"]:
+        if REVEALING_LABEL.search(case["label"]):
+            raise RuntimeError(
+                f"{problem_id}: case label {case['label']!r} gives it away"
+            )
+
+
+def posed(problem: dict, judge: dict, variant: dict) -> tuple[dict, dict]:
+    """The bank entry and judge with the variant's names in place of the published ones.
+
+    The bank keeps the names LeetCode publishes, so a scaffolded or refreshed
+    entry needs no hand edits; the rename is declared once in the variant and
+    applied here to everything that ships or reaches the interviewer.
+    """
+    renames = {**variant.get("terms", {}), **variant.get("parameters", {})}
+    if "entry" in variant:
+        renames[judge["entry"]] = variant["entry"]
+    # C passes an array with its length beside it, `pointsSize` and
+    # `pointsColSize`, so a renamed parameter is a prefix there as well.
+    prefixes = dict(variant.get("parameters", {}))
+    if "className" in variant:
+        old, new = judge["className"], variant["className"]
+        renames[old] = new
+        # C has no classes, so its starters spell the class as a lower-camel
+        # prefix on every function: `minStackCreate`, `lRUCacheGet`.
+        prefixes[old[0].lower() + old[1:]] = new[0].lower() + new[1:]
+
+    def renamed(text: str) -> str:
+        for old, new in renames.items():
+            text = re.sub(rf"\b{re.escape(old)}\b", new, text)
+        for old, new in prefixes.items():
+            text = re.sub(rf"\b{re.escape(old)}(?=[A-Z])", new, text)
+        return text
+
+    judge = dict(judge)
+    if "entry" in variant:
+        judge["entry"] = variant["entry"]
+    if "className" in variant:
+        # A class judge calls the class by name and lists the constructor as the
+        # first operation of every case, and a leftover `entry` on one is the
+        # published camel-case name that nothing reads.
+        judge.pop("entry", None)
+        judge["className"] = variant["className"]
+        judge["cases"] = [
+            {
+                **case,
+                "input": [
+                    [
+                        renames.get(operation, operation)
+                        for operation in case["input"][0]
+                    ],
+                    *case["input"][1:],
+                ],
+            }
+            for case in judge["cases"]
+        ]
+    if "paramNames" in judge:
+        judge["paramNames"] = [renames.get(name, name) for name in judge["paramNames"]]
+    problem = {
+        **problem,
+        "starterCode": {
+            language: renamed(code) for language, code in problem["starterCode"].items()
+        },
+        "constraints": [renamed(line) for line in problem["constraints"]],
+    }
+    return problem, judge
+
+
+def validated_variant(problem: dict, judge: dict, variant: object) -> dict:
+    """The checks that keep a scenario gradeable and keep the source out of it.
+
+    Gradeable: every example on the page is a real judge case, and the entry
+    point the brief names is the one every starter snippet defines and the judge
+    calls. Out of it: the source title is nowhere in what the candidate reads,
+    and the entry point is not the published name.
+
+    Returns the posed problem, the posed judge and the examples as the page
+    shows them.
+    """
+    problem_id = problem["id"]
+    optional = {"entry", "className", "parameters", "terms"}
+    if (
+        not isinstance(variant, dict)
+        or not VARIANT_KEYS <= set(variant) <= VARIANT_KEYS | optional
+    ):
+        raise RuntimeError(
+            f"{problem_id}: a variant has exactly {sorted(VARIANT_KEYS)}"
+        )
+    title = spoken_text(problem_id, "title", variant["title"])
+    brief = text_list(problem_id, "brief", variant["brief"], 1, 3)
+    # The exact contract in the scenario's words. The interviewer judges from
+    # this rather than from the published statement, which names the problem
+    # as often as it states it.
+    contract = spoken_text(problem_id, "contract", variant["contract"])
+    text_list(problem_id, "followUps", variant["followUps"], 2, 3)
+    text_list(problem_id, "hints", variant["hints"], 3, 3)
+    for at, item in enumerate(
+        sized(problem_id, "clarifications", variant["clarifications"], 3, 6)
+    ):
+        if not isinstance(item, dict) or set(item) != {"question", "answer"}:
+            raise RuntimeError(
+                f"{problem_id}: clarifications[{at}] is a question and an answer"
+            )
+        spoken_text(problem_id, f"clarifications[{at}].question", item["question"])
+        spoken_text(problem_id, f"clarifications[{at}].answer", item["answer"])
+
+    # Both kinds are renamed: a function by its entry point, a class by its
+    # name, since `LRUCache` on screen names the problem as plainly as a title.
+    declared = "entry" if judge["kind"] == "function" else "className"
+    if declared not in variant or ({"entry", "className"} - {declared}) & set(variant):
+        raise RuntimeError(
+            f"{problem_id}: a {judge['kind']} problem declares a new {declared}"
+        )
+    pattern = r"[a-z][A-Za-z0-9]+" if declared == "entry" else r"[A-Z][A-Za-z0-9]+"
+    if not re.fullmatch(pattern, str(variant[declared])) or camel_words(
+        variant[declared]
+    ) in {camel_words(problem["title"]), camel_words(judge[declared])}:
+        raise RuntimeError(
+            f"{problem_id}: {declared} {variant[declared]!r} is not a new name"
+        )
+    parameters = variant.get("parameters", {})
+    if not isinstance(parameters, dict) or not set(parameters) <= set(
+        judge.get("paramNames", [])
+    ):
+        raise RuntimeError(f"{problem_id}: parameters renames only judge parameters")
+    # Words a starter snippet carries that are neither the entry point nor a
+    # parameter, such as a comment naming the published node type.
+    terms = variant.get("terms", {})
+    if not isinstance(terms, dict) or not all(
+        re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", str(word))
+        for pair in terms.items()
+        for word in pair
+    ):
+        raise RuntimeError(
+            f"{problem_id}: terms maps one identifier-like word to another"
+        )
+    shipped, graded = posed(problem, judge, variant)
+
+    if "leetcode" in json.dumps(variant).lower():
+        raise RuntimeError(f"{problem_id}: a variant never names the source site")
+    for where, text in [
+        ("title", title),
+        ("contract", contract),
+        *[(f"brief[{at}]", line) for at, line in enumerate(brief)],
+    ]:
+        if names_source(problem["title"], text):
+            raise RuntimeError(f"{problem_id}: {where} names the source title")
+
+    # What the editor opens with, and what the browser runs: the starters and
+    # every judge case, labels, inputs and expected values alike.
+    for language, code in shipped["starterCode"].items():
+        if names_source(problem["title"], code):
+            raise RuntimeError(
+                f"{problem_id}: the {language} starter names the source title"
+            )
+    for case in graded["cases"]:
+        if names_source(problem["title"], json.dumps(case)):
+            raise RuntimeError(
+                f"{problem_id}: judge case {case['label']!r} names the source title"
+            )
+    for at, line in enumerate(shipped["constraints"]):
+        if names_source(problem["title"], line):
+            raise RuntimeError(
+                f"{problem_id}: constraints[{at}] names the source title"
+            )
+
+    name = graded["className"] if graded["kind"] == "class" else graded["entry"]
+    if not any(re.search(rf"\b{re.escape(name)}\b", line) for line in brief):
+        raise RuntimeError(f"{problem_id}: the brief never names {name}")
+    for language, code in shipped["starterCode"].items():
+        if not re.search(rf"\b{re.escape(name)}\b", code):
+            raise RuntimeError(
+                f"{problem_id}: the {language} starter does not define {name}"
+            )
+
+    cases = graded["cases"]
+    # Compared by the values an input holds, not by how it is written: the
+    # published examples spell `x = 2.00000` and `addNum(1), addNum(2)` where a
+    # judge case holds 2 and a list of operations.
+    # A class example is published as calls, `addNum(1), addNum(2)`, or as the
+    # judge's two lists; either way only its argument values say which case it is.
+    operations = {judge.get("className")} | {
+        name
+        for case in judge["cases"]
+        if judge["kind"] == "class"
+        for name in case["input"][0]
+    }
+    published_inputs = {
+        tuple(
+            value for value in input_values(example["input"]) if value not in operations
+        )
+        for example in problem["examples"]
+    }
+    published = {
+        at
+        for at, case in enumerate(judge["cases"])
+        if (
+            input_values(compact(case["input"][1]))
+            if judge["kind"] == "class"
+            else input_values(case_input(judge, case))
+        )
+        in published_inputs
+    }
+    examples = []
+    shown = set()
+    for at, example in enumerate(
+        sized(problem_id, "examples", variant["examples"], 1, 2)
+    ):
+        if (
+            not isinstance(example, dict)
+            or not {"case"} <= set(example) <= {"case", "output", "explanation"}
+            or example["case"] not in range(len(cases))
+        ):
+            raise RuntimeError(f"{problem_id}: examples[{at}] names one judge case")
+        case = cases[example["case"]]
+        shown.add(example["case"])
+        # An override only where the judge's expected value is not what a reader
+        # should see: the kept prefix of an in-place compaction, say, or one of
+        # several accepted orders.
+        rendered = {
+            "input": case_input(graded, case),
+            "output": compact(case["expected"]),
+        }
+        for key in ("output", "explanation"):
+            if key in example:
+                rendered[key] = spoken_text(
+                    problem_id, f"examples[{at}].{key}", example[key]
+                )
+        # Judge data is on the page too, and a published sample sentence can
+        # carry the title: "This is an example of text justification."
+        shown_text = " ".join(rendered.values())
+        if names_source(problem["title"], shown_text):
+            raise RuntimeError(f"{problem_id}: examples[{at}] names the source title")
+        examples.append(rendered)
+    # The published examples are the most recognisable thing about a problem.
+    # One of them may stay when it is the clearest case, never all of them while
+    # the judge holds a case of its own.
+    if len(published) < len(cases) and shown <= published:
+        raise RuntimeError(f"{problem_id}: every example is a published one")
+    return {"problem": shipped, "judge": graded, "examples": examples}
+
+
+def validated_variants(problems: list[dict], judges: dict) -> dict:
+    variants = read_json(VARIANT_SOURCE)
+    if not isinstance(variants, dict):
+        raise RuntimeError("variants must be a JSON object keyed by problem id")
+    ids = [problem["id"] for problem in problems]
+    if list(variants) != ids:
+        raise RuntimeError(
+            "variants must list every problem once, in bank order; "
+            f"missing {sorted(set(ids) - set(variants))}, extra {sorted(set(variants) - set(ids))}"
+        )
+    validated = {}
+    for problem in problems:
+        judge = judges[problem["id"]]
+        check_labels(problem["id"], judge)
+        variant = variants[problem["id"]]
+        validated[problem["id"]] = {
+            **validated_variant(problem, judge, variant),
+            "variant": variant,
+        }
+    check_page_names([variant["title"] for variant in variants.values()], ids)
+    return validated
+
+
+def page_slug(title: str) -> str:
+    """The name the interview URL carries, from the scenario rather than the id.
+
+    The id is LeetCode's slug, and `?problem=coin-change` in the address bar
+    names the problem before the page has rendered. The id still keys history,
+    tokens and the agent, so it stays inside the page and in the judge's file
+    name, where only a reader of the network panel sees it.
+    """
+    return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+
+
+def check_page_names(titles: list[str], ids: list[str]) -> None:
+    pages = [page_slug(title) for title in titles]
+    if len(set(pages)) != len(pages):
+        raise RuntimeError("variant titles must be unique, and unique as page names")
+    # An old link carries an id, and the loader tries a page of that name before
+    # the alias map, so a page named like another problem's id would take over
+    # that problem's links.
+    taken = sorted(set(pages) & set(ids))
+    if taken:
+        raise RuntimeError(f"page names must not equal a problem id: {taken}")
+
+
+def candidate_problem(entry: dict) -> dict:
+    """Everything the interview page is given, and nothing it is not.
+
+    Built up rather than filtered down from the bank entry, so a field added to
+    the bank later stays on the server until someone decides the candidate
+    should see it.
+
+    The published title rides along as `source`, shown small beside the
+    scenario so a candidate can find the problem again afterwards. The scenario
+    is still what the page poses: no number, no statement, no published examples.
+    """
+    posed_problem, variant = entry["problem"], entry["variant"]
+    return {
+        "page": page_slug(variant["title"]),
+        "title": variant["title"],
+        "source": posed_problem["title"],
+        "difficulty": posed_problem["difficulty"],
+        "brief": variant["brief"],
+        "examples": entry["examples"],
+        "starterCode": posed_problem["starterCode"],
+        "interviewMetadata": public_metadata(posed_problem),
+    }
+
+
+def rust_str(text: str) -> str:
+    """A Rust string literal. JSON escapes are not all Rust escapes."""
+    escaped = "".join(
+        {"\\": "\\\\", '"': '\\"', "\n": "\\n"}.get(character, character)
+        if character.isascii()
+        else f"\\u{{{ord(character):x}}}"
+        for character in text
+    )
+    return f'"{escaped}"'
+
+
+def rust_strs(items: list[str]) -> str:
+    return "&[" + ", ".join(rust_str(item) for item in items) + "]"
+
+
+def rust_variants(problems: list[dict], variants: dict) -> str:
     rows = []
     for problem in problems:
-        topics = ", ".join(json.dumps(topic) for topic in problem["topics"])
-        rows.append(f"    ({json.dumps(problem['id'])}, &[{topics}]),")
+        entry = variants[problem["id"]]
+        variant = entry["variant"]
+        clarifications = ", ".join(
+            f"({rust_str(item['question'])}, {rust_str(item['answer'])})"
+            for item in variant["clarifications"]
+        )
+        rows.append(
+            "\n".join(
+                [
+                    f"    ({rust_str(problem['id'])}, ProblemVariant {{",
+                    f"        title: {rust_str(variant['title'])},",
+                    f"        page: {rust_str(page_slug(variant['title']))},",
+                    f"        brief: {rust_strs(variant['brief'])},",
+                    f"        contract: {rust_str(variant['contract'])},",
+                    f"        constraints: {rust_strs(entry['problem']['constraints'])},",
+                    f"        clarifications: &[{clarifications}],",
+                    f"        follow_ups: {rust_strs(variant['followUps'])},",
+                    f"        hints: {rust_strs(variant['hints'])},",
+                    "    }),",
+                ]
+            )
+        )
+    return (
+        "//! Generated by scripts/gen-problems.py; do not edit by hand.\n\n"
+        "use super::ProblemVariant;\n\n"
+        "#[rustfmt::skip]\n"
+        "pub const PROBLEM_VARIANTS: &[(&str, ProblemVariant)] = &[\n"
+        + "\n".join(rows)
+        + "\n];\n"
+    )
+
+
+# What an import leaves behind when it drops the code a page was built around:
+# headings and links pointing at nothing. A reviewer told to find "the full
+# solution here" is reading a web page, not notes.
+GUIDE_FURNITURE = (
+    "```",
+    "You can find the full",
+    "Java Solution",
+    "Explanation of the Solution",
+)
+
+
+def validated_guides(problems: list[dict], guides: object = None) -> dict:
+    """The notes by problem, in bank order. `guides` is the parsed document,
+    read from problem-bank/guides.json when it is not handed in."""
+    if guides is None:
+        guides = read_json(GUIDE_SOURCE)
+    if not isinstance(guides, dict) or set(guides) != {
+        "source",
+        "note",
+        "license",
+        "notes",
+    }:
+        raise RuntimeError("guides.json has exactly source, note, license and notes")
+    license_text = (
+        "\n".join(guides["license"]) if isinstance(guides["license"], list) else ""
+    )
+    if (
+        "Permission is hereby granted" not in license_text
+        or "Copyright (c)" not in license_text
+    ):
+        raise RuntimeError("guides.json must carry the license its notes came under")
+    ids = [problem["id"] for problem in problems]
+    notes = guides["notes"]
+    if not isinstance(notes, dict) or not set(notes) <= set(ids):
+        raise RuntimeError(
+            f"guides.json notes name problems the bank does not have: {sorted(set(notes) - set(ids))}"
+        )
+    for problem_id, text in notes.items():
+        if not named(text) or not text.isascii():
+            raise RuntimeError(f"{problem_id}: a guide note is non-empty ASCII text")
+        for furniture in GUIDE_FURNITURE:
+            if furniture in text:
+                raise RuntimeError(
+                    f"{problem_id}: a guide note still carries {furniture!r}"
+                )
+    return {problem_id: notes[problem_id] for problem_id in ids if problem_id in notes}
+
+
+def rust_guides(guides: dict) -> str:
+    rows = [
+        f"    ({rust_str(problem_id)}, {rust_str(text)}),"
+        for problem_id, text in guides.items()
+    ]
+    return (
+        "//! Generated by scripts/gen-problems.py; do not edit by hand.\n"
+        "//!\n"
+        "//! Solution notes for the report reviewer. The source and the MIT license\n"
+        "//! they are used under are in problem-bank/guides.json.\n\n"
+        "#[rustfmt::skip]\n"
+        "pub const PROBLEM_GUIDES: &[(&str, &str)] = &[\n" + "\n".join(rows) + "\n];\n"
+    )
+
+
+def rust_topics(problems: list[dict]) -> str:
+    rows = [
+        f"    ({rust_str(problem['id'])}, {rust_strs(problem['topics'])}),"
+        for problem in problems
+    ]
     return (
         """//! Generated by scripts/gen-problems.py; do not edit by hand.\n\n\
 #[rustfmt::skip]\n\
@@ -516,17 +1078,31 @@ def generated() -> dict[Path, str]:
     """Every file this script owns, as path -> exact contents."""
     files: dict[Path, str] = {}
     problems = validated_problems()
+    variants = validated_variants(problems, read_json(JUDGE_SOURCE))
+    # Every consumer that has an id and wants the page or the title reads this
+    # map, rather than rebuilding it from the pages or re-deriving the slug.
+    # Only the paths that start from a published id or name fetch it: an old
+    # link, history saved before pages had names, and the lobby's opt-in toggle.
+    # A scenario link loads a page and a judge that carry no published id; the
+    # page names its published title once, in the `source` it shows small.
+    pages = {}
     for problem in problems:
-        problem = dict(problem)
-        problem["interviewMetadata"] = public_metadata(problem)
-        files[OUTPUT_DIR / f"{problem['id']}.json"] = (
-            json.dumps(problem, indent=2) + "\n"
+        entry = variants[problem["id"]]
+        page = candidate_problem(entry)
+        pages[problem["id"]] = {
+            "page": page["page"],
+            "title": page["title"],
+            "source": page["source"],
+            **({"default": True} if problem["id"] == DEFAULT_PROBLEM_ID else {}),
+        }
+        files[OUTPUT_DIR / f"{page['page']}.json"] = json.dumps(page, indent=2) + "\n"
+        files[JUDGE_OUTPUT_DIR / f"{page['page']}.json"] = (
+            json.dumps(entry["judge"], indent=2) + "\n"
         )
-    for problem_id, judge in read_json(JUDGE_SOURCE).items():
-        files[JUDGE_OUTPUT_DIR / f"{problem_id}.json"] = (
-            json.dumps(judge, indent=2) + "\n"
-        )
+    files[PAGE_MAP_OUTPUT] = json.dumps(pages, indent=2) + "\n"
     files[RUST_TOPICS] = rust_topics(problems)
+    files[RUST_VARIANTS] = rust_variants(problems, variants)
+    files[RUST_GUIDES] = rust_guides(validated_guides(problems))
     return files
 
 

@@ -1,0 +1,64 @@
+{
+  "page": "highway-billboard-leasing",
+  "title": "Highway Billboard Leasing",
+  "source": "House Robber",
+  "difficulty": "Medium",
+  "brief": [
+    "A media company owns a row of billboard sites along a highway, each with a known monthly lease offer. A zoning rule forbids leasing two sites that stand directly next to each other.",
+    "Implement bestLeaseRevenue(nums), where nums holds the offer for each site in order along the highway, and return the largest total revenue achievable while obeying the rule."
+  ],
+  "examples": [
+    {
+      "input": "nums = [2,7,9,3,1]",
+      "output": "12"
+    },
+    {
+      "input": "nums = [5]",
+      "output": "5"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def bestLeaseRevenue(self, nums: list[int]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction bestLeaseRevenue(nums) {\n  // Think out loud as you go!\n}\n",
+    "c": "int bestLeaseRevenue(int* nums, int numsSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int bestLeaseRevenue(vector<int>& nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int bestLeaseRevenue(int[] nums) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "page": "nesting-fuzzer-corpus",
+  "title": "Nesting Fuzzer Corpus",
+  "source": "Generate Parentheses",
+  "difficulty": "Medium",
+  "brief": [
+    "Our template engine supports nested blocks written with an open marker and a close marker. To fuzz the parser we want a corpus of every correctly nested block sequence of a given size, using the character ( to open and ) to close.",
+    "Implement wellNestedSequences(n), where n is the number of blocks, and return every string made of n opens and n closes that is correctly nested."
+  ],
+  "examples": [
+    {
+      "input": "n = 2",
+      "output": "[\"(())\",\"()()\"]"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    vector<string> wellNestedSequences(int n) {\n        \n    }\n};",
+    "java": "class Solution {\n    public List<String> wellNestedSequences(int n) {\n        \n    }\n}",
+    "python": "class Solution:\n    def wellNestedSequences(self, n: int) -> List[str]:\n        ",
+    "javascript": "/**\n * @param {number} n\n * @return {string[]}\n */\nvar wellNestedSequences = function(n) {\n    \n};",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nchar** wellNestedSequences(int n, int* returnSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

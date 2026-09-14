@@ -1,0 +1,64 @@
+{
+  "page": "led-panel-ring-scan",
+  "title": "LED Panel Ring Scan",
+  "source": "Spiral Matrix",
+  "difficulty": "Medium",
+  "brief": [
+    "A diagnostics routine for rectangular LED panels reads out every pixel in a ring pattern: it starts at the top-left pixel, runs right along the top edge, then down, left and up around the outside, and keeps circling inward until every pixel has been read.",
+    "Implement clockwiseScanOrder(matrix), where matrix is the panel as a list of rows of pixel values, and return all the values as a single list in the order the routine reads them."
+  ],
+  "examples": [
+    {
+      "input": "matrix = [[1,2],[3,4],[5,6],[7,8]]",
+      "output": "[1,2,4,6,8,7,5,3]"
+    },
+    {
+      "input": "matrix = [[1,2,3],[4,5,6],[7,8,9]]",
+      "output": "[1,2,3,6,9,8,7,4,5]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def clockwiseScanOrder(self, matrix: list[list[int]]) -> list[int]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[][]} matrix\n * @return {number[]}\n */\nfunction clockwiseScanOrder(matrix) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nint* clockwiseScanOrder(int** matrix, int matrixSize, int* matrixColSize, int* returnSize) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<int> clockwiseScanOrder(vector<vector<int>>& matrix) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public List<Integer> clockwiseScanOrder(int[][] matrix) {\n        // Think out loud as you go!\n        return new ArrayList<>();\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

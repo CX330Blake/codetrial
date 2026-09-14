@@ -245,10 +245,10 @@ fn live_setup_uses_native_audio_voice_tools_and_transcription() {
         setup["tools"][0]["functionDeclarations"][1]["name"],
         TOOL_LOG_HINT
     );
-    assert!(
-        setup["tools"][0]["functionDeclarations"][1]
-            .get("parameters")
-            .is_none()
+    assert_eq!(
+        setup["tools"][0]["functionDeclarations"][1]["parameters"]["required"],
+        json!(["requested"]),
+        "the flag decides whether the call hands out a rung"
     );
     let framework_tool = &setup["tools"][0]["functionDeclarations"][2];
     assert_eq!(framework_tool["name"], TOOL_RECORD_FRAMEWORK_EVIDENCE);

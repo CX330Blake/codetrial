@@ -4,6 +4,10 @@ use serde_json::Value;
 use serde_json::json;
 use sha2::{Digest, Sha256};
 
+#[path = "common/words.rs"]
+mod words;
+use words::shared_run;
+
 /// The defaults src/runtime.rs supplies at the one production call site, so a
 /// test that cares about a single argument does not spell out the other five.
 fn instructions(problem: &Problem, duration_min: u32) -> String {
@@ -14,6 +18,13 @@ fn instructions(problem: &Problem, duration_min: u32) -> String {
         &InterviewGrounding::default(),
         InterviewLoop::CodingBehavioral,
     )
+}
+
+/// Whether a piece of text gives away which published problem an exercise
+/// was written from, by the rule `words::names_title` shares with the
+/// generator.
+fn names_source(problem: &Problem, text: &str) -> bool {
+    words::names_title(problem.title, text)
 }
 
 struct IntegrityEventInput<'a> {
@@ -99,39 +110,21 @@ fn problem_bank_matches_contract() {
         assert!(!problem.summary.is_empty());
         assert!(!problem.optimal.is_empty());
         assert!(!problem.pitfalls.is_empty());
-        assert_eq!(
-            problem.hint_ladder.len(),
-            3,
-            "{} needs exactly three hints",
-            problem.id
-        );
-        assert!(
-            problem.hint_ladder[0].starts_with("Start with"),
-            "{} first hint should be a small nudge",
-            problem.id
-        );
-        assert!(
-            problem.hint_ladder[1].starts_with("The useful concept here is"),
-            "{} second hint should name the concept",
-            problem.id
-        );
-        assert!(
-            problem.hint_ladder[2].starts_with("Mechanically,"),
-            "{} third hint should describe the mechanism",
-            problem.id
-        );
-        assert_ne!(
-            problem.hint_ladder[1].trim_start_matches("The useful concept here is "),
-            problem.hint_ladder[2].trim_start_matches("Mechanically, "),
-            "{} mechanism hint should not repeat the concept hint",
-            problem.id
-        );
-        for hint in problem.hint_ladder {
-            assert!(!hint.trim().is_empty(), "{} has an empty hint", problem.id);
-            assert_eq!(hint.trim(), *hint, "{} has padded hint text", problem.id);
+
+        // Every problem in this table has a variant, which the generator cannot
+        // see: it holds the bank to variants.json, and the text rules there,
+        // but not to what `PROBLEMS` lists.
+        let variant = problem.variant();
+        assert_eq!(variant.hints.len(), 3, "{}", problem.id);
+
+        // The ladder this replaced was the optimal approach cut into three
+        // pieces, so the second request heard the technique by name and the
+        // third heard the algorithm. A rung may point at the idea; it may not
+        // carry the private walkthrough's wording.
+        for hint in variant.hints {
             assert!(
-                !hint.contains('`'),
-                "{} hint should be spoken prose, not raw code formatting",
+                shared_run(hint, problem.optimal) < 5,
+                "{} hint repeats the optimal approach: {hint}",
                 problem.id
             );
         }
@@ -218,7 +211,7 @@ fn prompt_samples() -> Value {
     };
     json!({
         "instructions": instructions(problem, 45),
-        "greeting": greeting(),
+        "greeting": greeting(problem),
         "languageChoice": language_choice("C++", LanguageChoiceContext::Start),
         "languageSwitch": language_choice("Java", LanguageChoiceContext::SwitchWithCode),
         "silenceEmpty": silence_nudge("(the editor is currently empty)"),
@@ -899,6 +892,9 @@ fn interview_prompt_pins_reacto_star_and_safety_boundaries() {
         "never make them repeat work",
         "it is a hint",
         "call `log_hint`",
+        "unambiguous request for a hint, clue, nudge",
+        "Give exactly that clue",
+        "never add or combine steps",
         "says the behavioral round",
         "Never invent a story",
         "`record_framework_evidence`",
@@ -918,7 +914,7 @@ fn interview_prompt_pins_reacto_star_and_safety_boundaries() {
     assert!(wrap_up("candidate_ended").contains("source `session_timing`, kind `skipped`"));
 
     let public_reactions = [
-        greeting(),
+        greeting(problem),
         language_choice("C++", LanguageChoiceContext::Start),
         language_choice("Java", LanguageChoiceContext::SwitchWithCode),
         silence_nudge("(the editor is currently empty)"),
@@ -933,12 +929,250 @@ fn interview_prompt_pins_reacto_star_and_safety_boundaries() {
         !public_reactions.contains(problem.optimal),
         "a reaction exposed the private optimal approach"
     );
-    for hint in problem.hint_ladder {
+    for hint in problem.variant().hints {
         assert!(
             !public_reactions.contains(hint),
             "a reaction exposed a private hint: {hint}"
         );
     }
+}
+
+/// The ladder is served, not held: each request that asks for a hint gets the
+/// next rung and no other, the last waits for an approach of the candidate's
+/// own, and a hint nobody asked for is counted without spending a rung.
+#[test]
+fn log_hint_hands_out_one_rung_per_request_and_holds_the_last_for_an_approach() {
+    let problem = get_problem(Some("3sum"));
+    let [first, second, third] = problem.variant().hints else {
+        panic!("three rungs");
+    };
+    let mut state = RuntimeState {
+        hint_ladder: problem.variant().hints,
+        ..RuntimeState::default()
+    };
+
+    let unrequested = record_hint(&mut state, false);
+    assert_eq!(unrequested, "Recorded. Total hints so far: 1.");
+    assert_eq!(
+        state.hint_rungs_given, 0,
+        "an unrequested hint spends no rung"
+    );
+
+    let one = record_hint(&mut state, true);
+    assert!(one.contains(first) && !one.contains(second), "{one}");
+    let two = record_hint(&mut state, true);
+    assert!(two.contains(second) && !two.contains(third), "{two}");
+
+    let held = record_hint(&mut state, true);
+    assert!(
+        !held.contains(third),
+        "the key step before any approach: {held}"
+    );
+    assert!(held.contains("stays withheld") && held.contains("Give no clue this turn"));
+    assert!(
+        !held.contains(first) && !held.contains(second),
+        "a withheld request hands the model a clue to improvise from: {held}"
+    );
+    assert_eq!(state.hint_rungs_given, 2);
+    assert_eq!(state.hints_used, 4, "a withheld rung is still a hint given");
+
+    // Only an approach unlocks it: evidence for another phase does not, and
+    // neither does an Algorithm phase recorded as skipped.
+    for (phase, source, kind) in [
+        ("repeat", "candidate_speech", "observed"),
+        ("example", "candidate_speech", "inferred"),
+        ("situation", "session_timing", "skipped"),
+    ] {
+        record_framework_evidence(
+            &mut state,
+            &json!({
+                "phase": phase,
+                "source": source,
+                "kind": kind,
+                "confidence": 90,
+                "summary": "Candidate restated the task."
+            }),
+        )
+        .unwrap();
+        assert!(
+            record_hint(&mut state, true).contains("stays withheld"),
+            "{phase} evidence released the key step"
+        );
+    }
+    let mut skipped = state.clone();
+    skipped.framework_evidence.push(FrameworkEvidence {
+        phase: FrameworkPhase::Algorithm,
+        kind: EvidenceKind::Skipped,
+        ..skipped.framework_evidence[0].clone()
+    });
+    assert!(
+        record_hint(&mut skipped, true).contains("stays withheld"),
+        "skipped Algorithm evidence released the key step"
+    );
+    assert_eq!(state.hint_rungs_given, 2);
+
+    // Code of their own is an approach too: Coding evidence releases the key
+    // step without the Algorithm phase ever being named.
+    let mut coded = state.clone();
+    coded.framework_evidence.push(FrameworkEvidence {
+        phase: FrameworkPhase::Coding,
+        kind: EvidenceKind::Observed,
+        ..coded.framework_evidence[0].clone()
+    });
+    assert!(
+        record_hint(&mut coded, true).contains(third),
+        "Coding evidence did not release the key step"
+    );
+
+    record_framework_evidence(
+        &mut state,
+        &json!({
+            "phase": "algorithm",
+            "source": "candidate_speech",
+            "kind": "observed",
+            "confidence": 90,
+            "summary": "Candidate proposed pinning one value."
+        }),
+    )
+    .unwrap();
+    let three = record_hint(&mut state, true);
+    assert!(three.contains(third), "{three}");
+    assert!(record_hint(&mut state, true).contains("Every rung is used"));
+}
+
+#[test]
+fn greeting_introduces_the_scenario_and_never_the_published_problem() {
+    // The template's own rules, once; the loop is for what each problem brings.
+    let opening = greeting(get_problem(Some("two-sum")));
+    assert!(opening.contains("may ask for a hint if they get stuck"));
+    assert!(opening.contains("without naming any published problem, practice site"));
+    assert!(opening.contains("do not volunteer a constraint, edge case, or hint"));
+
+    for problem in PROBLEMS {
+        let opening = greeting(problem);
+        let variant = problem.variant();
+
+        assert!(
+            opening.contains(variant.title),
+            "{} lost its title",
+            problem.id
+        );
+        for line in variant.brief {
+            assert!(opening.contains(line), "{} lost its brief", problem.id);
+        }
+
+        // The summary is the published statement in a sentence, and what the
+        // interviewer is handed to open with is what it paraphrases aloud.
+        assert!(
+            !opening.contains(problem.summary),
+            "{} opens from the published statement",
+            problem.id
+        );
+        assert!(
+            !names_source(problem, &opening),
+            "{} names its source",
+            problem.id
+        );
+        assert!(
+            !opening.contains(problem.optimal),
+            "{} exposed its private optimal approach",
+            problem.id
+        );
+        for secret in variant
+            .hints
+            .iter()
+            .chain(variant.follow_ups)
+            .chain(variant.constraints)
+        {
+            assert!(
+                !opening.contains(secret),
+                "{} exposed private variant text",
+                problem.id
+            );
+        }
+    }
+}
+
+/// What the live interviewer holds is the scenario and a way to steer it, not
+/// the published problem and a solution to recite. Every problem, because the
+/// title rides in on data rather than on the template.
+#[test]
+fn live_instructions_pose_the_variant_and_hold_no_source_or_walkthrough() {
+    for problem in PROBLEMS {
+        let prompt = instructions(problem, 45);
+        let variant = problem.variant();
+
+        assert!(
+            !names_source(problem, &prompt),
+            "{} names its source problem",
+            problem.id
+        );
+        for part in variant
+            .brief
+            .iter()
+            .chain(variant.follow_ups)
+            .chain(variant.constraints)
+        {
+            assert!(prompt.contains(part), "{} lost {part}", problem.id);
+        }
+        assert!(prompt.contains(variant.contract), "{}", problem.id);
+
+        // The published statement names the problem as often as it states it,
+        // so the interviewer judges from the scenario's contract instead.
+        assert!(
+            !prompt.contains(problem.summary),
+            "{} holds the published statement",
+            problem.id
+        );
+        // The rungs arrive one at a time from `log_hint`.
+        for hint in variant.hints {
+            assert!(
+                !prompt.contains(hint),
+                "{} holds its hint ladder",
+                problem.id
+            );
+        }
+        for (question, answer) in variant.clarifications {
+            assert!(prompt.contains(question) && prompt.contains(answer));
+        }
+        assert!(
+            !prompt.contains("Reference notes on approaches"),
+            "{} carries the solution notes into the live interview",
+            problem.id
+        );
+    }
+
+    let three_sum = get_problem(Some("3sum"));
+    let prompt = instructions(three_sum, 45);
+    for rule in [
+        "SOURCE DISCIPLINE",
+        "Never name it yourself, nor any\npractice site",
+        "never answer a question they did not ask",
+        "of these, in order and one at a time",
+        "returns the one clue to give now",
+        "from a ladder\n   you do not otherwise hold",
+    ] {
+        assert!(prompt.contains(rule), "missing rule: {rule}");
+    }
+
+    // The notes a reviewer may read once the interview is over. The live prompt
+    // is checked above for every problem; this is the other half, so removing
+    // the notes from both places cannot pass as keeping them private.
+    let report = report_prompt(ReportPromptInput {
+        problem: three_sum,
+        transcript: "",
+        rolling_assessment: "",
+        final_code: "",
+        language: "python",
+        hints_used: 0,
+        duration_min: 45,
+        elapsed_min: 30.0,
+        test_summary: "",
+    });
+    assert!(report.contains("Reference notes on approaches"));
+    assert!(report.contains("never name the published problem, its title, LeetCode"));
+    assert!(report.contains("Two-Pointer Technique"));
+    assert!(!report.contains("You can find the full solution"));
 }
 
 #[test]
@@ -1027,7 +1261,7 @@ fn leetcode_reactions_preserve_stage_transitions() {
     );
 
     for neutral in [
-        greeting(),
+        greeting(get_problem(Some("two-sum"))),
         language_choice("Python", LanguageChoiceContext::Start),
         silence_nudge("(the editor is currently empty)"),
         time_warning(5),
@@ -1409,7 +1643,7 @@ fn framework_evaluation_scenarios_exercise_reactions_evidence_and_reports() {
             .expect("hint count fits production type");
         for expected in 1..=hints {
             assert_eq!(
-                record_hint(&mut state),
+                record_hint(&mut state, false),
                 format!("Recorded. Total hints so far: {expected}.")
             );
         }
@@ -4330,10 +4564,34 @@ fn every_problem_has_bounded_ordered_question_metadata() {
 
 #[test]
 fn generated_problem_metadata_exposes_no_private_rubric() {
+    let pages = std::fs::read_dir("web/problems")
+        .expect("generated pages exist")
+        .map(|entry| {
+            let page: Value =
+                serde_json::from_str(&std::fs::read_to_string(entry.unwrap().path()).unwrap())
+                    .expect("browser problem is JSON");
+            (page["page"].as_str().unwrap().to_string(), page)
+        })
+        .collect::<std::collections::HashMap<_, _>>();
     for problem in PROBLEMS {
-        let text = std::fs::read_to_string(format!("web/problems/{}.json", problem.id))
-            .expect("generated browser problem exists");
-        let public: Value = serde_json::from_str(&text).expect("browser problem is JSON");
+        let public = pages
+            .get(problem.variant().page)
+            .unwrap_or_else(|| panic!("no page for {}", problem.id));
+
+        // The whole page but the one field that names the published title on
+        // purpose, shown small beside the scenario; nothing else is exempt.
+        assert_eq!(
+            public["source"].as_str(),
+            Some(problem.title),
+            "{}",
+            problem.id
+        );
+        let mut scenario = public.clone();
+        scenario
+            .as_object_mut()
+            .expect("browser problem is an object")
+            .remove("source");
+        let text = scenario.to_string();
         let metadata = public["interviewMetadata"]
             .as_object()
             .expect("public metadata exists");
@@ -4343,39 +4601,69 @@ fn generated_problem_metadata_exposes_no_private_rubric() {
             .collect::<std::collections::HashSet<_>>();
         assert_eq!(
             keys,
+            ["difficulty", "reactoStages", "followUpDirections"]
+                .into_iter()
+                .collect(),
+            "{}",
+            problem.id
+        );
+        let variant = problem.variant();
+        for secret in [problem.optimal, problem.pitfalls, problem.summary]
+            .into_iter()
+            .chain(variant.hints.iter().copied())
+            .chain(variant.follow_ups.iter().copied())
+            .chain(variant.constraints.iter().copied())
+        {
+            assert!(!text.contains(secret), "{} leaked private text", problem.id);
+        }
+
+        // The published problem: its name, its tags and its wording stay on the
+        // server, and the page is keyed by the scenario instead.
+        let shipped = public
+            .as_object()
+            .expect("browser problem is an object")
+            .keys()
+            .map(String::as_str)
+            .collect::<std::collections::HashSet<_>>();
+        assert_eq!(
+            shipped,
             [
+                "page",
+                "title",
+                "source",
                 "difficulty",
-                "competencies",
-                "reactoStages",
-                "followUpDirections"
+                "brief",
+                "examples",
+                "starterCode",
+                "interviewMetadata"
             ]
             .into_iter()
             .collect(),
             "{}",
             problem.id
         );
-        for secret in std::iter::once(problem.optimal)
-            .chain(std::iter::once(problem.pitfalls))
-            .chain(problem.hint_ladder.iter().copied())
-        {
-            assert!(!text.contains(secret), "{} leaked private text", problem.id);
-        }
+        assert_eq!(public["title"].as_str(), Some(variant.title));
+        assert!(
+            !names_source(problem, &text),
+            "{} names its source problem",
+            problem.id
+        );
     }
 }
 
 #[test]
 fn interview_contract_versions_are_one_closed_bundle() {
-    assert_eq!(INTERVIEW_CONTRACT_BUNDLE_VERSION, 4);
-    assert_eq!(LIVE_PROMPT_VERSION, 1);
-    assert_eq!(REPORT_PROMPT_VERSION, 4);
+    assert_eq!(INTERVIEW_CONTRACT_BUNDLE_VERSION, 5);
+    assert_eq!(LIVE_PROMPT_VERSION, 2);
+    assert_eq!(REPORT_PROMPT_VERSION, 5);
     assert_eq!(RUBRIC_VERSION, 1);
     assert_eq!(REPORT_SCHEMA_VERSION, 1);
     assert_eq!(
         interview_contract_json(),
         json!({
-            "bundleVersion": 4,
-            "livePromptVersion": 1,
-            "reportPromptVersion": 4,
+            "bundleVersion": 5,
+            "livePromptVersion": 2,
+            "reportPromptVersion": 5,
             "rubricVersion": 1,
             "reportSchemaVersion": 1,
         })

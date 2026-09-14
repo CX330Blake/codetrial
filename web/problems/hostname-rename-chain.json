@@ -1,0 +1,60 @@
+{
+  "page": "hostname-rename-chain",
+  "title": "Hostname Rename Chain",
+  "source": "Word Ladder",
+  "difficulty": "Hard",
+  "brief": [
+    "Our infrastructure team renames hosts gradually. A rename may change exactly one letter of a hostname, and every intermediate name must already be reserved in the registry so that DNS stays valid throughout.",
+    "Implement shortestRenameChain(currentName, desiredName, reserved), where currentName is the current hostname, desiredName is the desired hostname, and reserved lists the names held in the registry, and return the number of names in the shortest chain of renames from currentName to desiredName."
+  ],
+  "examples": [
+    {
+      "input": "currentName = \"hit\", desiredName = \"cog\", reserved = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\",\"hog\"]",
+      "output": "4"
+    }
+  ],
+  "starterCode": {
+    "cpp": "class Solution {\npublic:\n    int shortestRenameChain(string currentName, string desiredName, vector<string>& reserved) {\n        \n    }\n};",
+    "java": "class Solution {\n    public int shortestRenameChain(String currentName, String desiredName, List<String> reserved) {\n        \n    }\n}",
+    "python": "class Solution:\n    def shortestRenameChain(self, currentName: str, desiredName: str, reserved: List[str]) -> int:\n        ",
+    "javascript": "/**\n * @param {string} currentName\n * @param {string} desiredName\n * @param {string[]} reserved\n * @return {number}\n */\nvar shortestRenameChain = function(currentName, desiredName, reserved) {\n    \n};",
+    "c": "int shortestRenameChain(char* currentName, char* desiredName, char** reserved, int reservedSize) {\n    \n}"
+  },
+  "interviewMetadata": {
+    "difficulty": "Hard",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

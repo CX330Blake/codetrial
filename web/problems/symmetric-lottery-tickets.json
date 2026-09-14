@@ -1,0 +1,60 @@
+{
+  "page": "symmetric-lottery-tickets",
+  "title": "Symmetric Lottery Tickets",
+  "source": "Palindrome Number",
+  "difficulty": "Easy",
+  "brief": [
+    "A lottery runs a promotion for ticket numbers that read the same from left to right as from right to left when written in decimal. The ticket service stores the number as a signed integer.",
+    "Implement isMirrorNumber(x), where x is the ticket number, and return true if its decimal form reads the same in both directions and false otherwise."
+  ],
+  "examples": [
+    {
+      "input": "x = 1221",
+      "output": "true"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def isMirrorNumber(self, x: int) -> bool:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number} x\n * @return {boolean}\n */\nfunction isMirrorNumber(x) {\n  // Think out loud as you go!\n}\n",
+    "c": "bool isMirrorNumber(int x) {\n    // Think out loud as you go!\n    return false;\n}\n",
+    "cpp": "class Solution {\npublic:\n    bool isMirrorNumber(int x) {\n        // Think out loud as you go!\n        return false;\n    }\n};\n",
+    "java": "class Solution {\n    public boolean isMirrorNumber(int x) {\n        // Think out loud as you go!\n        return false;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

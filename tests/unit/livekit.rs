@@ -103,6 +103,7 @@ fn the_interview_begins_from_the_plan_it_was_booked_with() {
     assert_eq!(state.interview_loop, boot.interview_loop);
     assert_eq!(state.coding_minutes, boot.coding_minutes);
     assert_eq!(state.behavioral_minutes, boot.behavioral_minutes);
+    assert_eq!(state.hint_ladder, boot.problem.variant().hints);
 }
 
 /// Closing a turn yields what to publish, once, and only for an open one.
@@ -638,7 +639,7 @@ fn execute_tool_call_reads_editor_and_tracks_hints() {
         &GeminiFunctionCall {
             id: "2".to_string(),
             name: TOOL_LOG_HINT.to_string(),
-            args: serde_json::json!({}),
+            args: serde_json::json!({"requested": false}),
         },
     );
     let evidence = execute_tool_call(
@@ -666,6 +667,23 @@ fn execute_tool_call_reads_editor_and_tracks_hints() {
             .contains("Latest test run")
     );
     assert_eq!(hint["result"], "Recorded. Total hints so far: 1.");
+
+    // A call that leaves the flag out is read as asked for, so a candidate
+    // whose request the model logged carelessly still gets the next rung.
+    let mut laddered = RuntimeState {
+        hint_ladder: &["first rung", "second rung", "third rung"],
+        ..RuntimeState::default()
+    };
+    let unflagged = execute_tool_call(
+        &mut laddered,
+        &GeminiFunctionCall {
+            id: "5".to_string(),
+            name: TOOL_LOG_HINT.to_string(),
+            args: serde_json::json!({}),
+        },
+    );
+    assert!(unflagged["result"].as_str().unwrap().contains("first rung"));
+    assert_eq!(laddered.hint_rungs_given, 1);
     assert_eq!(state.hints_used, 1);
     assert_eq!(evidence["result"]["phase"], "algorithm");
     assert_eq!(state.framework_evidence.len(), 1);

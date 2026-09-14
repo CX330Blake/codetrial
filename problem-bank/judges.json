@@ -757,7 +757,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample two jumps",
+        "label": "two jumps",
         "input": [
           [
             2,
@@ -792,7 +792,7 @@
         "expected": 0
       },
       {
-        "label": "greedy window needs three",
+        "label": "three jumps needed",
         "input": [
           [
             1,
@@ -893,7 +893,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample singleton random",
+        "label": "singleton random",
         "input": [
           [
             "RandomizedSet",
@@ -1709,20 +1709,20 @@
         "label": "uneven spaces go left",
         "input": [
           [
-            "This",
-            "is",
-            "an",
-            "example",
-            "of",
-            "text",
-            "justification."
+            "Keep",
+            "it",
+            "as",
+            "concise",
+            "as",
+            "your",
+            "documentation."
           ],
           16
         ],
         "expected": [
-          "This    is    an",
-          "example  of text",
-          "justification.  "
+          "Keep    it    as",
+          "concise  as your",
+          "documentation.  "
         ]
       },
       {
@@ -2207,7 +2207,7 @@
         "expected": 3
       },
       {
-        "label": "left pointer must not move backward",
+        "label": "left edge must not move backward",
         "input": [
           "abba"
         ],
@@ -3766,7 +3766,7 @@
   "group-anagrams": {
     "kind": "function",
     "entry": "groupAnagrams",
-    "checker": "anagramGroups",
+    "checker": "unorderedGroups",
     "cases": [
       {
         "label": "mixed groups",
@@ -5031,7 +5031,7 @@
     "outputType": "randomList",
     "cases": [
       {
-        "label": "mixed random pointers",
+        "label": "mixed random links",
         "input": [
           [
             [
@@ -5080,7 +5080,7 @@
         ]
       },
       {
-        "label": "self random pointer",
+        "label": "self random link",
         "input": [
           [
             [
@@ -6453,7 +6453,7 @@
         "expected": false
       },
       {
-        "label": "prefix sum is not enough",
+        "label": "partial path is not enough",
         "input": [
           [
             1,
@@ -7629,7 +7629,7 @@
   "two-sum": {
     "kind": "function",
     "entry": "twoSum",
-    "checker": "twoSum",
+    "checker": "indexPair",
     "cases": [
       {
         "label": "nums=[2,7,11,15], target=9",
@@ -8240,7 +8240,7 @@
       }
     ],
     "paramNames": [
-      "edges"
+      "node"
     ],
     "paramTypes": [
       "Node"
@@ -8532,7 +8532,7 @@
   "course-schedule-ii": {
     "kind": "function",
     "entry": "findOrder",
-    "checker": "topologicalOrder",
+    "checker": "dependencyOrder",
     "cases": [
       {
         "label": "single prerequisite order",
@@ -10208,7 +10208,7 @@
         ]
       },
       {
-        "label": "longer no carry sample",
+        "label": "longer no carry",
         "input": [
           [
             4,
@@ -10239,7 +10239,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample carry",
+        "label": "carry",
         "input": [
           "11",
           "1"
@@ -10247,7 +10247,7 @@
         "expected": "100"
       },
       {
-        "label": "sample multi digit",
+        "label": "multi digit",
         "input": [
           "1010",
           "1011"
@@ -10295,7 +10295,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample short",
+        "label": "short",
         "input": [
           [
             2,
@@ -10306,7 +10306,7 @@
         "expected": 1
       },
       {
-        "label": "sample mixed order",
+        "label": "mixed order",
         "input": [
           [
             4,
@@ -10443,7 +10443,7 @@
         "expected": 5
       },
       {
-        "label": "larger dynamic case",
+        "label": "larger staircase",
         "input": [
           10
         ],
@@ -10562,7 +10562,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample alternating",
+        "label": "alternating",
         "input": [
           [
             1,
@@ -10574,7 +10574,7 @@
         "expected": 4
       },
       {
-        "label": "sample with middle peak",
+        "label": "middle peak",
         "input": [
           [
             2,
@@ -10607,7 +10607,7 @@
         "expected": 0
       },
       {
-        "label": "greedy local choice fails",
+        "label": "uneven neighbors",
         "input": [
           [
             2,
@@ -10633,7 +10633,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "mixed sample",
+        "label": "mixed signs",
         "input": [
           [
             -2,
@@ -10711,7 +10711,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample makes amount",
+        "label": "makes amount",
         "input": [
           [
             1,
@@ -10743,7 +10743,7 @@
         "expected": 0
       },
       {
-        "label": "greedy fails",
+        "label": "three denominations",
         "input": [
           [
             1,
@@ -10782,7 +10782,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "classic sample",
+        "label": "several rising runs",
         "input": [
           [
             10,
@@ -10798,7 +10798,7 @@
         "expected": 4
       },
       {
-        "label": "sample with duplicates",
+        "label": "with duplicates",
         "input": [
           [
             0,
@@ -11128,7 +11128,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample grid",
+        "label": "three by three grid",
         "input": [
           [
             [
@@ -11197,7 +11197,7 @@
         "expected": 6
       },
       {
-        "label": "greedy path fails",
+        "label": "cheap start",
         "input": [
           [
             [
@@ -11327,7 +11327,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "leetcode sample",
+        "label": "two dictionary words",
         "input": [
           "leetcode",
           [
@@ -11373,7 +11373,7 @@
         "expected": true
       },
       {
-        "label": "prefix greedy fails",
+        "label": "overlapping words",
         "input": [
           "cars",
           [
@@ -11450,7 +11450,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "short sample",
+        "label": "short",
         "input": [
           [
             2,
@@ -11462,7 +11462,7 @@
         "expected": 3
       },
       {
-        "label": "zero and positive sample",
+        "label": "zero and positive",
         "input": [
           [
             0,
@@ -11498,7 +11498,7 @@
         "expected": -4
       },
       {
-        "label": "xor pair logic fails",
+        "label": "pairwise cancelling fails",
         "input": [
           [
             5,
@@ -11527,7 +11527,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample range",
+        "label": "small range",
         "input": [
           5,
           7
@@ -11583,7 +11583,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample triangle",
+        "label": "four rows",
         "input": [
           [
             [
@@ -11635,7 +11635,7 @@
         "expected": 3
       },
       {
-        "label": "greedy child fails",
+        "label": "deep cheap value",
         "input": [
           [
             [
@@ -11745,7 +11745,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample square area four",
+        "label": "square area four",
         "input": [
           [
             [
@@ -11856,7 +11856,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "non-wrapping sample",
+        "label": "non-wrapping",
         "input": [
           [
             1,
@@ -11868,7 +11868,7 @@
         "expected": 3
       },
       {
-        "label": "wrapping sample",
+        "label": "wrapping",
         "input": [
           [
             5,
@@ -12012,7 +12012,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample second largest",
+        "label": "second largest",
         "input": [
           [
             3,
@@ -12245,7 +12245,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample true",
+        "label": "interleaves",
         "input": [
           "aabcc",
           "dbbca",
@@ -12254,7 +12254,7 @@
         "expected": true
       },
       {
-        "label": "sample false",
+        "label": "cannot interleave",
         "input": [
           "aabcc",
           "dbbca",
@@ -12281,7 +12281,7 @@
         "expected": false
       },
       {
-        "label": "greedy source choice fails",
+        "label": "shared letters",
         "input": [
           "aa",
           "ab",
@@ -12308,7 +12308,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "two transactions sample",
+        "label": "two transactions",
         "input": [
           [
             3,
@@ -12397,7 +12397,7 @@
         "expected": 2
       },
       {
-        "label": "two transactions sample",
+        "label": "two transactions",
         "input": [
           2,
           [
@@ -12472,7 +12472,7 @@
     "outputType": "linkedList",
     "cases": [
       {
-        "label": "sample reorder",
+        "label": "reorder",
         "input": [
           [
             4,
@@ -12559,7 +12559,7 @@
     "checker": "approxNumber",
     "cases": [
       {
-        "label": "odd total sample",
+        "label": "odd total",
         "input": [
           [
             1,
@@ -12572,7 +12572,7 @@
         "expected": 2
       },
       {
-        "label": "even total sample",
+        "label": "even total",
         "input": [
           [
             1,
@@ -12643,7 +12643,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "diagonal sample",
+        "label": "diagonal",
         "input": [
           [
             [
@@ -12663,7 +12663,7 @@
         "expected": 3
       },
       {
-        "label": "mixed slope sample",
+        "label": "mixed slopes",
         "input": [
           [
             [
@@ -12773,7 +12773,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample bit pattern",
+        "label": "bit pattern",
         "input": [
           43261596
         ],
@@ -12822,7 +12822,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample unlocks better project",
+        "label": "unlocks better project",
         "input": [
           2,
           0,
@@ -12930,7 +12930,7 @@
     "checker": "integerRows",
     "cases": [
       {
-        "label": "sample first row wins",
+        "label": "first row wins",
         "input": [
           [
             1,
@@ -13188,7 +13188,7 @@
     "checker": "exact",
     "cases": [
       {
-        "label": "sample odd after even",
+        "label": "odd after even",
         "input": [
           [
             "MedianFinder",

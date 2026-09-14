@@ -1,0 +1,64 @@
+{
+  "page": "rooftop-panel-footprint",
+  "title": "Rooftop Panel Footprint",
+  "source": "Maximal Square",
+  "difficulty": "Medium",
+  "brief": [
+    "A solar installer surveys a flat roof as a grid of cells, marking each cell as usable or blocked by vents and skylights. Panels are sold only in square layouts, and the sales tool needs the biggest square layout that fits entirely on usable cells.",
+    "Implement largestPanelArea(matrix), where matrix is the survey grid with the character '1' for a usable cell and '0' for a blocked cell, and return the area, in cells, of the largest square made only of usable cells."
+  ],
+  "examples": [
+    {
+      "input": "matrix = [[\"1\",\"0\",\"1\",\"0\",\"0\"],[\"1\",\"0\",\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\",\"1\",\"1\"],[\"1\",\"0\",\"0\",\"1\",\"0\"]]",
+      "output": "4"
+    },
+    {
+      "input": "matrix = [[\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\"]]",
+      "output": "9"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def largestPanelArea(self, matrix: list[list[str]]) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {character[][]} matrix\n * @return {number}\n */\nfunction largestPanelArea(matrix) {\n  // Think out loud as you go!\n}\n",
+    "c": "int largestPanelArea(char** matrix, int matrixSize, int* matrixColSize) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int largestPanelArea(vector<vector<char>>& matrix) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int largestPanelArea(char[][] matrix) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

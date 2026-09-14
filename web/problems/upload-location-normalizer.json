@@ -1,0 +1,64 @@
+{
+  "page": "upload-location-normalizer",
+  "title": "Upload Location Normalizer",
+  "source": "Simplify Path",
+  "difficulty": "Medium",
+  "brief": [
+    "Our file sync client accepts absolute locations typed by users and scripts, and they come in messy: doubled slashes, trailing slashes, and the usual Unix . and .. components. Before we use a location as a cache key, we need one canonical spelling for it.",
+    "Implement canonicalLocation(path), where path is an absolute Unix-style location, and return its canonical form: it starts with a single slash, uses one slash between directory names, has no trailing slash, and has every . and .. component resolved."
+  ],
+  "examples": [
+    {
+      "input": "path = \"/a/./b/../../c/\"",
+      "output": "\"/c\""
+    },
+    {
+      "input": "path = \"/home//foo/\"",
+      "output": "\"/home/foo\""
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def canonicalLocation(self, path: str) -> str:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} path\n * @return {string}\n */\nfunction canonicalLocation(path) {\n  // Think out loud as you go!\n}\n",
+    "c": "char* canonicalLocation(char* path) {\n    // Think out loud as you go!\n    return \"\";\n}\n",
+    "cpp": "class Solution {\npublic:\n    string canonicalLocation(string path) {\n        // Think out loud as you go!\n        return \"\";\n    }\n};\n",
+    "java": "class Solution {\n    public String canonicalLocation(String path) {\n        // Think out loud as you go!\n        return \"\";\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

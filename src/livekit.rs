@@ -1425,6 +1425,7 @@ fn initial_runtime_state(boot: &RuntimeBootstrap<'_>, started_at: Instant) -> Ru
         interview_loop: boot.interview_loop,
         coding_minutes: boot.coding_minutes,
         behavioral_minutes: boot.behavioral_minutes,
+        hint_ladder: boot.problem.variant().hints,
         ..RuntimeState::default()
     }
 }
@@ -1912,7 +1913,9 @@ fn agent_state_attributes(
     attributes
 }
 
-fn execute_tool_call(state: &mut RuntimeState, call: &GeminiFunctionCall) -> serde_json::Value {
+/// Public so the behaviour check in `tests/interview_behavior.rs` answers a
+/// text model's tool calls with this dispatch rather than a copy of it.
+pub fn execute_tool_call(state: &mut RuntimeState, call: &GeminiFunctionCall) -> serde_json::Value {
     match call.name.as_str() {
         TOOL_READ_EDITOR => serde_json::json!({
             "result": read_editor_text(
@@ -1922,8 +1925,17 @@ fn execute_tool_call(state: &mut RuntimeState, call: &GeminiFunctionCall) -> ser
                 state.test_runs,
             )
         }),
+
+        // Missing reads as asked for: the declaration requires the flag, and
+        // the cost of the other default is a hint the candidate asked for
+        // arriving without its rung.
         TOOL_LOG_HINT => {
-            serde_json::json!({ "result": crate::agent::record_hint(state) })
+            let requested = call
+                .args
+                .get("requested")
+                .and_then(serde_json::Value::as_bool)
+                .unwrap_or(true);
+            serde_json::json!({ "result": crate::agent::record_hint(state, requested) })
         }
         TOOL_RECORD_FRAMEWORK_EVIDENCE => match record_framework_evidence(state, &call.args) {
             Ok(evidence) => serde_json::json!({ "result": framework_evidence_json(&evidence) }),

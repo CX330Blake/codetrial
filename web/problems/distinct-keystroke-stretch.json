@@ -1,0 +1,64 @@
+{
+  "page": "distinct-keystroke-stretch",
+  "title": "Distinct Keystroke Stretch",
+  "source": "Longest Substring Without Repeating Characters",
+  "difficulty": "Medium",
+  "brief": [
+    "A password strength analyser looks at the raw keystroke string a user typed. One of its signals is how long a stretch of consecutive keystrokes goes by without any key being pressed twice.",
+    "Implement longestDistinctRun(s), where s is the keystroke string, and return the length of the longest unbroken stretch of s in which no character appears more than once."
+  ],
+  "examples": [
+    {
+      "input": "s = \"pwwkew\"",
+      "output": "3"
+    },
+    {
+      "input": "s = \"\"",
+      "output": "0"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def longestDistinctRun(self, s: str) -> int:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nfunction longestDistinctRun(s) {\n  // Think out loud as you go!\n}\n",
+    "c": "int longestDistinctRun(char* s) {\n    // Think out loud as you go!\n    return 0;\n}\n",
+    "cpp": "class Solution {\npublic:\n    int longestDistinctRun(string s) {\n        // Think out loud as you go!\n        return 0;\n    }\n};\n",
+    "java": "class Solution {\n    public int longestDistinctRun(String s) {\n        // Think out loud as you go!\n        return 0;\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

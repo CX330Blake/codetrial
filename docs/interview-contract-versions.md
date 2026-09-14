@@ -8,10 +8,11 @@ can select it.
 
 ## The active bundle
 
-Bundle 4: live prompt 1, report prompt 4, rubric 1, report schema 1.
+Bundle 5: live prompt 2, report prompt 5, rubric 1, report schema 1.
 
 | Bundle | Introduced |
 |---|---|
+| 5 | Each problem posed as an interview scenario rather than the published problem: the live prompt holds the scenario, its private contract, the clarifications to answer when asked and the follow-ups, and never the source title, the hint ladder or a solution walkthrough; `log_hint` serves the authored hints one rung per request and holds the last until the candidate has stated an approach; the report prompt gives the reviewer both the published problem and the scenario, with the reference notes, and forbids naming the published problem in anything written to the candidate |
 | 4 | The observable-delivery policy, made explicit in the report prompt and the server validator, with no change to the rubric or the public shape |
 | 3 | Framework phase scores kept explicitly formative, and prohibited from mechanical use in a hiring decision while calibration remains incomplete |
 | 2 | Provider-enforced structured report output and strict validation, with no change to rubric semantics or the public schema |
@@ -28,6 +29,10 @@ move together. A released bundle number is never reused for different behavior.
 - Reports without `interviewContract` predate this contract. They stay readable
   and are labeled `legacy/unversioned`; they are never assigned the current
   rubric.
+- The browser scores the active bundle and bundle 4, which shares its rubric
+  and report schema and differs only in the prompts that wrote the report
+  (`SCORABLE_CONTRACTS` in `web/lib.js`). A report keeps the bundle it claims.
+  A bump that changes the rubric or the schema does not join that list.
 - The browser renders the active report schema normally. An older renderer may
   ignore additive fields only after the bundle and schema migration explicitly
   permits it.

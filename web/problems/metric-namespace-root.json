@@ -1,0 +1,60 @@
+{
+  "page": "metric-namespace-root",
+  "title": "Metric Namespace Root",
+  "source": "Longest Common Prefix",
+  "difficulty": "Easy",
+  "brief": [
+    "Our observability UI groups metric keys that a team has selected and shows the leading text they all start with as a header, so the rows below can show only the part that differs.",
+    "Implement sharedLeadingText(strs), where strs is the list of selected keys, and return the longest string that every key starts with."
+  ],
+  "examples": [
+    {
+      "input": "strs = [\"inter\",\"internet\",\"internal\"]",
+      "output": "\"inter\""
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def sharedLeadingText(self, strs: list[str]) -> str:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string[]} strs\n * @return {string}\n */\nfunction sharedLeadingText(strs) {\n  // Think out loud as you go!\n}\n",
+    "c": "char* sharedLeadingText(char** strs, int strsSize) {\n    // Think out loud as you go!\n    return \"\";\n}\n",
+    "cpp": "class Solution {\npublic:\n    string sharedLeadingText(vector<string>& strs) {\n        // Think out loud as you go!\n        return \"\";\n    }\n};\n",
+    "java": "class Solution {\n    public String sharedLeadingText(String[] strs) {\n        // Think out loud as you go!\n        return \"\";\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

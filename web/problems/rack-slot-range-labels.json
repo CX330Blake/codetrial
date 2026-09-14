@@ -1,0 +1,64 @@
+{
+  "page": "rack-slot-range-labels",
+  "title": "Rack Slot Range Labels",
+  "source": "Summary Ranges",
+  "difficulty": "Easy",
+  "brief": [
+    "A datacentre dashboard lists the free slots in a rack by number. Long lists are hard to read, so the dashboard compresses each unbroken run of slot numbers into one label: a lone slot is shown as its number, such as 7, and a run of two or more is shown as its first and last number joined by ->, such as 4->5.",
+    "Implement labelSlotRuns(nums), where nums is the list of free slot numbers in increasing order, and return the list of labels as strings covering every number in nums."
+  ],
+  "examples": [
+    {
+      "input": "nums = [-2,-1,0,2]",
+      "output": "[\"-2->0\",\"2\"]"
+    },
+    {
+      "input": "nums = [0,2,3,4,6,8,9]",
+      "output": "[\"0\",\"2->4\",\"6\",\"8->9\"]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def labelSlotRuns(self, nums: list[int]) -> list[str]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {number[]} nums\n * @return {string[]}\n */\nfunction labelSlotRuns(nums) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nchar** labelSlotRuns(int* nums, int numsSize, int* returnSize) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<string> labelSlotRuns(vector<int>& nums) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public List<String> labelSlotRuns(int[] nums) {\n        // Think out loud as you go!\n        return new ArrayList<>();\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Easy",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}

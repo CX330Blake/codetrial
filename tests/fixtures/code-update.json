@@ -4,14 +4,14 @@
     {
       "name": "opening sync",
       "payload": {
-        "code": "def two_sum(nums, target):\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    return []\n",
         "language": "python"
       }
     },
     {
       "name": "keystroke",
       "payload": {
-        "code": "def two_sum(nums, target):\n    seen = {}\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    seen = {}\n    return []\n",
         "language": "python",
         "at": 1770000000000
       }
@@ -19,35 +19,35 @@
     {
       "name": "language tab python",
       "payload": {
-        "code": "def two_sum(nums, target):\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    return []\n",
         "language": "python"
       }
     },
     {
       "name": "language tab javascript",
       "payload": {
-        "code": "def two_sum(nums, target):\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    return []\n",
         "language": "javascript"
       }
     },
     {
       "name": "language tab c",
       "payload": {
-        "code": "def two_sum(nums, target):\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    return []\n",
         "language": "c"
       }
     },
     {
       "name": "language tab cpp",
       "payload": {
-        "code": "def two_sum(nums, target):\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    return []\n",
         "language": "cpp"
       }
     },
     {
       "name": "language tab java",
       "payload": {
-        "code": "def two_sum(nums, target):\n    return []\n",
+        "code": "def match_pair(amounts, total):\n    return []\n",
         "language": "java"
       }
     },

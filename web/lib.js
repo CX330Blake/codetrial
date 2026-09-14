@@ -132,7 +132,7 @@ function isTopologicalOrder(testCase, actual) {
 }
 
 export function checkAnswer(spec, testCase, actual) {
-  if (spec.checker === "twoSum") {
+  if (spec.checker === "indexPair") {
     const [nums, target] = testCase.input;
     if (!Array.isArray(actual) || actual.length !== 2) return false;
     const [i, j] = actual;
@@ -155,13 +155,13 @@ export function checkAnswer(spec, testCase, actual) {
   if (spec.checker === "integerCombinations") {
     return deepEqual(sortedIntegerRows(actual, true), sortedIntegerRows(testCase.expected, true));
   }
-  if (spec.checker === "anagramGroups") {
+  if (spec.checker === "unorderedGroups") {
     return deepEqual(sortedAnagramGroups(actual), sortedAnagramGroups(testCase.expected));
   }
   if (spec.checker === "balancedBst") {
     return isBalancedBst(testCase, actual);
   }
-  if (spec.checker === "topologicalOrder") {
+  if (spec.checker === "dependencyOrder") {
     return isTopologicalOrder(testCase, actual);
   }
   if (spec.checker === "approxNumber") {
@@ -403,25 +403,38 @@ export function loopLabel(value) {
 
 const textEncoder = new TextEncoder();
 
-/// The five versions this build renders, and the only bundle it will score.
+/// The five versions this build produces. See `SCORABLE_CONTRACTS` for what it
+/// will score.
 ///
 /// Here rather than inside `sanitizeReport` so a test can read it. While it was
 /// function-local, moving it left the whole suite green with the supported-card
 /// branch no longer rendering, which is the defect a local constant invites.
 export const ACTIVE_CONTRACT = {
-  bundleVersion: 4,
-  livePromptVersion: 1,
-  reportPromptVersion: 4,
+  bundleVersion: 5,
+  livePromptVersion: 2,
+  reportPromptVersion: 5,
   reportSchemaVersion: 1,
   rubricVersion: 1,
 };
+
+/// The bundles this build scores: the active one, and earlier ones whose rubric
+/// and report schema are the active ones. Bundle 4 differs from 5 only in the
+/// prompts that produced the report, so what its scores mean is unchanged, and
+/// refusing it would blank the scores on every report saved before bundle 5.
+/// The report keeps the bundle it claims, so its card still says which prompts
+/// wrote it.
+export const SCORABLE_CONTRACTS = [
+  ACTIVE_CONTRACT,
+  { ...ACTIVE_CONTRACT, bundleVersion: 4, livePromptVersion: 1, reportPromptVersion: 4 },
+];
 
 /// The report's contract bundle, and whether this build can score against it.
 ///
 /// Two answers rather than one, because they are not the same question. The
 /// bundle is what the report claims and is kept whenever it is well formed, so
-/// a reader is told which rubric produced it. Supported is whether every version
-/// matches this build, and only that decides whether the scores below are shown.
+/// a reader is told which rubric produced it. Supported is whether the bundle is
+/// one of `SCORABLE_CONTRACTS`, and only that decides whether the scores below
+/// are shown.
 /// A report with no bundle at all predates the contract and is neither.
 function reportContract(raw) {
   const keys = Object.keys(ACTIVE_CONTRACT);
@@ -433,7 +446,8 @@ function reportContract(raw) {
     ? null
     : wellFormed ? Object.fromEntries(keys.map((key) => [key, claimed[key]])) : null;
   const unsupported = claimed !== undefined
-    && (interviewContract === null || keys.some((key) => interviewContract[key] !== ACTIVE_CONTRACT[key]));
+    && (interviewContract === null
+      || !SCORABLE_CONTRACTS.some((contract) => keys.every((key) => interviewContract[key] === contract[key])));
   return { interviewContract, unsupported };
 }
 

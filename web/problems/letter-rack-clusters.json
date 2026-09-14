@@ -1,0 +1,60 @@
+{
+  "page": "letter-rack-clusters",
+  "title": "Letter Rack Clusters",
+  "source": "Group Anagrams",
+  "difficulty": "Medium",
+  "brief": [
+    "A word game server receives the words players submit and wants to cluster together submissions that were built from the same set of letter tiles, just arranged differently.",
+    "Implement clusterByLetters(strs), where strs is the list of submitted words, and return a list of clusters, each a list of words, so that two words share a cluster exactly when one is a rearrangement of the other's letters."
+  ],
+  "examples": [
+    {
+      "input": "strs = [\"abc\",\"bca\",\"foo\",\"ofo\",\"bar\"]",
+      "output": "[[\"abc\",\"bca\"],[\"foo\",\"ofo\"],[\"bar\"]]"
+    }
+  ],
+  "starterCode": {
+    "python": "class Solution:\n    def clusterByLetters(self, strs: list[str]) -> list[list[str]]:\n        # Think out loud as you go!\n        pass\n",
+    "javascript": "/**\n * @param {string[]} strs\n * @return {string[][]}\n */\nfunction clusterByLetters(strs) {\n  // Think out loud as you go!\n}\n",
+    "c": "/**\n * Return an array of arrays of size *returnSize.\n * The sizes of the arrays are returned as *returnColumnSizes array.\n * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().\n */\nchar*** clusterByLetters(char** strs, int strsSize, int* returnSize, int** returnColumnSizes) {\n    // Think out loud as you go!\n    *returnSize = 0;\n    *returnColumnSizes = NULL;\n    return NULL;\n}\n",
+    "cpp": "class Solution {\npublic:\n    vector<vector<string>> clusterByLetters(vector<string>& strs) {\n        // Think out loud as you go!\n        return {};\n    }\n};\n",
+    "java": "class Solution {\n    public List<List<String>> clusterByLetters(String[] strs) {\n        // Think out loud as you go!\n        return new ArrayList<>();\n    }\n}\n"
+  },
+  "interviewMetadata": {
+    "difficulty": "Medium",
+    "reactoStages": [
+      "repeat",
+      "example",
+      "algorithm",
+      "coding",
+      "test",
+      "optimizations"
+    ],
+    "followUpDirections": [
+      {
+        "stage": "repeat",
+        "direction": "Ask the candidate to restate the inputs, outputs, constraints, and ambiguities."
+      },
+      {
+        "stage": "example",
+        "direction": "Ask the candidate to choose and trace an ordinary example and a boundary case."
+      },
+      {
+        "stage": "algorithm",
+        "direction": "Ask for the candidate's approach, correctness argument, and complexity."
+      },
+      {
+        "stage": "coding",
+        "direction": "Ask the candidate to implement their stated approach and explain major decisions."
+      },
+      {
+        "stage": "test",
+        "direction": "Ask the candidate to predict useful cases and expected results before running them."
+      },
+      {
+        "stage": "optimizations",
+        "direction": "Ask for complexity, an uncovered edge case, and a justified optimization or cleanup."
+      }
+    ]
+  }
+}
