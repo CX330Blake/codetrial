@@ -222,6 +222,11 @@ start.addEventListener("click", async () => {
   if (profile.targetCompany) destination.searchParams.set("company", profile.targetCompany);
   const focus = nodes.practiceFocusShareInput.checked ? practiceFocus(reports) : null;
   const selected = checkedGrounding();
+  const extracted = {
+    requirements: [...grounding.requirements],
+    skills: [...grounding.skills],
+    anchors: [...grounding.anchors],
+  };
   const consented = nodes.groundingConsent.checked;
 
   starting = true;
@@ -244,7 +249,7 @@ start.addEventListener("click", async () => {
   }
   start.textContent = "Starting...";
   try {
-    const packet = selectedGroundingPacket(grounding, selected, consented);
+    const packet = selectedGroundingPacket(extracted, selected, consented);
     storeGroundingPacket(sessionStorage, packet);
     storeSharedFocus(sessionStorage, focus?.weakness ?? null);
   } catch (error) {
