@@ -248,6 +248,7 @@ start.addEventListener("click", async () => {
     signInFirst = false;
   }
   start.textContent = "Starting...";
+  if (!nodes.groundingConsent.checked) packet = null;
   try {
     storeGroundingPacket(sessionStorage, packet);
     storeSharedFocus(sessionStorage, focus?.weakness ?? null);
