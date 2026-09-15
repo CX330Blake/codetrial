@@ -558,12 +558,18 @@ jobs:
             archive: zip
     runs-on: ${{ matrix.os }}
     env:
-      # Override the workflow's Linux-only mold flag. Even an empty RUSTFLAGS
-      # overrides .cargo/config.toml, so macOS must repeat -ObjC here or the
-      # linker omits WebRTC's NSString categories and the first room aborts.
+      # Override the workflow-wide Linux-only mold flag with the
+      # platform-specific flags required by each release target. Neither
+      # non-Linux runner can use mold, and MSVC hands -fuse-ld=mold to link.exe,
+      # which fails with LNK1117. Releases build once per push rather than once
+      # per mutant, so using the platform's default linker is the right trade.
+      #
+      # Even an empty RUSTFLAGS overrides .cargo/config.toml, so Apple targets
+      # must repeat -ObjC here or the linker omits WebRTC's NSString categories
+      # and the first room aborts.
       RUSTFLAGS: >-
         ${{ matrix.target == 'x86_64-pc-windows-msvc' && '-C target-feature=+crt-static'
-            || matrix.target == 'aarch64-apple-darwin' && '-Clink-arg=-ObjC'
+            || contains(matrix.target, '-apple-') && '-Clink-arg=-ObjC'
             || '' }}
     steps:
       - uses: actions/checkout@v7
@@ -643,6 +649,18 @@ jobs:
             --env CARGO_HOME=/cargo \
             ${{ matrix.image }} \
             cargo build --release --locked --target ${{ matrix.target }}
+      # A successful link does not prove the Objective-C categories survived.
+      # The selector reference remains even when its implementation is absent,
+      # so match a method name entry rather than any occurrence of the selector.
+      - name: Verify macOS WebRTC linkage
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          binary=target/${{ matrix.target }}/release/codetrial
+          # Collect the output so grep cannot give otool SIGPIPE under pipefail.
+          objc=$(otool -oV "$binary")
+          grep -Eq '^[[:space:]]*name[[:space:]].*[[:space:]]stringForAbslStringView:$' <<< "$objc" \
+            || { echo 'WebRTC NSString category is missing' >&2; exit 1; }
       # Two libraries set the floor, not one. The C++ half of this build links
       # libstdc++, so a newer compiler raises the GLIBCXX_ requirement whether
       # or not it touches GLIBC_, and a binary refused for either reason is
