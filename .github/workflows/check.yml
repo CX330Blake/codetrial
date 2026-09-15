@@ -558,13 +558,13 @@ jobs:
             archive: zip
     runs-on: ${{ matrix.os }}
     env:
-      # Cleared for the same reason `plan-mutants` clears it: the workflow-wide
-      # value is `-Clink-arg=-fuse-ld=mold`, and only the Linux jobs that
-      # install mold can honor it. Two of these three runners cannot have mold
-      # at all, and MSVC hands the flag to `link.exe`, which dies with LNK1117.
-      # Release builds happen once per push rather than once per mutant, so the
-      # linker that is present everywhere is the right trade.
-      RUSTFLAGS: ${{ matrix.target == 'x86_64-pc-windows-msvc' && '-C target-feature=+crt-static' || '' }}
+      # Override the workflow's Linux-only mold flag. Even an empty RUSTFLAGS
+      # overrides .cargo/config.toml, so macOS must repeat -ObjC here or the
+      # linker omits WebRTC's NSString categories and the first room aborts.
+      RUSTFLAGS: >-
+        ${{ matrix.target == 'x86_64-pc-windows-msvc' && '-C target-feature=+crt-static'
+            || matrix.target == 'aarch64-apple-darwin' && '-Clink-arg=-ObjC'
+            || '' }}
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
