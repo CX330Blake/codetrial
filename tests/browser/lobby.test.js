@@ -973,6 +973,76 @@ lobbyTest("a start ships the length that was on screen when it was pressed", asy
   );
 });
 
+lobbyTest("a start ships the grounding snippets that were checked when it was pressed", async (page) => {
+  session = { signedIn: false, loginRequired: true };
+  await lobby(page);
+  await page.click("details.interview-context summary");
+  const txt = (name, text) => ({ name, mimeType: "text/plain", buffer: Buffer.from(text) });
+
+  await page.setInputFiles("#grounding-jd", txt("first.txt", "Must know Rust"));
+  await page.locator('#grounding-choices input[data-group="requirements"]').first().check();
+  await page.check("#grounding-consent");
+
+  const finishLogin = (() => {
+    let done;
+    holdLogin = new Promise((resolve) => (done = resolve));
+    return done;
+  })();
+  await page.fill("#github-login", "candidate");
+  await page.click("#start");
+  await page.click("#grounding-clear");
+  await page.setInputFiles("#grounding-jd", txt("second.txt", "Must know SQL"));
+  await settles(page, () => document.querySelector("#grounding-choices label")?.textContent.includes("SQL"));
+  await page.locator('#grounding-choices input[data-group="requirements"]').first().check();
+  await page.check("#grounding-consent");
+  finishLogin();
+
+  await page.waitForURL(/\/interview/);
+  const stored = await page.evaluate(() => JSON.parse(sessionStorage.getItem("codetrial.interview-grounding.v1")));
+  assert.deepEqual(stored?.requirements, ["Must know Rust"]);
+});
+
+lobbyTest("consent withdrawn during the sign-in wait stores no grounding", async (page) => {
+  session = { signedIn: false, loginRequired: true };
+  await lobby(page);
+  await page.click("details.interview-context summary");
+  await page.setInputFiles("#grounding-jd", {
+    name: "jd.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("Must know Rust"),
+  });
+  await page.locator('#grounding-choices input[data-group="requirements"]').first().check();
+  await page.check("#grounding-consent");
+
+  const finishLogin = (() => {
+    let done;
+    holdLogin = new Promise((resolve) => (done = resolve));
+    return done;
+  })();
+  await page.fill("#github-login", "candidate");
+  await page.click("#start");
+  await page.uncheck("#grounding-consent");
+  finishLogin();
+
+  await page.waitForURL(/\/interview/);
+  const stored = await page.evaluate(() => sessionStorage.getItem("codetrial.interview-grounding.v1"));
+  assert.equal(stored, null);
+});
+
+lobbyTest("a start the grounding packet refuses does not sign in first", async (page) => {
+  session = { signedIn: false, loginRequired: true };
+  await lobby(page);
+  await page.click("details.interview-context summary");
+  await page.setInputFiles("#grounding-jd", { name: "jd.txt", mimeType: "text/plain", buffer: Buffer.from("Must know Rust") });
+  await page.locator('#grounding-choices input[data-group="requirements"]').first().check();
+
+  await page.fill("#github-login", "candidate");
+  await page.click("#start");
+  await settles(page, () => document.querySelector("#grounding-error").textContent.includes("Agree"));
+  assert.equal(session.signedIn, false, "no /api/login for a start that was never going to go");
+  assert.equal(await page.isDisabled("#start"), false);
+});
+
 lobbyTest("a start already on its way out is not undone by a later choice", async (page) => {
   // The sign-in round trip is the one window where the start handler is
   // suspended with the page still live under it, and everything the candidate

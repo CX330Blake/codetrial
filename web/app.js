@@ -221,8 +221,13 @@ start.addEventListener("click", async () => {
   if (profile.seniority) destination.searchParams.set("seniority", profile.seniority);
   if (profile.targetCompany) destination.searchParams.set("company", profile.targetCompany);
   const focus = nodes.practiceFocusShareInput.checked ? practiceFocus(reports) : null;
-  const selected = checkedGrounding();
-  const consented = nodes.groundingConsent.checked;
+  let packet;
+  try {
+    packet = selectedGroundingPacket(grounding, checkedGrounding(), nodes.groundingConsent.checked);
+  } catch (error) {
+    nodes.groundingError.textContent = error.message;
+    return;
+  }
 
   starting = true;
   start.disabled = true;
@@ -243,8 +248,8 @@ start.addEventListener("click", async () => {
     signInFirst = false;
   }
   start.textContent = "Starting...";
+  if (!nodes.groundingConsent.checked) packet = null;
   try {
-    const packet = selectedGroundingPacket(grounding, selected, consented);
     storeGroundingPacket(sessionStorage, packet);
     storeSharedFocus(sessionStorage, focus?.weakness ?? null);
   } catch (error) {
