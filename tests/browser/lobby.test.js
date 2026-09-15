@@ -394,6 +394,62 @@ lobbyTest("loading a resume keeps the JD requirements already checked", async (p
   assert.deepEqual(await jd.evaluateAll((boxes) => boxes.map((box) => box.checked)), [false, true]);
 });
 
+async function holdSlowRead(page) {
+  await page.evaluate(() => {
+    const read = Blob.prototype.arrayBuffer;
+    let open;
+    const gate = new Promise((resolve) => { open = resolve; });
+    let done = null;
+    Blob.prototype.arrayBuffer = async function () {
+      if (this.name === "slow.txt") {
+        await gate;
+        done = read.call(this);
+        return done;
+      }
+      return read.call(this);
+    };
+    window.releaseSlowRead = async () => {
+      open();
+      for (let wait = 0; !done && wait < 1000; wait++) await new Promise((resolve) => setTimeout(resolve, 10));
+      if (!done) throw new Error("the gated read never started");
+      await done;
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    };
+  });
+  return () => page.evaluate(() => window.releaseSlowRead());
+}
+
+const groundingTxt = (name, text) => ({ name, mimeType: "text/plain", buffer: Buffer.from(text) });
+const groundingText = (page) =>
+  page.evaluate(() => [...document.querySelectorAll("#grounding-choices label")].map((row) => row.textContent.trim()));
+
+lobbyTest("a slower read of an earlier JD does not replace the one picked after it", async (page) => {
+  await lobby(page);
+  await page.click("details.interview-context summary");
+  const release = await holdSlowRead(page);
+
+  await page.setInputFiles("#grounding-jd", groundingTxt("slow.txt", "Must know Rust"));
+  await page.setInputFiles("#grounding-jd", groundingTxt("jd.txt", "Must know SQL"));
+  await settles(page, () => document.querySelector("#grounding-choices label") !== null);
+  await release();
+
+  assert.deepEqual(await groundingText(page), ["Must know SQL"]);
+  assert.match(await page.locator("#grounding-jd-status").textContent(), /^Parsed locally/);
+});
+
+lobbyTest("a resume still reading when grounding is cleared stays cleared", async (page) => {
+  await lobby(page);
+  await page.click("details.interview-context summary");
+  const release = await holdSlowRead(page);
+
+  await page.setInputFiles("#grounding-resume", groundingTxt("slow.txt", "Skills: Rust, Go\nBuilt a parser"));
+  await page.click("#grounding-clear");
+  await release();
+
+  assert.deepEqual(await groundingText(page), []);
+  assert.equal(await page.locator("#grounding-resume-status").textContent(), "");
+});
+
 lobbyTest("a manually selected problem still receives the arriving practice focus", async (page) => {
   reports = [focusedAttempt(EASY[0])];
   const release = await heldLobby(page);
