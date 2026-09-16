@@ -549,7 +549,6 @@ jobs:
           - name: macOS arm64
             os: macos-15
             target: aarch64-apple-darwin
-            xcode: '26.3'
             extension: ''
             archive: zip
           - name: Windows x86_64
@@ -572,23 +571,12 @@ jobs:
         ${{ matrix.target == 'x86_64-pc-windows-msvc' && '-C target-feature=+crt-static'
             || contains(matrix.target, '-apple-') && '-Clink-arg=-ObjC'
             || '' }}
-      # The runner's default Xcode 16.4 links WebRTC's NSString category away
-      # even with -ObjC, while a 26 linker, matching the 26.0 SDK the archive
-      # was built with, keeps it. DEVELOPER_DIR picks the newer Xcode for every
-      # tool without touching the machine-wide xcode-select.
-      DEVELOPER_DIR: >-
-        ${{ matrix.xcode && format('/Applications/Xcode_{0}.app/Contents/Developer', matrix.xcode) || '' }}
-      # Unset, cc targets the selected SDK, so Xcode 26 would build the C and
-      # C++ objects for macOS 26 while rustc stamps the binary 11.0. Pin both
-      # to the 11.0 floor earlier releases shipped with.
-      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.xcode && '11.0' || '' }}
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
-      # The toolchain is part of the key: the image on Linux, where it is the
-      # compiler, and the Xcode on macOS, where it is the linker and the SDK.
+      # The image is part of the key, because on this leg it is the compiler.
       # `rust-cache` keys on the runner's rustc, which is no longer the one that
       # builds here, and it declines to save when an exact key hit came back: a
       # `target/` filled by the old runner build therefore survives under this
@@ -598,7 +586,7 @@ jobs:
       # its own entry, and bumping the pin rotates the cache with it.
       - uses: Swatinem/rust-cache@v2
         with:
-          key: release-${{ matrix.target }}${{ matrix.image && format('-{0}', matrix.image) || '' }}${{ matrix.xcode && format('-xcode{0}', matrix.xcode) || '' }}
+          key: release-${{ matrix.target }}${{ matrix.image && format('-{0}', matrix.image) || '' }}
       # The same entry the check job saves, on the same key. Without it all
       # three platform legs re-download 24 MB that one job already fetched and
       # stored on this commit, and the fetch script no-ops on a hit.
@@ -664,26 +652,25 @@ jobs:
       # A successful link does not prove the Objective-C categories survived.
       # The selector reference remains even when its implementation is absent,
       # so match a method name entry rather than any occurrence of the selector.
+      #
+      # A relative method list names its selector through a slot in
+      # __objc_selrefs, and the otool in the runner's Xcode cannot follow that
+      # slot: it prints "(0x1037c3988 extends past end of file)" where a newer
+      # one prints the name. Look the slot up in the selref table, which every
+      # otool decodes, and accept a method entry that points at it.
       - name: Verify macOS WebRTC linkage
         if: runner.os == 'macOS'
         shell: bash
         run: |
           binary=target/${{ matrix.target }}/release/codetrial
-          # Prove the build used the Xcode DEVELOPER_DIR names, not the default.
-          [[ $(xcrun --find ld) == "$DEVELOPER_DIR"/* ]] \
-            || { echo "ld is not from $DEVELOPER_DIR" >&2; exit 1; }
+          sel=stringForAbslStringView:
           # Collect the output so awk and grep cannot give otool SIGPIPE under
           # pipefail.
-          load=$(otool -l "$binary")
-          minos=$(awk '$1 == "minos" { print $2 }' <<< "$load")
-          [[ $minos == "$MACOSX_DEPLOYMENT_TARGET" ]] \
-            || { echo "minos is $minos, want $MACOSX_DEPLOYMENT_TARGET" >&2; exit 1; }
-          # Launching proves dyld accepts the binary on this macOS 15 runner.
-          # --help returns before any WebRTC code runs, so it says nothing
-          # about the categories; the otool match below does.
-          "$binary" --help >/dev/null
+          selrefs=$(otool -v -s __DATA __objc_selrefs "$binary")
+          slot=$(awk -v want="__TEXT:__objc_methname:$sel" \
+            '$2 == want { sub(/^0+/, "", $1); print $1 }' <<< "$selrefs")
           objc=$(otool -oV "$binary")
-          grep -Eq '^[[:space:]]*name[[:space:]].*[[:space:]]stringForAbslStringView:$' <<< "$objc" \
+          grep -Eq "^[[:space:]]*name[[:space:]]+0x[0-9a-f]+ (\(0x${slot:-none}[ )]|$sel\$)" <<< "$objc" \
             || { echo 'WebRTC NSString category is missing' >&2; exit 1; }
       # Two libraries set the floor, not one. The C++ half of this build links
       # libstdc++, so a newer compiler raises the GLIBCXX_ requirement whether
