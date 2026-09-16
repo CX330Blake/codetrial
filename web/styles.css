@@ -862,8 +862,10 @@ p {
   display: none;
 }
 
+/* Make textarea text visible when its selection background hides the syntax layer. */
 #editor::selection {
   background: #264f78;
+  color: var(--ink);
 }
 
 .tok-keyword {
