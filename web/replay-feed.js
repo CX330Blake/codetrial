@@ -56,7 +56,13 @@ export function recordReplay(kind, payload) {
     void flushReplay();
     return;
   }
-  replayTimer ||= setTimeout(() => void flushReplay(), REPLAY_FLUSH_MS);
+  scheduleFlush();
+}
+
+function scheduleFlush() {
+  if (replayTimer) return;
+  const delay = Math.max(REPLAY_FLUSH_MS, retryAfter - Date.now());
+  replayTimer = setTimeout(() => void flushReplay(), delay);
 }
 
 /// How long to wait after the server says it has heard enough for now.
@@ -91,8 +97,10 @@ export function closeReplay() {
 /// that batch is kept and sent when the minute is up.
 /// One flush at a time, in the order they were asked for.
 ///
-/// `recordReplay` starts one whenever the queue fills, and the interview's last
-/// act awaits one. Left unserialized, a batch posted while another was still
+/// `recordReplay` starts one whenever the queue fills, and the interview's end
+/// asks for one without waiting on it. Inside a Retry-After window a flush
+/// resolves without posting and leaves the queue to the timer that window
+/// armed. Left unserialized, a batch posted while another was still
 /// awaiting `fetch` could commit first, and the replay would be ordered by
 /// whichever request the server happened to finish rather than by what the
 /// candidate did. Chained rather than skipped, because a caller that is told
@@ -108,6 +116,10 @@ export function flushReplay() {
 
 async function sendQueuedBatch() {
   if (!replayQueue.length || replayClosed) return;
+  if (Date.now() < retryAfter) {
+    scheduleFlush();
+    return;
+  }
   const batch = replayQueue.splice(0, REPLAY_MAX_BATCH);
   try {
     const response = await fetch(`/api/interviews/${encodeURIComponent(state.interviewId)}/events`, {
@@ -154,7 +166,7 @@ async function sendQueuedBatch() {
   } catch {
     // Offline. The interview is what matters and it is still running.
   }
-  if (replayQueue.length) replayTimer ||= setTimeout(() => void flushReplay(), REPLAY_FLUSH_MS);
+  if (replayQueue.length) scheduleFlush();
 }
 
 /// The problem heading, as the recording shows it.
