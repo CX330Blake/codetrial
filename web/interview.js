@@ -1473,9 +1473,11 @@ function endInterview(reason) {
   // who ends while it is still up would read the report status through it.
   globalThis.clearTimeout(frameworkHintTimer);
   nodes.frameworkHint.hidden = true;
-  // Last event, and sent rather than queued: the page is about to stop being
-  // the kind of page that flushes timers, and an "ended" nobody sent leaves a
-  // replay that just stops.
+  // Last event, and flushed now rather than left to the batching timer: the
+  // page is about to stop being the kind of page that flushes timers, and an
+  // "ended" nobody sent leaves a replay that just stops. Inside a Retry-After
+  // window the flush sends nothing and the event still waits on that timer,
+  // so a tab closed before the window passes loses it.
   recordReplay("lifecycle", { state: "ended", reason });
   void flushReplay();
   // The end_interview payload carries the final buffer, so drop any debounced
